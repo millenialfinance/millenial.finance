@@ -4,7 +4,11 @@
    [milfin.subs :as subs]
    [milfin.events :as events]
    [milfin.components :refer [window]]
+   [milfin.ethers :as e]
+   [milfin.chains :refer [chainId->chain]]
    ))
+
+(:name (chainId->chain 1))
 
 (defn wallet-btn
   []
@@ -16,12 +20,15 @@
   (let [connected (re-frame/subscribe [::subs/connected])
         addr (re-frame/subscribe [::subs/addr])
         balance (re-frame/subscribe [::subs/balance])
+        formatted-balance (.formatUnits e/utils @balance)
+        chainId (re-frame/subscribe [::subs/chainId])
+        network-name (:name (chainId->chain @chainId))
         ]
-    (if connected
+    (if @connected
      [:div.status-bar
       [:p.status-bar-field (str "Address: " @addr)]
-      [:p.status-bar-field (str "Network: " )]
-      [:p.status-bar-field (str "Balance: "  @balance)]]
+      [:p.status-bar-field "Network: " network-name]
+      [:p.status-bar-field "Balance: "  formatted-balance]]
      [wallet-btn])))
 
 (defn intro
@@ -38,7 +45,8 @@
 (defn body
   []
   [:div
-  [intro]
+    [wallet-display]
+    [intro]
    ])
 
 (defn main-panel []

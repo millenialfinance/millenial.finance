@@ -22,3 +22,8 @@
  ::connected
  (fn [db]
    (:connected db)))
+
+(re-frame/reg-sub
+ ::chainId
+ (fn [db]
+   (:chainId db)))

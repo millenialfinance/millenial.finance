@@ -3,6 +3,6 @@
 (def default-db
   {:name "re-frame"
    :addr "0x0"
-   :bal 0
-   :chainid 0
+   :balance 0
+   :chainId 0
    :provider nil})
