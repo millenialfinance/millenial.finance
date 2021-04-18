@@ -23,40 +23,28 @@
  (fn-traced [cofx event]
             (let [db (:db cofx)
                   window-eth (:window-eth cofx)]
-              {:eth-fetch [:addr :balance :network-name]
-               :db (-> db
-                       (assoc :provider (-> window-eth
-                                            .enable
-                                            (.then e/get-web3-provider)))
-                       (assoc :connected true))})))
+              {:eth-fetch [window-eth :addr :balance :network-name]
+               })))
 
 (re-frame/reg-cofx
  :window-eth
  (fn [cofx]
    (assoc cofx :window-eth (.-ethereum js/window))))
 
-(re-frame/reg-event-db
- ::get-address
- (fn-traced [db event]
-            (let [provider (:provider db)
-                  addr (:addr db)]
-              (assoc db :addr
-                     (-> provider
-                   (.getBalance addr)
-                   (.then identity))))))
-
 (re-frame/reg-fx
  :eth-fetch
- (fn [fields]
-   (doseq [f fields]
-     (js/console.log f)
-     (case f
-       :addr (.then (e/get-addr) #(re-frame/dispatch [::store :addr %]))
-       :balance (-> (e/get-addr)
-                (.then #(e/get-bal %))
-                (.then #(do
-                          (js/console.log %)
-                          (re-frame/dispatch [::store :balance %]))))
-       :network-name (-> (e/get-web3-provider)
-                         .getNetwork
-                         (.then #(re-frame/dispatch [::store :chainId (.-chainId %)])))))))
+ (fn [[window-eth & fields]]
+   (.then (.enable window-eth) (fn []
+                                 (re-frame/dispatch [::store :connected true])
+                                 (doseq [f fields]
+                                  (js/console.log f)
+                                  (case f
+                                    :addr (.then (e/get-addr) #(re-frame/dispatch [::store :addr %]))
+                                    :balance (-> (e/get-addr)
+                                                 (.then #(e/get-bal %))
+                                                 (.then #(do
+                                                           (js/console.log %)
+                                                           (re-frame/dispatch [::store :balance %]))))
+                                    :network-name (-> (e/get-web3-provider)
+                                                      .getNetwork
+                                                      (.then #(re-frame/dispatch [::store :chainId (.-chainId %)])))))))))
