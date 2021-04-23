@@ -25,8 +25,12 @@
   (-> (get-web3-provider)
       .getSigner
       .getAddress))
+
 (defn get-bal
   [addr]
-  (js/console.log addr)
   (-> (get-web3-provider)
       (.getBalance addr)))
+
+(defn instantiate-contract
+  [address abi provider]
+  (new (.-Contract e) address abi provider))

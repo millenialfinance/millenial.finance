@@ -103,5 +103,4 @@
    [window "welcome" [wallet-display]]])
 
 (defn init []
-  (rdom/render [app] (js/document.getElementById "root"))
-  (js/console.log e))
+  (rdom/render [app] (js/document.getElementById "root")))

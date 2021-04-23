@@ -14,12 +14,43 @@ body {
   margin: 12px 12px;
 }
 
+.zap-btn {
+  margin-left: 1rem;
+  margin-top: .1rem;
+}
+
+.zap-row {
+  margin-top: .3rem;
+  margin-left: .25rem;
+}
+
 .status-bar-field {
   box-shadow: inset -1px -1px  #dfdfdf,
     inset 1px 1px #808080;
   flex-grow: 1;
   padding: 2px 3px;
   margin: 0;
+}
+
+p.pool-title {
+  font-weight: bold;
+}
+
+.pool-info {
+  margin-top: .25rem;
+}
+
+.component {
+  display: flex;
+}
+
+.contract-fn {
+  margin-top: .25rem;
+}
+
+
+.fn-name {
+  font-weight: bold;
 }
 
 .app {

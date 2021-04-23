@@ -27,3 +27,33 @@
  ::chainId
  (fn [db]
    (:chainId db)))
+
+(re-frame/reg-sub
+ ::contracts
+ (fn [db]
+   (:contracts db)))
+
+(re-frame/reg-sub
+ ::contracts-state
+ (fn [db]
+   (:contracts-state db)))
+
+(re-frame/reg-sub
+ ::zapin-token
+ (fn [db]
+   (:zapin-token (:zapper db))))
+
+(re-frame/reg-sub
+ ::zapin-amt
+ (fn [db]
+   (:zapin-amt (:zapper db))))
+
+(re-frame/reg-sub
+ ::zapout-token
+ (fn [db]
+   (:zapout-token (:zapper db))))
+
+(re-frame/reg-sub
+ ::token-balances
+ (fn [db]
+   (:token-balances (:contracts-state db))))
