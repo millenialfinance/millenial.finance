@@ -138,7 +138,7 @@
                  :on-click #(re-frame/dispatch-sync [::events/store-in [:zapper :zapin-amt] (.formatEther e/utils (@balances @zapin-token))])}]]
           [:div.zap-btn
            [btn {:text "Zap"
-                 :on-click #(re-frame/dispatch-sync [::events/call-contract-write contract "zapInToken" [kw :zapInToken @zapin-token @zapout-token] [@zapin-token (.parseEther @zapin-amt) @zapout-token]])}]]]
+                 :on-click #(re-frame/dispatch-sync [::events/call-contract-write contract "zapInToken" [kw :zapInToken @zapin-token @zapout-token] [@zapin-token (.parseEther e/utils @zapin-amt) @zapout-token]])}]]]
 
          ]
         (get-zapper-info contract kw))]]))
