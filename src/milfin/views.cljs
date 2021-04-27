@@ -3,7 +3,7 @@
    [re-frame.core :as re-frame]
    [milfin.subs :as subs]
    [milfin.tokens :refer [bsc-tokens]]
-   [milfin.events :as events]
+   [milfin.events :as events :refer [fetch-pool-info]]
    [milfin.components :refer [window btn status-bar]]
    [milfin.contracts :refer [parse-abistr]]
    [milfin.ethers :as e]
@@ -13,32 +13,6 @@
   []
   [btn {:text "Connect Wallet"
         :on-click #(re-frame/dispatch-sync [::events/initialize-ether])}])
-
-(defn contract-fn
-  [f on-click]
-  [:div.contract-fn
-   [:fieldset
-    [:legend (or (:name f) "Constructor")]
-    [:p
-     (str f)]]])
-
-(defn render-abi
-  [abistr]
-  (let [abi (parse-abistr abistr)
-        fs (filter #(contains? % :outputs) abi)]
-    [:div
-     [:section.component
-      [:h3 "Functions"]
-      [:div
-       (for [f fs]
-         ^{:key (or (:name f) "constructor")} [contract-fn f])]]]))
-
-(defn fetch-pool-info
-  [contract kw addr]
-  (doseq [poolId [0 1]]
-    (re-frame/dispatch-sync [::events/call-contract contract "userInfo" [kw :userInfo poolId] [poolId addr]])
-    (re-frame/dispatch-sync [::events/call-contract contract (:pending-reward-fn-name contract) [kw :pendingReward poolId] [poolId addr]])
-    (re-frame/dispatch-sync [::events/call-contract contract "poolInfo" [kw :poolInfo poolId] [poolId]])))
 
 (defmulti contract-panel
   (fn [kw contract chainId] (:type contract)))
@@ -54,7 +28,7 @@
        (str "Contract Address: " (:addr contract))
        (if chainId (str "Network: " (:name (chainId->chain chainId))))
        [btn {:text "Refresh" :on-click #(fetch-pool-info contract kw @addr)}]]
-      (for [poolId [0 1]]
+      (for [poolId [0 1 2]]
         ^{:key poolId}
         (let [userInfo (get-in contract-state [:userInfo poolId])
               pendingReward (get-in contract-state [:pendingReward poolId])
@@ -152,12 +126,6 @@
      (doall
       (for [[k v] @contracts]
         ^{:key k} [contract-panel k v @chainId]))]))
-
-(defn debug-panel
-  []
-  [window
-   [:div
-    [:p "Test Panel"]]])
 
 (defn wallet-display
   []
