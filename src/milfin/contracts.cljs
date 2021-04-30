@@ -145,7 +145,7 @@
 {\"stateMutability\":\"payable\",
 \"type\":\"receive\"}]
 "
-                                :addr "0xfcd2c9a6E0327Dd9A33cb865cab24Bedd6704729"
+                                :addr "0x3fE3FA91B5f3777CC692f3471971e6c01505A3De"
                                 :name "Millenial Finance Zapper"
                                 :chain :bsc
                                 :type :zap

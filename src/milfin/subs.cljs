@@ -49,6 +49,11 @@
    (:zapin-amt (:zapper db))))
 
 (re-frame/reg-sub
+ ::zapper-state
+ (fn [db]
+   (:zapper db)))
+
+(re-frame/reg-sub
  ::zapout-token
  (fn [db]
    (:zapout-token (:zapper db))))
@@ -57,3 +62,8 @@
  ::token-balances
  (fn [db]
    (:token-balances (:contracts-state db))))
+
+(re-frame/reg-sub
+ ::token-allowances
+ (fn [db]
+   (:token-allowances (:contracts-state db))))

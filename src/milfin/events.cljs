@@ -71,6 +71,16 @@
               {:eth-call [window-eth contract "balanceOf" [:token-balances token-addr] [wallet-addr]]})))
 
 (re-frame/reg-event-fx
+ ::get-bep20-allowance
+ [(re-frame/inject-cofx :window-eth) (re-frame/inject-cofx :contracts)]
+ (fn-traced [cofx [_ token-addr wallet-addr contract-addr]]
+            (let [window-eth (:window-eth cofx)
+                  contracts (:contracts cofx)
+                  bep20 (:bep20 (:bsc contracts))
+                  contract (assoc bep20 :addr token-addr)]
+              {:eth-call [window-eth contract "allowance" [:token-allowances token-addr] [wallet-addr contract-addr]]})))
+
+(re-frame/reg-event-fx
  ::approve-bep20
  [(re-frame/inject-cofx :window-eth) (re-frame/inject-cofx :contracts)]
  (fn-traced [cofx [_ token-addr contract-addr]]
@@ -78,7 +88,9 @@
                   contracts (:contracts cofx)
                   bep20 (:bep20 (:bsc contracts))
                   contract (assoc bep20 :addr token-addr)]
-              {:eth-call-write [window-eth contract "approve" [:token-balances token-addr] [contract-addr (.parseEther e/utils "1000000")]]})))
+              {:eth-call-write [window-eth contract "approve" [:pending-token-approvals token-addr] [contract-addr (.toHexString (.parseEther e/utils "1000000000000"))]]})))
+
+
 
 (re-frame/reg-cofx
  :window-eth
@@ -119,7 +131,7 @@
    (go
      (let [eth (<p! (.enable window-eth))
            contract (instantiate-contract-write _contract)
-           result (apply js-invoke contract f a)]
+           result (<p! (apply js-invoke contract f a))]
        (re-frame/dispatch [::store-contract-state keys result])))))
 
 (re-frame/reg-fx

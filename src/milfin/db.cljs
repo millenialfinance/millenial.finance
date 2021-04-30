@@ -9,7 +9,10 @@
    :provider nil
    :contracts-state {}
    :token-balances {}
+   :token-allowances {}
    :zapper {
-            :zapin-token nil
-            :zapout-token nil
+            :zap-direction :in
+            :zapin-amt 0
+            :zapin-token ""
+            :zapout-token ""
             }})
