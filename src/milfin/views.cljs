@@ -106,7 +106,7 @@
                  [:option {:value token-addr} (str (:name token) " (" (:shortname token) ")")])))]
            [:p (str "Balance: " (if @balances (.formatUnits e/utils (or (@balances zapin-token) 0)) 0))]
            [:p (str "Token Address: " zapin-token)]
-           [:p (str "Contract Approved: " (not (== 0 (or (get @allowances zapin-token) 0))))]
+           [:p (str "Contract Approved: " (not (if (get @allowances zapin-token) (.eq (get @allowances zapin-token) 0) true)))]
            [btn {:text "Approve"
                  :on-click #(re-frame/dispatch [::events/approve-bep20 zapin-token (:addr contract)])}]]
 
