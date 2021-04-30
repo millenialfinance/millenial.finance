@@ -172,12 +172,11 @@
 (defn intro
   []
   [:div
-   [:p "We're preparing experiments in various blockchain areas"]
+   [:p "We're preparing experiments in various cross-chain areas"]
    [:ul
     [:li "Collaborative art (NFT DAOs)"]
     [:li "LP AMM Efficiency"]
-    [:li "LP tokens as collateral"]
-    [:li "LP tokens as NFT-like priviledged token"]]
+    [:li "Priviledged LP Tokens (NFT-like benefits for holders)"]]
    [:p "Follow us on " [:a {:href "https://twitter.com/milfinance"} "twitter"] " to keep in touch"]])
 
 (defn body
