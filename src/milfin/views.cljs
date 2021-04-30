@@ -42,7 +42,7 @@
                     stakingToken (bsc-tokens stakingTokenAddr)]
                 [:p (str "Staking: " (:name stakingToken) " (" (:shortname stakingToken) ")")])
               (fetch-pool-info contract kw @addr))
-            (if userInfo [:p (str "Balance: " (.formatUnits e/utils (first userInfo)))])
+            (if userInfo [:p (str "Staked Balance: " (.formatUnits e/utils (first userInfo)))])
             (if pendingReward [:p (str "Pending reward: " (.formatUnits e/utils pendingReward))])
             [btn {:text "Claim"
                   :on-click #(re-frame/dispatch [::events/call-contract-write contract "withdraw" [kw :withdraw poolId] [poolId 0]])}]]]))]]))
