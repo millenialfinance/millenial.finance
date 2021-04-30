@@ -35,8 +35,8 @@
 
 (re-frame/reg-sub
  ::contracts-state
- (fn [db]
-   (:contracts-state db)))
+ (fn [db [_ contract-kw]]
+   (contract-kw (:contracts-state db))))
 
 (re-frame/reg-sub
  ::zapin-token

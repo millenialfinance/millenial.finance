@@ -20,8 +20,9 @@
 (defmethod contract-panel :pool
   [kw contract chainId]
   (let [addr (re-frame/subscribe [::subs/addr])
-        contracts-state (re-frame/subscribe [::subs/contracts-state])
-        contract-state (kw @contracts-state)]
+        _contract-state (re-frame/subscribe [::subs/contracts-state kw])
+        contract-state (into {} @_contract-state)
+        ]
     [window (:name contract)
      [:div
       [status-bar
@@ -30,9 +31,9 @@
        [btn {:text "Refresh" :on-click #(fetch-pool-info contract kw @addr)}]]
       (for [poolId [0 1 2]]
         ^{:key poolId}
-        (let [userInfo (get-in contract-state [:userInfo poolId])
-              pendingReward (get-in contract-state [:pendingReward poolId])
-              poolInfo (get-in contract-state [:poolInfo poolId])]
+        (let [userInfo (get-in contract-state [:userInfo (str poolId)])
+              pendingReward (get-in contract-state [:pendingReward (str poolId)])
+              poolInfo (get-in contract-state [:poolInfo (str poolId)])]
           [:div.pool-info
            [:fieldset
             [:legend (str "Pool " poolId)]
@@ -56,8 +57,15 @@
 
 (defn get-zapper-info
   [contract kw]
-  (doseq [i (take 3 (range))]
+  (doseq [i (take 4 (range))]
     (re-frame/dispatch [::events/call-contract contract "tokens" [kw :tokens i] [i]])))
+
+(defn contract-status-bar
+  [contract chainId on-click]
+  [status-bar
+       (str "Contract Address: " (:addr contract))
+       (when chainId (str "Network: " (:name (chainId->chain chainId))))
+   [btn {:text "Refresh" :on-click on-click}]])
 
 (defmethod contract-panel :zap
   [kw contract chainId]
@@ -65,12 +73,12 @@
         zapin-token (re-frame/subscribe [::subs/zapin-token])
         zapout-token (re-frame/subscribe [::subs/zapout-token])
         zapin-amt (re-frame/subscribe [::subs/zapin-amt])
-        contracts-state (re-frame/subscribe [::subs/contracts-state])
+        contract-state (re-frame/subscribe [::subs/contracts-state kw])
         balances (re-frame/subscribe [::subs/token-balances])
-        contract-state (kw @contracts-state)
-        tokens (:tokens contract-state)]
+        tokens (:tokens @contract-state)]
     [window (:name contract)
      [:div
+      [contract-status-bar contract chainId #(fetch-pool-info contract kw @addr)]
       (if tokens
         [:section
          [:fieldset
@@ -86,7 +94,10 @@
                (let [token (bsc-tokens token-addr)]
                  [:option {:value token-addr} (str (:name token) " (" (:shortname token) ")")])))]
            [:p (str "Balance: " (if @balances (.formatUnits e/utils (or (@balances @zapin-token) 0)) 0))]
-           [:p (str "Token Address: " @zapin-token)]]
+           [:p (str "Token Address: " @zapin-token)]
+           [btn {:text "Approve"
+                 :on-click #(re-frame/dispatch-sync [::events/approve-bep20 @zapin-token (:addr contract)])}]]
+
           ]
          [:fieldset
           [:legend "Zapping To"]
@@ -121,7 +132,7 @@
   []
   (let [contracts (re-frame/subscribe [::subs/contracts])
         chainId (re-frame/subscribe [::subs/chainId])
-        contracts-state (re-frame/subscribe [::subs/contracts-state])]
+        ]
     [:div
      (doall
       (for [[k v] @contracts]

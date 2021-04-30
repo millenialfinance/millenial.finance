@@ -70,6 +70,16 @@
                   contract (assoc bep20 :addr token-addr)]
               {:eth-call [window-eth contract "balanceOf" [:token-balances token-addr] [wallet-addr]]})))
 
+(re-frame/reg-event-fx
+ ::approve-bep20
+ [(re-frame/inject-cofx :window-eth) (re-frame/inject-cofx :contracts)]
+ (fn-traced [cofx [_ token-addr contract-addr]]
+            (let [window-eth (:window-eth cofx)
+                  contracts (:contracts cofx)
+                  bep20 (:bep20 (:bsc contracts))
+                  contract (assoc bep20 :addr token-addr)]
+              {:eth-call-write [window-eth contract "approve" [:token-balances token-addr] [contract-addr (.parseEther e/utils "1000000")]]})))
+
 (re-frame/reg-cofx
  :window-eth
  (fn [cofx]
@@ -136,6 +146,6 @@
 (defn fetch-pool-info
   [contract kw addr]
   (doseq [poolId [0 1 2]]
-    (re-frame/dispatch-sync [::call-contract contract "userInfo" [kw :userInfo poolId] [poolId addr]])
-    (re-frame/dispatch-sync [::call-contract contract (:pending-reward-fn-name contract) [kw :pendingReward poolId] [poolId addr]])
-    (re-frame/dispatch-sync [::call-contract contract "poolInfo" [kw :poolInfo poolId] [poolId]])))
+    (re-frame/dispatch [::call-contract contract "userInfo" [kw :userInfo (str poolId)] [poolId addr]])
+    (re-frame/dispatch [::call-contract contract (:pending-reward-fn-name contract) [kw :pendingReward (str poolId)] [poolId addr]])
+    (re-frame/dispatch [::call-contract contract "poolInfo" [kw :poolInfo (str poolId)] [poolId]])))
