@@ -2,18 +2,18 @@
   (:require
    [re-frame.core :as re-frame]
    [milfin.subs :as subs]
-   [milfin.tokens :refer [bsc-tokens]]
+   [milfin.tokens :as tokenlist]
    [milfin.events :as events :refer [fetch-pool-info]]
    [milfin.components :refer [window btn status-bar]]
    [milfin.contracts :refer [parse-abistr]]
    [milfin.ethers :as e]
-   [milfin.chains :refer [chainId->chain]]))
+   [milfin.chains :refer [chainId->chain]]
+   [clojure.string :as str]))
 
 (defn wallet-btn
   []
   [btn {:text "Connect Wallet"
         :on-click #(re-frame/dispatch-sync [::events/initialize-ether])}])
-
 
 (defmulti contract-panel
   (fn [kw contract chainId] (:type contract)))
@@ -22,8 +22,7 @@
   [kw contract chainId]
   (let [addr (re-frame/subscribe [::subs/addr])
         _contract-state (re-frame/subscribe [::subs/contracts-state kw])
-        contract-state (into {} @_contract-state)
-        ]
+        contract-state (into {} @_contract-state)]
     [window (:name contract)
      [:div
       [status-bar
@@ -56,99 +55,83 @@
   [kw contract chainId]
   nil)
 
-(defn get-zapper-info
-  [contract kw]
-  (doseq [i (take 4 (range))]
-    (re-frame/dispatch [::events/call-contract contract "tokens" [kw :tokens i] [i]])))
-
 (defn contract-status-bar
   [contract chainId on-click]
   [status-bar
-       (str "Contract Address: " (:addr contract))
-       (when chainId (str "Network: " (:name (chainId->chain chainId))))
-   [btn {:text "Refresh" :on-click on-click}]])
+   (str "Contract Address: " (:addr contract))
+   (when chainId (str "Network: " (:name (chainId->chain chainId))))
+   (when on-click [btn {:text "Refresh" :on-click on-click}])])
 
-(defmethod contract-panel :zap
-  [kw contract chainId]
-  (let [addr (re-frame/subscribe [::subs/addr])
-        zapper-state (re-frame/subscribe[::subs/zapper-state])
-        {:keys [zapin-token zapout-token zapin-amt zap-direction]} @zapper-state
-        contract-state (re-frame/subscribe [::subs/contracts-state kw])
-        balances (re-frame/subscribe [::subs/token-balances])
-        allowances (re-frame/subscribe [::subs/token-allowances])
-        tokens (:tokens @contract-state)]
-    [window (:name contract)
-     [:div
-      [contract-status-bar contract chainId #(doall
-                                              (for [token tokens]
-                                                (do
-                                                  (re-frame/dispatch [::events/get-bep20-allowance (second token) @addr (:addr contract)])
-                                                  (re-frame/dispatch [::events/get-bep20-bal (second token) @addr]))))]
-      (if tokens
-        [:section
-         [:fieldset
-          [:legend "Zapping From"]
-          [:div
-           [:select {:value (or zapin-token "")
-                     :on-change #(do
-                                  (let [token (bsc-tokens (.. % -target -value))
-                                        isLP (= :lp (:type token))]
-                                    (if isLP
-                                      (re-frame/dispatch [::events/store-in [:zapper :zap-direction] :out])
-                                      (re-frame/dispatch [::events/store-in [:zapper :zap-direction] :in])))
-                                  (re-frame/dispatch [::events/get-bep20-allowance (.. % -target -value) @addr (:addr contract)])
-                                  (re-frame/dispatch [::events/store-in [:zapper :zapin-token] (.. % -target -value)])
-                                  (re-frame/dispatch [::events/get-bep20-bal (.. % -target -value) @addr]))}
-            [:option {:value ""} "-Select-"]
-            (doall
-             (for [token-addr (map #(.-val %) tokens)]
-               (let [token (bsc-tokens token-addr)]
-                 [:option {:value token-addr} (str (:name token) " (" (:shortname token) ")")])))]
-           [:p (str "Balance: " (if @balances (.formatUnits e/utils (or (@balances zapin-token) 0)) 0))]
-           [:p (str "Token Address: " zapin-token)]
-           [:p (str "Contract Approved: " (not (if (get @allowances zapin-token) (.eq (get @allowances zapin-token) 0) true)))]
-           [btn {:text "Approve"
-                 :on-click #(re-frame/dispatch [::events/approve-bep20 zapin-token (:addr contract)])}]]
+(defn handle-zapin-token-change
+  [token-addr wallet-addr contract-addr chainId]
+  (let [tokens (tokenlist/tokens chainId)
+        token (tokens token-addr)
+        type (:type token)]
+    (case type
+      :lp (do
+            (re-frame/dispatch [::events/get-erc20-allowance token-addr wallet-addr contract-addr])
+            (re-frame/dispatch [::events/get-erc20-bal token-addr wallet-addr])
+            (re-frame/dispatch [::events/store-in [:zapper :zap-direction] :out]))
+      :erc20 (do
+               (re-frame/dispatch [::events/store-in [:zapper :zap-direction] :in])
+               (re-frame/dispatch [::events/get-erc20-allowance token-addr wallet-addr contract-addr])
+               (re-frame/dispatch [::events/get-erc20-bal token-addr wallet-addr]))
+      :native (do
+                (re-frame/dispatch [::events/store-in [:zapper :zap-direction] :in])
+                (re-frame/dispatch [::events/fetch-balance]))))
+  (re-frame/dispatch [::events/store-in [:zapper :zapin-token] token-addr]))
 
-          ]
-         [:fieldset
-          [:legend "Zapping To"]
-          [:div
-           [:select {:value (or zapout-token "")
-                     :on-change #(do
-                                  (js/console.log %)
-                                  (re-frame/dispatch [::events/store-in [:zapper :zapout-token] (.. % -target -value)])
-                                  (re-frame/dispatch [::events/get-bep20-bal (.. % -target -value) @addr]))}
-            [:option {:value ""} "-Select-"]
-            (doall
-             (for [token (map bsc-tokens (map #(.-val %) tokens))]
-               (let [isLP (= :lp (:type token))
-                     zapping-in (= :in zap-direction)
-                     addr (:address token)]
-                 (when (or (and isLP zapping-in) (and (not isLP) (not zapping-in)))
-                   [:option {:value addr} (str (:name token) " (" (:shortname token) ")")]))))]
-           [:p (str "Balance: " (if @balances (.formatUnits e/utils (or (@balances zapout-token) 0)) 0))]
-           [:p (str "Token Address: " zapout-token)]]
-          ]
-         [:section.component.zap-row
-          [:div.field-row
-           [:label {:for "zapin-amt"} "Amount"]
-           [:input {:id "zapin-amt" :type "text" :value zapin-amt :on-change #(re-frame/dispatch [::events/store-in [:zapper :zapin-amt] (.. % -target -value)])}]]
-          [:div.zap-btn
-           [btn {:text "Max"
-                 :on-click #(re-frame/dispatch [::events/store-in [:zapper :zapin-amt] (.formatEther e/utils (@balances zapin-token))])}]]
-          [:div.zap-btn
-           [btn {:text "Zap"
-                 :on-click #(re-frame/dispatch [::events/call-contract-write contract (if (= :in zap-direction ) "zapInToken" "zapOutToken") [kw (if (= (:in zap-direction)) :zapInToken :zapOutToken) zapin-token zapout-token] [zapin-token (.parseEther e/utils zapin-amt) zapout-token]])}]]]
+(defn refresh-zapper
+  [tokens wallet-addr contract-addr]
+  (for [token tokens]
+    (do
+      (re-frame/dispatch [::events/get-erc20-allowance token wallet-addr contract-addr])
+      (re-frame/dispatch [::events/get-erc20-bal token wallet-addr]))))
 
-         ]
-        (get-zapper-info contract kw))]]))
+(defn handle-zapout-token-change
+  [token-addr wallet-addr]
+  (re-frame/dispatch [::events/store-in [:zapper :zapout-token] token-addr])
+  (re-frame/dispatch [::events/get-erc20-bal token-addr wallet-addr]))
+
+(defn handle-zap
+  [contract kw zap-direction zapin-token zapin-amt zapout-token chainId]
+  (let [tokens (tokenlist/tokens chainId)
+        zapin-type (:type (tokens zapin-token))
+        zapout-type (:type (tokens zapout-token))
+        is-native-send (= :native zapin-type)
+        fn-name (case zap-direction
+                  :in (if (= zapin-type :native)
+                        "zapIn"
+                        "zapInToken")
+                  :out (if (= zapout-type :native)
+                         "zapOut"
+                         "zapOutToken"))
+        router-addr (case zap-direction
+                      :in (:router-addr (tokens zapout-token))
+                      :out (:router-addr (tokens zapin-token)))
+        fn-kw (keyword fn-name)
+        parsed-amt (.parseEther e/utils zapin-amt)
+        ks [kw fn-kw zapin-token zapout-token]]
+    (case zap-direction
+      :in (if (= zapin-type :native)
+            (re-frame/dispatch [::events/call-contract-write-paid parsed-amt contract "zapIn" [kw :zapIn zapin-token zapout-token] [zapout-token router-addr]])
+            (re-frame/dispatch [::events/call-contract-write contract "zapInToken" [kw :zapInToken zapin-token zapout-token] [zapin-token parsed-amt zapout-token router-addr]]))
+      :out (if (= zapout-type :native)
+             (do
+               (js/console.log (map str [zapin-token parsed-amt router-addr]))
+               (re-frame/dispatch [::events/call-contract-write contract "zapOut" [kw :zapIn zapin-token zapout-token] [zapin-token parsed-amt router-addr]]))
+             (do
+               (js/console.log [zapin-token parsed-amt zapout-token router-addr])
+               (re-frame/dispatch [::events/call-contract-write contract "zapOutToken" [kw :zapOutToken zapin-token zapout-token] [zapin-token parsed-amt zapout-token router-addr]]))))))
+
+(defn xnor
+  [a b]
+  (or (and a b) (and (not a) (not b))))
 
 (defn contracts-panel
   []
   (let [contracts (re-frame/subscribe [::subs/contracts])
-        chainId (re-frame/subscribe [::subs/chainId])
-        ]
+        chainId (re-frame/subscribe [::subs/chainId])]
     [:div
      (doall
       (for [[k v] @contracts]
@@ -168,6 +151,72 @@
        (str "Network: " network-name)
        (str "Balance: " formatted-balance)]
       [wallet-btn])))
+
+(defmethod contract-panel :milzap
+  [kw contract]
+  (let [chainId (re-frame/subscribe [::subs/chainId])
+        addr (re-frame/subscribe [::subs/addr])
+        token-addrs (re-frame/subscribe [::subs/enabled-tokens @chainId])
+        chain-tokens (tokenlist/tokens @chainId)
+        zapper-state (re-frame/subscribe [::subs/zapper-state])
+        {:keys [zapin-token zapout-token zapin-amt zap-direction]} @zapper-state
+        native-balance (re-frame/subscribe [::subs/balance])
+        balances (re-frame/subscribe [::subs/token-balances])
+        allowances (re-frame/subscribe [::subs/token-allowances])
+        native-token (chain-tokens "0x0")]
+    [window (:name contract)
+     [:div
+      [contract-status-bar contract @chainId #(refresh-zapper @token-addrs @addr (:addr contract))]
+      [:section
+       [:fieldset
+        [:legend "Zapping From"]
+        [:div
+         [:select {:value (or zapin-token "")
+                   :on-change #(handle-zapin-token-change (.. % -target -value) @addr (:addr contract) @chainId)}
+          [:option {:value ""} "-Select-"]
+          [:option {:value "0x0"} (str (:name native-token) " (" (:shortname native-token) ")")]
+          (doall
+           (for [t @token-addrs]
+             (let [token (chain-tokens t)]
+               [:option {:value t} (str (:name token) " (" (:shortname token) ")")])))]
+         [:p (str "Balance: "
+                    (if (= "0x0" zapin-token)
+                      (.formatUnits e/utils (or @native-balance 0))
+                      (if @balances (.formatUnits e/utils (or (@balances zapin-token) 0)) 0)))]
+         [:p (str "Token Address: " zapin-token)]
+         (when (not (= "0x0" zapin-token))
+           (if (not (if (get @allowances zapin-token) (.eq (get @allowances zapin-token) 0) true))
+             [:p "Contract Approved"]
+             [btn {:text "Approve"
+                   :on-click #(re-frame/dispatch [::events/approve-erc20 zapin-token (:addr contract)])}]
+             ))
+         ]]
+       [:fieldset
+        [:legend "Zapping To"]
+        [:div
+         [:select {:value (or zapout-token "")
+                   :on-change #(handle-zapout-token-change (.. % -target -value) @addr (:addr contract) @chainId)}
+          [:option {:value ""} "-Select-"]
+          (when (= zap-direction :out)
+            [:option {:value "0x0"} (str (:name native-token) " (" (:shortname native-token) ")")])
+          (doall
+           (for [token (map chain-tokens @token-addrs)]
+             (let [isLP (= :lp (:type token))
+                   zapping-in (= :in zap-direction)
+                   addr (:address token)]
+               (when (xnor isLP zapping-in)
+                 [:option {:value addr} (str (:name token) " (" (:shortname token) ")")]))))]]]]
+        [:section.component.zap-row
+          [:div.field-row
+           [:label {:for "zapin-amt"} "Amount"]
+           [:input {:id "zapin-amt" :type "text" :value zapin-amt :on-change #(re-frame/dispatch [::events/store-in [:zapper :zapin-amt] (.. % -target -value)])}]]
+          [:div.zap-btn
+           [btn {:text "Max"
+                 :on-click #(re-frame/dispatch [::events/store-in [:zapper :zapin-amt] (.formatEther e/utils (@balances zapin-token))])}]]
+          [:div.zap-btn
+           [btn {:text "Zap"
+                 :on-click #(handle-zap contract kw zap-direction zapin-token zapin-amt zapout-token @chainId)}]]]
+      ]]))
 
 (defn intro
   []

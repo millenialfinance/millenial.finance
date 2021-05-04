@@ -762,7 +762,7 @@
   :network "mainnet",
   :infoURL "https://www.mintme.com",
   :networkId 37480}
- {:rpc ["https://rpc.fantom.network" "https://fantomscan.io/rpc"],
+ {:rpc ["https://rpcapi.fantom.network" "https://fantomscan.io/rpc"],
   :nativeCurrency {:name "Fantom", :symbol "FTM", :decimals 18},
   :explorers [],
   :name "Fantom Opera",
@@ -1763,4 +1763,4 @@
 )
 
 (def chainId->chain
-  (into {} (map (fn [chain] [(:chainId chain) chain]) chains)))
+  (reduce into {} (map (fn [chain] {(:chainId chain) chain}) chains)))

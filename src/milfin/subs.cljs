@@ -67,3 +67,8 @@
  ::token-allowances
  (fn [db]
    (:token-allowances (:contracts-state db))))
+
+(re-frame/reg-sub
+ ::enabled-tokens
+ (fn [db [_ chainId]]
+   (get (:enabled-tokens db) chainId)))
