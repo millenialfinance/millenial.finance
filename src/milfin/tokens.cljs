@@ -42,10 +42,29 @@
                                                  :type :erc20}
    "0x84311ecc54d7553378c067282940b0fdfb913675" {:name "ICE/FTM SushiSwap LP Token"
                                                  :address "0x84311ecc54d7553378c067282940b0fdfb913675"
-                                                 :shortname "ICE/FTM S-LP"
+                                                 :shortname "ICE/FTM Sushi LP"
                                                  :type :lp
                                                  :router-addr "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506"
-                                                 :exchange :sushi}})
+                                                 :exchange :sushi}
+    "0x5cc61a78f164885776aa610fb0fe1257df78e59b" {:name "Spirit Token"
+                                                 :address "0x5cc61a78f164885776aa610fb0fe1257df78e59b"
+                                                 :shortname "SPIRIT"
+                                                 :type :erc20
+                                                 :router-addr "0x30748322B6E34545DBe0788C421886AEB5297789"}
+   "0x30748322b6e34545dbe0788c421886aeb5297789" {:name "SPIRIT/FTM SpiritSwap LP Token"
+                                                 :address "0x30748322b6e34545dbe0788c421886aeb5297789"
+                                                 :shortname "SPIRIT/FTM Spirit LP"
+                                                 :type :lp
+                                                 :router-addr "0x16327e3fbdaca3bcf7e38f5af2599d2ddc33ae52"
+                                                 }
+   "0x623ee4a7f290d11c11315994db70fb148b13021d" {:name "ICE/FTM SpookySwap LP Token"
+                                                 :address "0x623ee4a7f290d11c11315994db70fb148b13021d"
+                                                 :shortname "ICE/FTM Spooky LP"
+                                                 :type :lp
+                                                 :router-addr "0xf491e7b69e4244ad4002bc14e878a34207e38c29"
+                                                 }
+
+   })
 
 
 (def tokens

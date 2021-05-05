@@ -72,3 +72,13 @@
  ::enabled-tokens
  (fn [db [_ chainId]]
    (get (:enabled-tokens db) chainId)))
+
+(re-frame/reg-sub
+ ::enabled-routers
+ (fn [db [_ chainId]]
+   (get (:enabled-routers db) chainId)))
+
+(re-frame/reg-sub
+ ::migrator-state
+ (fn [db]
+   (:migrator db)))
