@@ -5,7 +5,7 @@ body {
 }
 
 .status-bar {
-  margin: 0px 1px;
+  margin: 3px 1px;
   display: flex;
   gap: 1px;
 }
@@ -28,7 +28,7 @@ body {
   box-shadow: inset -1px -1px  #dfdfdf,
     inset 1px 1px #808080;
   flex-grow: 1;
-  padding: 2px 3px;
+  padding: 2px 5px;
   margin: 0;
 }
 
@@ -103,5 +103,6 @@ h4 {
 
 p {
   max-width: 50rem;
+  font-size: 120%;
   line-height: 1.5;
 }
