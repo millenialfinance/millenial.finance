@@ -24,6 +24,10 @@ body {
   margin-left: .25rem;
 }
 
+.rowfields {
+  margin-right: .3rem;
+}
+
 .status-bar-field {
   box-shadow: inset -1px -1px  #dfdfdf,
     inset 1px 1px #808080;
@@ -103,6 +107,6 @@ h4 {
 
 p {
   max-width: 50rem;
-  font-size: 120%;
+  font-size: 1.2em;
   line-height: 1.5;
 }

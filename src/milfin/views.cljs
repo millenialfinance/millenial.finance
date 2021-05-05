@@ -40,19 +40,20 @@ chainId (re-frame/subscribe [::subs/chainId])
      [:div
       [contract-status-bar contract @chainId #(refresh-zapper @token-addrs @addr (:addr contract))]
       [:section.component
-       [:fieldset
-        [:legend "Liquidity Token to Migrate"]
-        [:div
-         [:select {:value (or from "")
-                   :on-change #(handle-migrate-in-change (.. % -target -value) @addr (:addr contract) @chainId)}
-          [:option {:value ""} "-Select-"]
-          (doall
-           (for [t @token-addrs]
-             (let [token (chain-tokens t)]
-               (when (= (:type token) :lp)
-                 [:option {:value t} (:name token)]))))]
+       [:div.rowfields
+        [:fieldset
+         [:legend "Liquidity Token to Migrate"]
+         [:div
+          [:select {:value (or from "")
+                    :on-change #(handle-migrate-in-change (.. % -target -value) @addr (:addr contract) @chainId)}
+           [:option {:value ""} "-Select-"]
+           (doall
+            (for [t @token-addrs]
+              (let [token (chain-tokens t)]
+                (when (= (:type token) :lp)
+                  [:option {:value t} (:name token)]))))]
 
-         ]]
+          ]]]
         [:fieldset
         [:legend "Destination"]
         [:div
