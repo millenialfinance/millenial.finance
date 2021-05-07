@@ -50,7 +50,7 @@ chainId (re-frame/subscribe [::subs/chainId])
            (doall
             (for [t @token-addrs]
               (let [token (chain-tokens t)]
-                (when (= (:type token) :lp)
+                (when (and (= (:type token) :lp) (not (= :spirit (:exchange token))))
                   [:option {:value t} (:name token)]))))]
 
           ]]]
@@ -61,7 +61,7 @@ chainId (re-frame/subscribe [::subs/chainId])
                    :on-change #(handle-migrate-out-change (.. % -target -value) )}
           (doall
            (for [[router-addr router] (routers :ftm)]
-             [:option {:value router-addr} (:name router)]))]
+             (when (= "SpiritSwap" (:name router)) [:option {:value router-addr} (:name router)])))]
 
          ]]
        ]
@@ -167,7 +167,7 @@ chainId (re-frame/subscribe [::subs/chainId])
 (defn refresh-zapper
   [tokens wallet-addr contract-addr]
   (doall
-   (for [token tokens]
+   (for [token (filter #(not (= "0x0") (:address %)) tokens)]
      (do
        (re-frame/dispatch-sync [::events/get-erc20-allowance token wallet-addr contract-addr])
        (re-frame/dispatch-sync [::events/get-erc20-bal token wallet-addr])))))
@@ -244,6 +244,7 @@ chainId (re-frame/subscribe [::subs/chainId])
         balances (re-frame/subscribe [::subs/token-balances])
         allowances (re-frame/subscribe [::subs/token-allowances])
         native-token (chain-tokens "0x0")]
+    (js/setInterval #(refresh-zapper @token-addrs @addr (:addr contract)) 5000)
     [window (:name contract)
      [:div
       [contract-status-bar contract @chainId #(refresh-zapper @token-addrs @addr (:addr contract))]
@@ -258,7 +259,7 @@ chainId (re-frame/subscribe [::subs/chainId])
           (doall
            (for [t @token-addrs]
              (let [token (chain-tokens t)]
-               [:option {:value t} (str (:name token) " (" (:shortname token) ")")])))]
+               (when (or (not (= :lp (:type token))) (= :spirit (:exchange token)))[:option {:value t} (str (:name token) " (" (:shortname token) ")")]))))]
          [:p (str "Balance: "
                     (if (= "0x0" zapin-token)
                       (.formatUnits e/utils (or @native-balance 0))
@@ -281,11 +282,12 @@ chainId (re-frame/subscribe [::subs/chainId])
             [:option {:value "0x0"} (str (:name native-token) " (" (:shortname native-token) ")")])
           (doall
            (for [token (map chain-tokens @token-addrs)]
-             (let [isLP (= :lp (:type token))
+             (let [isLP (= :lp (:type token) )
+                   isSpirit (= :spirit (:exchange token))
                    zapping-in (= :in zap-direction)
                    addr (:address token)]
                (when (xnor isLP zapping-in)
-                 [:option {:value addr} (str (:name token) " (" (:shortname token) ")")]))))]]]]
+                 (when (and (or isSpirit (not isLP)) (not (= "0x0" (:address token)))) [:option {:value addr} (str (:name token) " (" (:shortname token) ")")])))))]]]]
         [:section.component.zap-row
           [:div.field-row
            [:label {:for "zapin-amt"} "Amount"]
@@ -318,5 +320,5 @@ chainId (re-frame/subscribe [::subs/chainId])
   (let [name (re-frame/subscribe [::subs/addr])]
     [:div
      [window "welcome" [body]]
-     [migrator-panel]
+     (when (not (= "0x0" @name)) [migrator-panel])
      [contracts-panel]]))
