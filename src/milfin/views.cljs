@@ -11,6 +11,8 @@
    [milfin.chains :refer [chainId->chain]]
    [clojure.string :as str]))
 
+(def restricted false)
+
 (defn wallet-btn
   []
   [btn {:text "Connect Wallet"
@@ -50,7 +52,7 @@ chainId (re-frame/subscribe [::subs/chainId])
            (doall
             (for [t @token-addrs]
               (let [token (chain-tokens t)]
-                (when (and (= (:type token) :lp) (not (= :spirit (:exchange token))))
+                (when (and (= (:type token) :lp) (or (not restricted) (not (= :spirit (:exchange token)))))
                   [:option {:value t} (:name token)]))))]
 
           ]]]
@@ -61,7 +63,7 @@ chainId (re-frame/subscribe [::subs/chainId])
                    :on-change #(handle-migrate-out-change (.. % -target -value) )}
           (doall
            (for [[router-addr router] (routers :ftm)]
-             (when (= "SpiritSwap" (:name router)) [:option {:value router-addr} (:name router)])))]
+             (when (or (not restricted) (= "SpiritSwap" (:name router))) [:option {:value router-addr} (:name router)])))]
 
          ]]
        ]
@@ -259,7 +261,7 @@ chainId (re-frame/subscribe [::subs/chainId])
           (doall
            (for [t @token-addrs]
              (let [token (chain-tokens t)]
-               (when (or (not (= :lp (:type token))) (= :spirit (:exchange token)))[:option {:value t} (str (:name token) " (" (:shortname token) ")")]))))]
+               (when (or (not (= :lp (:type token))) (= :spirit (:exchange token)) (not restricted))[:option {:value t} (str (:name token) " (" (:shortname token) ")")]))))]
          [:p (str "Balance: "
                     (if (= "0x0" zapin-token)
                       (.formatUnits e/utils (or @native-balance 0))
@@ -287,7 +289,7 @@ chainId (re-frame/subscribe [::subs/chainId])
                    zapping-in (= :in zap-direction)
                    addr (:address token)]
                (when (xnor isLP zapping-in)
-                 (when (and (or isSpirit (not isLP)) (not (= "0x0" (:address token)))) [:option {:value addr} (str (:name token) " (" (:shortname token) ")")])))))]]]]
+                 (when (and (or isSpirit (not isLP) (not restricted)) (not (= "0x0" (:address token)))) [:option {:value addr} (str (:name token) " (" (:shortname token) ")")])))))]]]]
         [:section.component.zap-row
           [:div.field-row
            [:label {:for "zapin-amt"} "Amount"]
