@@ -52,9 +52,9 @@
                                                 :address "0xAd84341756Bf337f5a0164515b1f6F993D194E1f"
                                                  :shortname "fUSD"
                                                  :type :erc20}
-   "0x84311ecc54d7553378c067282940b0fdfb913675" {:name "ICE/FTM SushiSwap LP Token"
+   "0x84311ecc54d7553378c067282940b0fdfb913675" {:name "FTM/ICE SushiSwap LP Token"
                                                  :address "0x84311ecc54d7553378c067282940b0fdfb913675"
-                                                 :shortname "ICE/FTM Sushi LP"
+                                                 :shortname "FTM/ICE Sushi LP"
                                                  :type :lp
                                                  :router-addr "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506"
                                                  :exchange :sushi}
@@ -70,16 +70,16 @@
                                                  :exchange :spirit
                                                  :router-addr "0x16327e3fbdaca3bcf7e38f5af2599d2ddc33ae52"
                                                  }
-   "0x623ee4a7f290d11c11315994db70fb148b13021d" {:name "ICE/FTM SpookySwap LP Token"
+   "0x623ee4a7f290d11c11315994db70fb148b13021d" {:name "FTM/ICE SpookySwap LP Token"
                                                  :address "0x623ee4a7f290d11c11315994db70fb148b13021d"
-                                                 :shortname "ICE/FTM Spooky LP"
+                                                 :shortname "FTM/ICE Spooky LP"
                                                  :type :lp
                                                  :exchange :spooky
                                                  :router-addr "0xf491e7b69e4244ad4002bc14e878a34207e38c29"
                                                  }
-    "0x936d23c83c2469f6a14b9f5beaec13879598a5ac" {:name "ICE/FTM SpiritSwap LP Token"
+    "0x936d23c83c2469f6a14b9f5beaec13879598a5ac" {:name "FTM/ICE SpiritSwap LP Token"
                                                  :address "0x936d23c83c2469f6a14b9f5beaec13879598a5ac"
-                                                 :shortname "ICE/FTM Spirit LP"
+                                                 :shortname "FTM/ICE Spirit LP"
                                                  :type :lp
                                                  :exchange :spirit
                                                  :router-addr "0x16327e3fbdaca3bcf7e38f5af2599d2ddc33ae52"
@@ -112,6 +112,118 @@
                                                  :type :lp
                                                  :exchange :spirit
                                                  :router-addr "0x16327e3fbdaca3bcf7e38f5af2599d2ddc33ae52"
+                                                 }
+   "0xfdb9ab8b9513ad9e419cf19530fee49d412c3ee3"  {:name "FTM/wBTC SpookySwap LP Token"
+                                                 :address "0xfdb9ab8b9513ad9e419cf19530fee49d412c3ee3"
+                                                 :shortname "FTM/wBTC Spooky LP"
+                                                 :type :lp
+                                                 :exchange :spooky
+                                                 :router-addr "0xf491e7b69e4244ad4002bc14e878a34207e38c29"
+                                                 }
+   "0xf0702249f4d3a25cd3ded7859a165693685ab577"  {:name "FTM/wETH SpookySwap LP Token"
+                                                  :address "0xf0702249f4d3a25cd3ded7859a165693685ab577"
+                                                 :shortname "FTM/wETH Spooky LP"
+                                                 :type :lp
+                                                 :exchange :spooky
+                                                 :router-addr "0xf491e7b69e4244ad4002bc14e878a34207e38c29"
+                                                 }
+   "0x2b4c76d0dc16be1c31d4c1dc53bf9b45987fc75c"  {:name "USDC/FTM SpookySwap LP Token"
+                                                  :address "0x2b4c76d0dc16be1c31d4c1dc53bf9b45987fc75c"
+                                                 :shortname "USDC/FTM Spooky LP"
+                                                 :type :lp
+                                                 :exchange :spooky
+                                                 :router-addr "0xf491e7b69e4244ad4002bc14e878a34207e38c29"
+                                                 }
+   "0x5965e53aa80a0bcf1cd6dbdd72e6a9b2aa047410"  {:name "fUSDT/FTM SpookySwap LP Token"
+                                                  :address "0x5965e53aa80a0bcf1cd6dbdd72e6a9b2aa047410"
+                                                 :shortname "fUSDT/FTM Spooky LP"
+                                                 :type :lp
+                                                 :exchange :spooky
+                                                 :router-addr "0xf491e7b69e4244ad4002bc14e878a34207e38c29"
+                                                 }
+   "0xebf374bb21d83cf010cc7363918776adf6ff2bf6"  {:name "FTM/AAVE SpookySwap LP Token"
+                                                  :address "0xebf374bb21d83cf010cc7363918776adf6ff2bf6"
+                                                 :shortname "FTM/AAVE Spooky LP"
+                                                 :type :lp
+                                                 :exchange :spooky
+                                                 :router-addr "0xf491e7b69e4244ad4002bc14e878a34207e38c29"
+                                                 }
+   "0x1c94665fd3ecfa969feda7ed01e35522e6982022"  {:name "FTM/BADGER SpookySwap LP Token"
+                                                  :address "0x1c94665fd3ecfa969feda7ed01e35522e6982022"
+                                                 :shortname "FTM/BADGER Spooky LP"
+                                                 :type :lp
+                                                 :exchange :spooky
+                                                 :router-addr "0xf491e7b69e4244ad4002bc14e878a34207e38c29"
+                                                 }
+   "0x91b39d5584e2a7dc829f696235742cc293f2e8cf"  {:name "FTM/BADGER SpookySwap LP Token"
+                                                  :address "0x91b39d5584e2a7dc829f696235742cc293f2e8cf"
+                                                 :shortname "FTM/BADGER Spooky LP"
+                                                 :type :lp
+                                                 :exchange :spooky
+                                                 :router-addr "0xf491e7b69e4244ad4002bc14e878a34207e38c29"
+                                                 }
+   "0x5dc7848bf215f1d99f2af3d2bf78fcdf238ee34b"  {:name "FTM/COVER SpookySwap LP Token"
+                                                  :address "0x5dc7848bf215f1d99f2af3d2bf78fcdf238ee34b"
+                                                  :shortname "FTM/COVER Spooky LP"
+                                                  :type :lp
+                                                  :exchange :spooky
+                                                  :router-addr "0xf491e7b69e4244ad4002bc14e878a34207e38c29"
+                                                 }
+   "0xb471ac6ef617e952b84c6a9ff5de65a9da96c93b"  {:name "CRV/FTM SpookySwap LP Token"
+                                                  :address  "0xb471ac6ef617e952b84c6a9ff5de65a9da96c93b"
+                                                  :shortname "FTM/COVER Spooky LP"
+                                                  :type :lp
+                                                  :exchange :spooky
+                                                  :router-addr "0xf491e7b69e4244ad4002bc14e878a34207e38c29"
+                                                 }
+   "0xe120ffbda0d14f3bb6d6053e90e63c572a66a428" {:name "FTM/DAI SpookySwap LP Token"
+                                                 :address "0xe120ffbda0d14f3bb6d6053e90e63c572a66a428"
+                                                  :shortname "FTM/DAI Spooky LP"
+                                                  :type :lp
+                                                  :exchange :spooky
+                                                  :router-addr "0xf491e7b69e4244ad4002bc14e878a34207e38c29"
+                                                 }
+   "0x89d9bc2f2d091cfbfc31e333d6dc555ddbc2fd29" {:name "FTM/LINK SpookySwap LP Token"
+                                                 :address "0x89d9bc2f2d091cfbfc31e333d6dc555ddbc2fd29"
+                                                  :shortname "FTM/LINK Spooky LP"
+                                                  :type :lp
+                                                  :exchange :spooky
+                                                  :router-addr "0xf491e7b69e4244ad4002bc14e878a34207e38c29"
+                                                 }
+   "0x01424c64c4744769299019be64f3d82898ff28f3" {:name "FTM/SFI SpookySwap LP Token"
+                                                 :address "0x01424c64c4744769299019be64f3d82898ff28f3"
+                                                  :shortname "FTM/SFI Spooky LP"
+                                                  :type :lp
+                                                  :exchange :spooky
+                                                  :router-addr "0xf491e7b69e4244ad4002bc14e878a34207e38c29"
+                                                 }
+   "0x06d173628be105fe81f1c82c9979ba79ebcafcb7" {:name "FTM/SNX SpookySwap LP Token"
+                                                 :address "0x06d173628be105fe81f1c82c9979ba79ebcafcb7"
+                                                 :shortname "FTM/SNX Spooky LP"
+                                                 :type :lp
+                                                 :exchange :spooky
+                                                 :router-addr "0xf491e7b69e4244ad4002bc14e878a34207e38c29"
+                                                 }
+   "0xf84e313b36e86315af7a06ff26c8b20e9eb443c3"  {:name "FTM/SUSHI SpookySwap LP Token"
+                                                  :address "0xf84e313b36e86315af7a06ff26c8b20e9eb443c3"
+                                                 :shortname "FTM/SUSHI Spooky LP"
+                                                 :type :lp
+                                                 :exchange :spooky
+                                                 :router-addr "0xf491e7b69e4244ad4002bc14e878a34207e38c29"
+                                                 }
+   "0xbf4d61d4cec3a9dff7452d8987e1cc2943e2eb4c" {:name "FTM/YFI SpookySwap LP Token"
+                                                 :address "0xbf4d61d4cec3a9dff7452d8987e1cc2943e2eb4c"
+                                                 :shortname "FTM/YFI Spooky LP"
+                                                 :type :lp
+                                                 :exchange :spooky
+                                                 :router-addr "0xf491e7b69e4244ad4002bc14e878a34207e38c29"
+                                                 }
+"0xb77b223490e1f5951ec79a8d09db9eab2adcb934"   {:name "FTM/CREAM SpookySwap LP Token"
+    :address "0xb77b223490e1f5951ec79a8d09db9eab2adcb934"
+                                                 :shortname "FTM/YFI Spooky LP"
+                                                 :type :lp
+                                                 :exchange :spooky
+                                                 :router-addr "0xf491e7b69e4244ad4002bc14e878a34207e38c29"
                                                  }
    })
 

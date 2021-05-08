@@ -1,11 +1,13 @@
 (ns milfin.ethers
   (:require ["ethers" :as ethers-lib]
+            ["@multiswap-lib/sdk" :as ms]
             [milfin.chains :refer [chains]]
             ))
 
 (def e ethers-lib/ethers)
 (def utils (.-utils e))
 
+(println (.-chainId ms))
 
 (defn window-eth
   []

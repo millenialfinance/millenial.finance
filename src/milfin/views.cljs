@@ -271,7 +271,7 @@ chainId (re-frame/subscribe [::subs/chainId])
            (for [t @token-addrs]
              (let [token (chain-tokens t)]
                (when (or (not (= :lp (:type token))) (= :spirit (:exchange token)) (not restricted))
-                 ^{:key t}[:option {:value t} (str (:name token) " (" (:shortname token) ")")]))))]
+                 ^{:key t}[:option {:value t} (str (:shortname token))]))))]
          [:p (str "Balance: "
                     (if (= "0x0" zapin-token)
                       (.formatUnits e/utils (or @native-balance 0))
@@ -299,7 +299,7 @@ chainId (re-frame/subscribe [::subs/chainId])
                    zapping-in (= :in zap-direction)
                    addr (:address token)]
                (when (xnor isLP zapping-in)
-                 (when (and (or isSpirit (not isLP) (not restricted)) (not (= "0x0" (:address token)))) ^{:key addr}[:option {:value addr} (str (:name token) " (" (:shortname token) ")")])))))]]]]
+                 (when (and (or isSpirit (not isLP) (not restricted)) (not (= "0x0" (:address token)))) ^{:key addr}[:option {:value addr} (str (:shortname token))])))))]]]]
         [:section.component.zap-row
           [:div.field-row
            [:label {:for "zapin-amt"} "Amount"]
