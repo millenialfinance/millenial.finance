@@ -40,6 +40,10 @@
                                                  :address "0xf16e81dce15b08f326220742020379b855b87df9"
                                                  :shortname "ICE"
                                                  :type :erc20}
+   "0x841FAD6EAe12c286d1Fd18d1d525DFfA75C7EFFE"  {:name "Boo Token"
+                                                  :address "0x841FAD6EAe12c286d1Fd18d1d525DFfA75C7EFFE"
+                                                 :shortname "BOO"
+                                                 :type :erc20}
   "0x74b23882a30290451A17c44f4F05243b6b58C76d" {:name "Wrapped Ether"
                                                 :address "0x74b23882a30290451A17c44f4F05243b6b58C76d"
                                                  :shortname "wETH"
@@ -221,6 +225,13 @@
 "0xb77b223490e1f5951ec79a8d09db9eab2adcb934"   {:name "FTM/CREAM SpookySwap LP Token"
     :address "0xb77b223490e1f5951ec79a8d09db9eab2adcb934"
                                                  :shortname "FTM/YFI Spooky LP"
+                                                 :type :lp
+                                                 :exchange :spooky
+                                                 :router-addr "0xf491e7b69e4244ad4002bc14e878a34207e38c29"
+                                                 }
+   "0xEc7178F4C41f346b2721907F5cF7628E388A7a58" {:name "FTM/BOO SpookySwap LP Token"
+                                                 :address "0xEc7178F4C41f346b2721907F5cF7628E388A7a58"
+                                                 :shortname "FTM/BOO Spooky LP"
                                                  :type :lp
                                                  :exchange :spooky
                                                  :router-addr "0xf491e7b69e4244ad4002bc14e878a34207e38c29"
