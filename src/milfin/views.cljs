@@ -20,9 +20,11 @@
 (defn contract-status-bar
   [contract chainId on-click]
   [status-bar
-   (str "Contract Address: " (:addr contract))
+   [:div (str "Contract Address: " (:addr contract)) [:a {:href (str "https://ftmscan.com/address/" (:addr contract))
+                                                          :style {:margin"0rem 0rem .1rem 2rem"}} "See on Explorer"]]
    (when chainId (str "Network: " (:name (chainId->chain chainId))))
    (when on-click [btn {:text "Refresh" :on-click on-click}])])
+
 (defn migrator-panel
   []
   (let [addr (re-frame/subscribe [::subs/addr])
@@ -48,12 +50,12 @@ chainId (re-frame/subscribe [::subs/chainId])
          [:div
           [:select {:value (or from "")
                     :on-change #(handle-migrate-in-change (.. % -target -value) @addr (:addr contract) @chainId)}
-           [:option {:value ""} "-Select-"]
+           ^{:key "default"}[:option {:value ""} "-Select-"]
            (doall
             (for [t @token-addrs]
               (let [token (chain-tokens t)]
                 (when (and (= (:type token) :lp) (or (not restricted) (not (= :spirit (:exchange token)))))
-                  [:option {:value t} (:name token)]))))]
+                  ^{:key t}[:option {:value t} (:name token)]))))]
 
           ]]]
         [:fieldset
@@ -63,7 +65,7 @@ chainId (re-frame/subscribe [::subs/chainId])
                    :on-change #(handle-migrate-out-change (.. % -target -value) )}
           (doall
            (for [[router-addr router] (routers :ftm)]
-             (when (or (not restricted) (= "SpiritSwap" (:name router))) [:option {:value router-addr} (:name router)])))]
+             (when (or (not restricted) (= "SpiritSwap" (:name router))) ^{:key router-addr}[:option {:value router-addr} (:name router)])))]
 
          ]]
        ]
@@ -71,7 +73,12 @@ chainId (re-frame/subscribe [::subs/chainId])
        [:section.component.zap-row
           [:div.field-row
            [:label {:for "migrate-amt"} "Amount"]
-           [:input {:id "migrate-amt" :type "text" :value amt :on-change #(re-frame/dispatch [::events/store-in [:migrator :amt] (.. % -target -value)])}]]
+           [:input {:id "migrate-amt" :type "text" :value amt :on-change #(let [val (.. % -target -value)]
+                                                                                (cond
+                                                                                  (= "." val) (re-frame/dispatch [::events/store-in [:migrator :amt] (str "0" (.. % -target -value))])
+                                                                                  (= "" val) (re-frame/dispatch [::events/store-in [:migrator :amt] "0"])
+                                                                                  true (re-frame/dispatch [::events/store-in [:migrator :amt] (.. % -target -value)])))
+                    }]]
           [:div.zap-btn
            [btn {:text "Max"
                  :on-click #(re-frame/dispatch [::events/store-in [:migrator :amt] (.formatEther e/utils (@balances from))])}]]
@@ -169,10 +176,11 @@ chainId (re-frame/subscribe [::subs/chainId])
 (defn refresh-zapper
   [tokens wallet-addr contract-addr]
   (doall
-   (for [token (filter #(not (= "0x0") (:address %)) tokens)]
-     (do
-       (re-frame/dispatch-sync [::events/get-erc20-allowance token wallet-addr contract-addr])
-       (re-frame/dispatch-sync [::events/get-erc20-bal token wallet-addr])))))
+   (for [token tokens]
+     (when-not (= "0x0" (:address token))
+       (do
+        (re-frame/dispatch-sync [::events/get-erc20-allowance token wallet-addr contract-addr])
+        (re-frame/dispatch-sync [::events/get-erc20-bal token wallet-addr]))))))
 
 (defn handle-zapout-token-change
   [token-addr wallet-addr]
@@ -246,22 +254,24 @@ chainId (re-frame/subscribe [::subs/chainId])
         balances (re-frame/subscribe [::subs/token-balances])
         allowances (re-frame/subscribe [::subs/token-allowances])
         native-token (chain-tokens "0x0")]
-    (js/setInterval #(refresh-zapper @token-addrs @addr (:addr contract)) 5000)
     [window (:name contract)
      [:div
-      [contract-status-bar contract @chainId #(refresh-zapper @token-addrs @addr (:addr contract))]
+      [contract-status-bar contract @chainId #(do
+                                                (handle-zapin-token-change zapin-token @addr (:addr contract) @chainId)
+                                                (handle-zapout-token-change zapout-token @addr))]
       [:section
        [:fieldset
         [:legend "Zapping From"]
         [:div
          [:select {:value (or zapin-token "")
                    :on-change #(handle-zapin-token-change (.. % -target -value) @addr (:addr contract) @chainId)}
-          [:option {:value ""} "-Select-"]
-          [:option {:value "0x0"} (str (:name native-token) " (" (:shortname native-token) ")")]
+          ^{:key "default"}[:option {:value ""} "-Select-"]
+          ^{:key "native"}[:option {:value "0x0"} (str (:name native-token) " (" (:shortname native-token) ")")]
           (doall
            (for [t @token-addrs]
              (let [token (chain-tokens t)]
-               (when (or (not (= :lp (:type token))) (= :spirit (:exchange token)) (not restricted))[:option {:value t} (str (:name token) " (" (:shortname token) ")")]))))]
+               (when (or (not (= :lp (:type token))) (= :spirit (:exchange token)) (not restricted))
+                 ^{:key t}[:option {:value t} (str (:name token) " (" (:shortname token) ")")]))))]
          [:p (str "Balance: "
                     (if (= "0x0" zapin-token)
                       (.formatUnits e/utils (or @native-balance 0))
@@ -279,9 +289,9 @@ chainId (re-frame/subscribe [::subs/chainId])
         [:div
          [:select {:value (or zapout-token "")
                    :on-change #(handle-zapout-token-change (.. % -target -value) @addr)}
-          [:option {:value ""} "-Select-"]
+          ^{:key "default"}[:option {:value ""} "-Select-"]
           (when (= zap-direction :out)
-            [:option {:value "0x0"} (str (:name native-token) " (" (:shortname native-token) ")")])
+           ^{:key "native"} [:option {:value "0x0"} (str (:name native-token) " (" (:shortname native-token) ")")])
           (doall
            (for [token (map chain-tokens @token-addrs)]
              (let [isLP (= :lp (:type token) )
@@ -289,14 +299,20 @@ chainId (re-frame/subscribe [::subs/chainId])
                    zapping-in (= :in zap-direction)
                    addr (:address token)]
                (when (xnor isLP zapping-in)
-                 (when (and (or isSpirit (not isLP) (not restricted)) (not (= "0x0" (:address token)))) [:option {:value addr} (str (:name token) " (" (:shortname token) ")")])))))]]]]
+                 (when (and (or isSpirit (not isLP) (not restricted)) (not (= "0x0" (:address token)))) ^{:key addr}[:option {:value addr} (str (:name token) " (" (:shortname token) ")")])))))]]]]
         [:section.component.zap-row
           [:div.field-row
            [:label {:for "zapin-amt"} "Amount"]
-           [:input {:id "zapin-amt" :type "text" :value zapin-amt :on-change #(re-frame/dispatch [::events/store-in [:zapper :zapin-amt] (.. % -target -value)])}]]
+           [:input {:id "zapin-amt" :type "text" :value zapin-amt :on-change #(let [val (.. % -target -value)]
+                                                                                (cond
+                                                                                  (= "." val) (re-frame/dispatch [::events/store-in [:zapper :zapin-amt] (str "0" (.. % -target -value))])
+                                                                                  (= "" val) (re-frame/dispatch [::events/store-in [:zapper :zapin-amt] "0"])
+                                                                                  true (re-frame/dispatch [::events/store-in [:zapper :zapin-amt] (.. % -target -value)])))}]]
           [:div.zap-btn
            [btn {:text "Max"
-                 :on-click #(re-frame/dispatch [::events/store-in [:zapper :zapin-amt] (.formatEther e/utils (@balances zapin-token))])}]]
+                 :on-click #(re-frame/dispatch [::events/store-in [:zapper :zapin-amt] (.formatEther e/utils (if (= "0x0" zapin-token)
+                                                                                                               @native-balance
+                                                                                                               (@balances zapin-token)))])}]]
           [:div.zap-btn
            [btn {:text "Zap"
                  :on-click #(handle-zap contract kw zap-direction zapin-token zapin-amt zapout-token @chainId)}]]]
@@ -310,7 +326,7 @@ chainId (re-frame/subscribe [::subs/chainId])
     [:li "Collaborative art (NFT DAOs)"]
     [:li "LP AMM Efficiency"]
     [:li "Priviledged LP Tokens (NFT-like benefits for holders)"]]
-   [:p "Follow us on " [:a {:href "https://twitter.com/milfinance"} "twitter"] " to keep in touch"]])
+   [:div "Follow us on " [:a {:href "https://twitter.com/milfinance"} "twitter"] " to keep in touch"]])
 
 (defn body
   []
