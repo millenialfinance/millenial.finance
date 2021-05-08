@@ -155,9 +155,9 @@
                                                  :exchange :spooky
                                                  :router-addr "0xf491e7b69e4244ad4002bc14e878a34207e38c29"
                                                  }
-   "0x91b39d5584e2a7dc829f696235742cc293f2e8cf"  {:name "FTM/BADGER SpookySwap LP Token"
+   "0x91b39d5584e2a7dc829f696235742cc293f2e8cf"  {:name "FTM/BAND SpookySwap LP Token"
                                                   :address "0x91b39d5584e2a7dc829f696235742cc293f2e8cf"
-                                                 :shortname "FTM/BADGER Spooky LP"
+                                                 :shortname "FTM/BAND Spooky LP"
                                                  :type :lp
                                                  :exchange :spooky
                                                  :router-addr "0xf491e7b69e4244ad4002bc14e878a34207e38c29"
