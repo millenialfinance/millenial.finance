@@ -175,7 +175,7 @@
                                                  }
    "0xb471ac6ef617e952b84c6a9ff5de65a9da96c93b"  {:name "CRV/FTM SpookySwap LP Token"
                                                   :address  "0xb471ac6ef617e952b84c6a9ff5de65a9da96c93b"
-                                                  :shortname "FTM/COVER Spooky LP"
+                                                  :shortname "FTM/CRV Spooky LP"
                                                   :type :lp
                                                   :exchange :spooky
                                                   :router-addr "0xf491e7b69e4244ad4002bc14e878a34207e38c29"
@@ -224,7 +224,7 @@
                                                  }
 "0xb77b223490e1f5951ec79a8d09db9eab2adcb934"   {:name "FTM/CREAM SpookySwap LP Token"
     :address "0xb77b223490e1f5951ec79a8d09db9eab2adcb934"
-                                                 :shortname "FTM/YFI Spooky LP"
+                                                 :shortname "FTM/CREAM Spooky LP"
                                                  :type :lp
                                                  :exchange :spooky
                                                  :router-addr "0xf491e7b69e4244ad4002bc14e878a34207e38c29"
