@@ -72,3 +72,11 @@
                                                  :address "0x711969A90C9EDD815A5C2b441FC80d067EC5E969"}
 
    })
+
+(def matic-vaults
+  {
+   "0xf26607237355D7c6183ea66EC908729E9c6eEB6b" {:name "wBTC-ETH Beefy Finance Vault"
+                                                 :token "0xdC9232E2Df177d7a12FdFf6EcBAb114E2231198D"
+                                                 :router "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff"
+                                                 :address "0xf26607237355D7c6183ea66EC908729E9c6eEB6b"}
+   })

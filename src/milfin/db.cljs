@@ -1,6 +1,6 @@
 (ns milfin.db
   (:require [milfin.routers :refer [ftm-routers]]
-            [milfin.vaults :refer [ftm-vaults]]
+            [milfin.vaults :refer [ftm-vaults matic-vaults]]
             [milfin.tokens :refer [tokens]]))
 
 (def default-db
@@ -18,6 +18,7 @@
                      }
    :vaults {
             250 (into {} ftm-vaults)
+            137 (into {} matic-vaults)
             }
    :enabled-tokens {
                     250 (into [] (keys (tokens 250)))

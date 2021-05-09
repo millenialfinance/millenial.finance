@@ -6,7 +6,7 @@
    [milfin.events :as events :refer [fetch-pool-info]]
    [milfin.components :refer [window btn status-bar]]
    [milfin.routers :refer [routers]]
-   [milfin.vaults :refer [ftm-vaults]]
+   [milfin.vaults :refer [ftm-vaults matic-vaults]]
    [milfin.contracts  :refer [parse-abistr chain->contracts]]
    [milfin.ethers :as e]
    [milfin.chains :refer [chainId->chain]]
@@ -21,7 +21,7 @@
 (defn contract-status-bar
   [contract chainId on-click]
   [status-bar
-   [:div (str "Contract Address: " (:addr contract)) [:a {:href (str "https://ftmscan.com/address/" (:addr contract))
+   [:div (str "Contract Address: " (:addr contract)) [:a {:href (str (if (= 250 chainId) "https://ftmscan.com/address/" "explorer-mainnet.maticvigil.com/address/") (:addr contract))
                                                           :style {:margin"0rem 0rem .1rem 2rem"}} "See on Explorer"]]
    (when chainId (str "Network: " (:name (chainId->chain chainId))))
    (when on-click [btn {:text "Refresh" :on-click on-click}])])
@@ -37,10 +37,10 @@
         native-balance (re-frame/subscribe [::subs/balance])
         token-addrs (re-frame/subscribe [::subs/enabled-tokens @chainId])
         vault-addrs (re-frame/subscribe [::subs/enabled-vaults @chainId])
-        vault (ftm-vaults to)
+        vault (if (= @chainId 250) (ftm-vaults to) (matic-vaults to))
         balances (re-frame/subscribe [::subs/token-balances])
         allowances (re-frame/subscribe [::subs/token-allowances])
-        contract (:milzap (chain->contracts :ftm) )
+        contract (:milzap (chain->contracts (if (= 250 @chainId) :ftm :matic)) )
         native-token (get chain-tokens "0x0")
         ]
     [window "Vault Zap"
@@ -75,12 +75,14 @@
         [:legend "Zapping Into Vault"]
         [:div
          [:select {:value (or to "")
-                   :on-change #(handle-vaultout-change (.. % -target -value) @addr)}
+                   :on-change #(handle-vaultout-change (.. % -target -value) @addr @chainId)}
           ^{:key "default"}[:option {:value ""} "-Select-"]
           (doall
            (for [[vault-addr vault] @vault-addrs]
-             (let [name (:name vault)]
-               ^{:key vault-addr}[:option {:value vault-addr} name])))]]]]
+             (do
+               (js/console.log vault-addr vault)
+               (let [name (:name vault)]
+                ^{:key vault-addr}[:option {:value vault-addr} name]))))]]]]
       [:section.component.zap-row
           [:div.field-row
            [:label {:for "vault-amt"} "Amount"]
@@ -106,14 +108,14 @@
   (let [addr (re-frame/subscribe [::subs/addr])
         migrator-state (re-frame/subscribe [::subs/migrator-state])
         {:keys [from to amt]} @migrator-state
-chainId (re-frame/subscribe [::subs/chainId])
+        chainId (re-frame/subscribe [::subs/chainId])
         chain-tokens (tokenlist/tokens @chainId)
         chain-routers (routers @chainId)
         token-addrs (re-frame/subscribe [::subs/enabled-tokens @chainId])
         balances (re-frame/subscribe [::subs/token-balances])
         allowances (re-frame/subscribe [::subs/token-allowances])
         from-router (:router-addr (get chain-tokens from))
-        contract (:milzap (chain->contracts :ftm) )
+        contract (:milzap (chain->contracts (if (= 250 @chainId) :ftm :matic)) )
         ]
     [window "Liquidity Migrator"
      [:div
@@ -139,7 +141,7 @@ chainId (re-frame/subscribe [::subs/chainId])
          [:select {:value to
                    :on-change #(handle-migrate-out-change (.. % -target -value) )}
           (doall
-           (for [[router-addr router] (routers :ftm)]
+           (for [[router-addr router] (routers (if (= 250 @chainId) :ftm :matic))]
              (when (or (not restricted) (= "SpiritSwap" (:name router))) ^{:key router-addr}[:option {:value router-addr} (:name router)])))]
 
          ]]
@@ -271,8 +273,8 @@ chainId (re-frame/subscribe [::subs/chainId])
         (re-frame/dispatch-sync [::events/get-erc20-bal token wallet-addr]))))))
 
 (defn handle-vaultout-change
-  [vault-addr wallet-addr]
-  (let [{:keys [token router]} (ftm-vaults vault-addr)
+  [vault-addr wallet-addr chainId]
+  (let [{:keys [token router]} ((if (= 250 chainId) ftm-vaults matic-vaults) vault-addr)
         ]
     (re-frame/dispatch [::events/store-in [:vaulter :to] vault-addr])
     (re-frame/dispatch [::events/store-in [:vaulter :token] token])

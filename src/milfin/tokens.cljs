@@ -30,6 +30,26 @@
                                                  :type :erc20}
    })
 
+(def matic-tokens
+  {
+   "0x0" {:name "MATIC"
+          :shortname "MATIC"
+          :type :native
+          :address "0x0"}
+   "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619" {:name "Wrapped Ethereum"
+                                                 :address "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619"
+                                                 :shortname "wETH"
+                                                 :type :erc20}
+ "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6"  {:name "Wrapped Bitcoin"
+    :address "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6"
+                                                 :shortname "wBTC"
+                                                 :type :erc20}
+   "0xdC9232E2Df177d7a12FdFf6EcBAb114E2231198D" {:name "wBTC/ETH Quickswap LP Token"
+                                                 :address "0xdC9232E2Df177d7a12FdFf6EcBAb114E2231198D"
+                                                 :shortname "wBTC/ETH Q-LP"
+                                                 :type :lp}
+   })
+
 (def ftm-tokens
   {
    "0x0" {:name "Fantom"
@@ -243,6 +263,8 @@
   {
    :bsc bsc-tokens
    :ftm ftm-tokens
+   :matic matic-tokens
    250 ftm-tokens
    97 bsc-tokens
+   137 matic-tokens
    })
