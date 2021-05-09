@@ -97,7 +97,9 @@
           [:div.zap-btn
            [btn {:text "Zap"
                  :on-click #(do
-                              (re-frame/dispatch [::events/call-contract-write-paid parsed-amt contract "zapInToVault" [:vaulter from to] [(:token vault) (:router vault) to]]))}]]]]]
+                              (if (= to "0x0")
+                                (re-frame/dispatch [::events/call-contract-write-paid parsed-amt contract "zapInToVault" [:vaulter from to] [(:token vault) (:router vault) to]])
+                                (re-frame/dispatch [::events/call-contract-write contract "zapInTokenToVault" [:vaulter from to] [from parsed-amt (:token vault) (:router vault) to]])))}]]]]]
     ))
 
 (defn migrator-panel
