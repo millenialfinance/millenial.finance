@@ -41,7 +41,7 @@
         balances (re-frame/subscribe [::subs/token-balances])
         allowances (re-frame/subscribe [::subs/token-allowances])
         contract (:milzap (chain->contracts :ftm) )
-        parsed-amt (.parseEther e/utils (str (or (when (number? amt) amt) 0.0)))
+        parsed-amt (.parseEther e/utils (str (or amt  0.0)))
         native-token (get chain-tokens "0x0")
         ]
     [window "Vault Zap"
@@ -115,7 +115,7 @@ chainId (re-frame/subscribe [::subs/chainId])
         allowances (re-frame/subscribe [::subs/token-allowances])
         from-router (:router-addr (get chain-tokens from))
         contract (:milzap (chain->contracts :ftm) )
-        parsed-amt (.parseEther e/utils (str (or (when (number? amt) amt) 0.0)))
+        parsed-amt (.parseEther e/utils (str (or amt  0.0)))
         ]
     [window "Liquidity Migrator"
      [:div
