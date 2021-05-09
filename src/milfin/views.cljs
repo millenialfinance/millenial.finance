@@ -41,7 +41,6 @@
         balances (re-frame/subscribe [::subs/token-balances])
         allowances (re-frame/subscribe [::subs/token-allowances])
         contract (:milzap (chain->contracts :ftm) )
-        parsed-amt (.parseEther e/utils (str (or amt  0.0)))
         native-token (get chain-tokens "0x0")
         ]
     [window "Vault Zap"
@@ -98,8 +97,8 @@
            [btn {:text "Zap"
                  :on-click #(do
                               (if (= from "0x0")
-                                (re-frame/dispatch [::events/call-contract-write-paid parsed-amt contract "zapInToVault" [:vaulter from to] [(:token vault) (:router vault) to]])
-                                (re-frame/dispatch [::events/call-contract-write contract "zapInTokenToVault" [:vaulter from to] [from parsed-amt (:token vault) (:router vault) to]])))}]]]]]
+                                (re-frame/dispatch [::events/call-contract-write-paid (.parseEther e/utils amt)  contract "zapInToVault" [:vaulter from to] [(:token vault) (:router vault) to]])
+                                (re-frame/dispatch [::events/call-contract-write contract "zapInTokenToVault" [:vaulter from to] [from  (:token vault) (:router vault) to]])))}]]]]]
     ))
 
 (defn migrator-panel
@@ -115,7 +114,6 @@ chainId (re-frame/subscribe [::subs/chainId])
         allowances (re-frame/subscribe [::subs/token-allowances])
         from-router (:router-addr (get chain-tokens from))
         contract (:milzap (chain->contracts :ftm) )
-        parsed-amt (.parseEther e/utils (str (or amt  0.0)))
         ]
     [window "Liquidity Migrator"
      [:div
@@ -164,7 +162,7 @@ chainId (re-frame/subscribe [::subs/chainId])
   [btn {:text "Migrate"
                  :on-click #(do
                               (js/console.log [from amt from-router to])
-                              (re-frame/dispatch [::events/call-contract-write contract "zapAcross" [:migrator from to] [from parsed-amt from-router to]]))}]
+                              (re-frame/dispatch [::events/call-contract-write contract "zapAcross" [:migrator from to] [from (.parseEther e/utils zapin-amt) from-router to]]))}]
              [btn {:text "Approve"
                    :on-click #(re-frame/dispatch [::events/approve-erc20 from (:addr contract)])}]
              )
@@ -295,21 +293,21 @@ chainId (re-frame/subscribe [::subs/chainId])
         router-addr (case zap-direction
                       :in (:router-addr (tokens zapout-token))
                       :out (:router-addr (tokens zapin-token)))
-        parsed-amt (.parseEther e/utils zapin-amt)]
+        ]
     (cond
       zap-across (let [_fromRouter (:router-addr (tokens zapin-token))
                        _toRouter (:router-addr (tokens zapout-token))]
-                   (re-frame/dispatch [::events/call-contract-write-paid parsed-amt contract "zapAcross" [kw :zapIn zapin-token zapout-token] [zapin-token parsed-amt _fromRouter _toRouter]]))
+                   (re-frame/dispatch [::events/call-contract-write-paid (.parseEther e/utils zapin-amt) contract "zapAcross" [kw :zapIn zapin-token zapout-token] [zapin-token (.parseEther e/utils zapin-amt) _fromRouter _toRouter]]))
       (= :in zap-direction) (if (= zapin-type :native)
-            (re-frame/dispatch [::events/call-contract-write-paid parsed-amt contract "zapIn" [kw :zapIn zapin-token zapout-token] [zapout-token router-addr]])
-            (re-frame/dispatch [::events/call-contract-write contract "zapInToken" [kw :zapInToken zapin-token zapout-token] [zapin-token parsed-amt zapout-token router-addr]]))
+                              (re-frame/dispatch [::events/call-contract-write-paid (.parseEther e/utils zapin-amt) contract "zapIn" [kw :zapIn zapin-token zapout-token] [zapout-token router-addr]])
+                              (re-frame/dispatch [::events/call-contract-write contract "zapInToken" [kw :zapInToken zapin-token zapout-token] [zapin-token (.parseEther e/utils zapin-amt) zapout-token router-addr]]))
       (= :out zap-direction) (if (= zapout-type :native)
              (do
-               (js/console.log (map str [zapin-token parsed-amt router-addr]))
-               (re-frame/dispatch [::events/call-contract-write contract "zapOut" [kw :zapIn zapin-token zapout-token] [zapin-token parsed-amt router-addr]]))
+
+               (re-frame/dispatch [::events/call-contract-write contract "zapOut" [kw :zapIn zapin-token zapout-token] [zapin-token (.parseEther e/utils zapin-amt) router-addr]]))
              (do
-               (js/console.log [zapin-token parsed-amt zapout-token router-addr])
-               (re-frame/dispatch [::events/call-contract-write contract "zapOutToken" [kw :zapOutToken zapin-token zapout-token] [zapin-token parsed-amt zapout-token router-addr]]))))
+               (js/console.log [zapin-token  (.parseEther e/utils zapin-amt) zapout-token router-addr])
+               (re-frame/dispatch [::events/call-contract-write contract "zapOutToken" [kw :zapOutToken zapin-token zapout-token] [zapin-token  (.parseEther e/utils zapin-amt) zapout-token router-addr]]))))
     ))
 
 (defn xnor
