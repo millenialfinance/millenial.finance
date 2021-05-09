@@ -66,7 +66,7 @@
                                                  :address "0x5cc61a78f164885776aa610fb0fe1257df78e59b"
                                                  :shortname "SPIRIT"
                                                  :type :erc20
-                                                 :router-addr "0x30748322B6E34545DBe0788C421886AEB5297789"}
+                                                  :router-addr "0x16327e3fbdaca3bcf7e38f5af2599d2ddc33ae52"}
    "0x30748322b6e34545dbe0788c421886aeb5297789" {:name "SPIRIT/FTM SpiritSwap LP Token"
                                                  :address "0x30748322b6e34545dbe0788c421886aeb5297789"
                                                  :shortname "SPIRIT/FTM Spirit LP"

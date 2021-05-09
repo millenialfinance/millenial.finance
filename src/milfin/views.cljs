@@ -12,7 +12,7 @@
    [milfin.chains :refer [chainId->chain]]
    [clojure.string :as str]))
 
-(def restricted true)
+(def restricted false)
 
 (defn wallet-btn
   []
@@ -55,7 +55,7 @@
                    :on-change #(handle-vaultin-token-change (.. % -target -value) @addr (:addr contract) @chainId)}
           ^{:key "default"}[:option {:value ""} "-Select-"]
           ^{:key "native"}[:option {:value "0x0"} (str (:name native-token) " (" (:shortname native-token) ")")]
-          (doall
+          #_(doall
            (for [t @token-addrs]
              (let [token (chain-tokens t)]
                (when-not (= :lp (:type token))
@@ -97,7 +97,7 @@
           [:div.zap-btn
            [btn {:text "Zap"
                  :on-click #(do
-                              (if (= to "0x0")
+                              (if (= from "0x0")
                                 (re-frame/dispatch [::events/call-contract-write-paid parsed-amt contract "zapInToVault" [:vaulter from to] [(:token vault) (:router vault) to]])
                                 (re-frame/dispatch [::events/call-contract-write contract "zapInTokenToVault" [:vaulter from to] [from parsed-amt (:token vault) (:router vault) to]])))}]]]]]
     ))
