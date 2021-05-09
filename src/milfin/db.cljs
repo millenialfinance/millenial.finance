@@ -1,5 +1,6 @@
 (ns milfin.db
   (:require [milfin.routers :refer [ftm-routers]]
+            [milfin.vaults :refer [ftm-vaults]]
             [milfin.tokens :refer [tokens]]))
 
 (def default-db
@@ -15,6 +16,9 @@
    :enabled-routers {
                      250 ftm-routers
                      }
+   :vaults {
+            250 (into {} ftm-vaults)
+            }
    :enabled-tokens {
                     250 (into [] (keys (tokens 250)))
                     97 ["0xFE3171B9c20d002376D4B0097207EDf54b02EA3B"
@@ -24,7 +28,13 @@
                     }
    :migrator {:from ""
               :to "0x16327e3fbdaca3bcf7e38f5af2599d2ddc33ae52"
-              :amt 0}
+              :amt 0
+              }
+   :vaulter {:from ""
+             :to "0x49b5988d48039794f6232b44D7ed8F9bF8b6F784"
+             :amt 0
+             :router ""
+             :token ""}
    :zapper {
             :zap-direction :in
             :zapin-amt 0

@@ -82,3 +82,13 @@
  ::migrator-state
  (fn [db]
    (:migrator db)))
+
+(re-frame/reg-sub
+ ::vaulter-state
+ (fn [db]
+   (:vaulter db)))
+
+(re-frame/reg-sub
+ ::enabled-vaults
+ (fn [db [_ chainId]]
+   (get (:vaults db) chainId)))

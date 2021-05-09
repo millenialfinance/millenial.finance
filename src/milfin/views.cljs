@@ -6,12 +6,13 @@
    [milfin.events :as events :refer [fetch-pool-info]]
    [milfin.components :refer [window btn status-bar]]
    [milfin.routers :refer [routers]]
+   [milfin.vaults :refer [ftm-vaults]]
    [milfin.contracts  :refer [parse-abistr chain->contracts]]
    [milfin.ethers :as e]
    [milfin.chains :refer [chainId->chain]]
    [clojure.string :as str]))
 
-(def restricted false)
+(def restricted true)
 
 (defn wallet-btn
   []
@@ -24,6 +25,80 @@
                                                           :style {:margin"0rem 0rem .1rem 2rem"}} "See on Explorer"]]
    (when chainId (str "Network: " (:name (chainId->chain chainId))))
    (when on-click [btn {:text "Refresh" :on-click on-click}])])
+
+(defn vault-zapper
+  []
+  (let [addr (re-frame/subscribe [::subs/addr])
+        vaulter-state (re-frame/subscribe [::subs/vaulter-state])
+        {:keys [from to amt router token]} @vaulter-state
+        chainId (re-frame/subscribe [::subs/chainId])
+        chain-tokens (tokenlist/tokens @chainId)
+        chain-routers (routers @chainId)
+        native-balance (re-frame/subscribe [::subs/balance])
+        token-addrs (re-frame/subscribe [::subs/enabled-tokens @chainId])
+        vault-addrs (re-frame/subscribe [::subs/enabled-vaults @chainId])
+        vault (ftm-vaults to)
+        balances (re-frame/subscribe [::subs/token-balances])
+        allowances (re-frame/subscribe [::subs/token-allowances])
+        contract (:milzap (chain->contracts :ftm) )
+        parsed-amt (.parseEther e/utils (str (or (when (number? amt) amt) 0.0)))
+        native-token (get chain-tokens "0x0")
+        ]
+    [window "Vault Zap"
+     [:div
+      [contract-status-bar contract @chainId #(refresh-zapper @token-addrs @addr (:addr contract))]
+      [:section
+       [:fieldset
+        [:legend "Zapping From"]
+        [:div
+         [:select {:value (or from "")
+                   :on-change #(handle-vaultin-token-change (.. % -target -value) @addr (:addr contract) @chainId)}
+          ^{:key "default"}[:option {:value ""} "-Select-"]
+          ^{:key "native"}[:option {:value "0x0"} (str (:name native-token) " (" (:shortname native-token) ")")]
+          (doall
+           (for [t @token-addrs]
+             (let [token (chain-tokens t)]
+               (when-not (= :lp (:type token))
+                 ^{:key t}[:option {:value t} (str (:shortname token))]))))]
+         [:p (str "Balance: "
+                  (if (= "0x0" from)
+                      (.formatUnits e/utils (or @native-balance 0))
+                      (if @balances (.formatUnits e/utils (or (@balances from) 0)) 0)))]
+         [:p (str "Token Address: " from)]
+         (when (not (= "0x0" from))
+           (if (not (if (get @allowances from) (.eq (get @allowances from) 0) true))
+             [:p "Contract Approved"]
+             [btn {:text "Approve"
+                   :on-click #(re-frame/dispatch [::events/approve-erc20 from (:addr contract)])}]
+             ))
+         ]]
+       [:fieldset
+        [:legend "Zapping Into Vault"]
+        [:div
+         [:select {:value (or to "")
+                   :on-change #(handle-vaultout-change (.. % -target -value) @addr)}
+          ^{:key "default"}[:option {:value ""} "-Select-"]
+          (doall
+           (for [[vault-addr vault] @vault-addrs]
+             (let [name (:name vault)]
+               ^{:key vault-addr}[:option {:value vault-addr} name])))]]]]
+      [:section.component.zap-row
+          [:div.field-row
+           [:label {:for "vault-amt"} "Amount"]
+           [:input {:id "vault-amt" :type "number" :value amt :on-change #(let [val (.. % -target -value)]
+                                                                                (cond
+                                                                                  (= "." val) (re-frame/dispatch [::events/store-in [:vaulter :amt] "0."])
+                                                                                  true (re-frame/dispatch [::events/store-in [:vaulter :amt] (.. % -target -value)])))}]]
+          [:div.zap-btn
+           [btn {:text "Max"
+                 :on-click #(re-frame/dispatch [::events/store-in [:vaulter :amt] (.formatEther e/utils (if (= "0x0" from)
+                                                                                                               @native-balance
+                                                                                                               (@balances from)))])}]]
+          [:div.zap-btn
+           [btn {:text "Zap"
+                 :on-click #(do
+                              (re-frame/dispatch [::events/call-contract-write-paid parsed-amt contract "zapInToVault" [:vaulter from to] [(:token vault) (:router vault) to]]))}]]]]]
+    ))
 
 (defn migrator-panel
   []
@@ -38,7 +113,7 @@ chainId (re-frame/subscribe [::subs/chainId])
         allowances (re-frame/subscribe [::subs/token-allowances])
         from-router (:router-addr (get chain-tokens from))
         contract (:milzap (chain->contracts :ftm) )
-        parsed-amt (.parseEther e/utils (str (or amt 0.0)))
+        parsed-amt (.parseEther e/utils (str (or (when (number? amt) amt) 0.0)))
         ]
     [window "Liquidity Migrator"
      [:div
@@ -154,6 +229,19 @@ chainId (re-frame/subscribe [::subs/chainId])
         (re-frame/dispatch [::events/store-in [:migrator :from] token-addr])
         ))))
 
+(defn handle-vaultin-token-change
+  [token-addr wallet-addr contract-addr chainId]
+  (let [tokens (tokenlist/tokens chainId)
+        token (tokens token-addr)
+        type (:type token)]
+    (case type
+      :erc20 (do
+               (re-frame/dispatch [::events/get-erc20-allowance token-addr wallet-addr contract-addr])
+               (re-frame/dispatch [::events/get-erc20-bal token-addr wallet-addr]))
+      :native (do
+                (re-frame/dispatch [::events/fetch-balance]))))
+  (re-frame/dispatch [::events/store-in [:vaulter :from] token-addr]))
+
 (defn handle-zapin-token-change
   [token-addr wallet-addr contract-addr chainId]
   (let [tokens (tokenlist/tokens chainId)
@@ -181,6 +269,14 @@ chainId (re-frame/subscribe [::subs/chainId])
        (do
         (re-frame/dispatch-sync [::events/get-erc20-allowance token wallet-addr contract-addr])
         (re-frame/dispatch-sync [::events/get-erc20-bal token wallet-addr]))))))
+
+(defn handle-vaultout-change
+  [vault-addr wallet-addr]
+  (let [{:keys [token router]} (ftm-vaults vault-addr)
+        ]
+    (re-frame/dispatch [::events/store-in [:vaulter :to] vault-addr])
+    (re-frame/dispatch [::events/store-in [:vaulter :token] token])
+    (re-frame/dispatch [::events/store-in [:vaulter :router] router])))
 
 (defn handle-zapout-token-change
   [token-addr wallet-addr]
@@ -339,4 +435,5 @@ chainId (re-frame/subscribe [::subs/chainId])
     [:div
      [window "welcome" [body]]
      (when (not (= "0x0" @name)) [migrator-panel])
+     (when (not (= "0x0" @name)) [vault-zapper])
      [contracts-panel]]))

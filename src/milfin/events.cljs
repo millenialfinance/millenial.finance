@@ -146,7 +146,8 @@
    (go
      (let [eth (<p! (.enable window-eth))
            contract (instantiate-contract-write _contract)
-           result (<p! (apply js-invoke contract f a))]
+           args (into [] (conj a (clj->js {:gasPrice "4000000000" :gasLimit "800000"})))
+           result (<p! (apply js-invoke contract f args))]
        (re-frame/dispatch [::store-contract-state keys result])))))
 
 (re-frame/reg-fx
@@ -155,7 +156,7 @@
    (go
      (let [eth (<p! (.enable window-eth))
            contract (instantiate-contract-write _contract)
-           args (into [] (conj a (clj->js {:value val})))
+           args (into [] (conj a (clj->js {:value val :gasPrice "4000000000" :gasLimit "800000"})))
            _ (js/console.log (first args))
            result (<p! (apply js-invoke contract f args))]
        (re-frame/dispatch [::store-contract-state keys result])))))
