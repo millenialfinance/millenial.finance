@@ -21,7 +21,7 @@
 (defn contract-status-bar
   [contract chainId on-click]
   [status-bar
-   [:div (str "Contract Address: " (:addr contract)) [:a {:href (str (if (= 250 chainId) "https://ftmscan.com/address/" "explorer-mainnet.maticvigil.com/address/") (:addr contract))
+   [:div (str "Contract Address: " (:addr contract)) [:a {:href (str (if (= 250 chainId) "https://ftmscan.com/address/" "https://explorer-mainnet.maticvigil.com/address/") (:addr contract))
                                                           :style {:margin"0rem 0rem .1rem 2rem"}} "See on Explorer"]]
    (when chainId (str "Network: " (:name (chainId->chain chainId))))
    (when on-click [btn {:text "Refresh" :on-click on-click}])])

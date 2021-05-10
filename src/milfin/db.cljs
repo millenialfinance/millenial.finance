@@ -22,6 +22,7 @@
             }
    :enabled-tokens {
                     250 (into [] (keys (tokens 250)))
+                    137 (into [] (keys (tokens 137)))
                     97 ["0xFE3171B9c20d002376D4B0097207EDf54b02EA3B"
                         "0xf16e81dce15B08F326220742020379B855B87DF9"
                         ]

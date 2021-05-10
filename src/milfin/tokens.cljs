@@ -41,7 +41,7 @@
                                                  :shortname "wETH"
                                                  :type :erc20}
  "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6"  {:name "Wrapped Bitcoin"
-    :address "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6"
+                                                :address "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6"
                                                  :shortname "wBTC"
                                                  :type :erc20}
    "0xdC9232E2Df177d7a12FdFf6EcBAb114E2231198D" {:name "wBTC/ETH Quickswap LP Token"
