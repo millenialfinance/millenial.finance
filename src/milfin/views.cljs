@@ -54,7 +54,7 @@
                    :on-change #(handle-vaultin-token-change (.. % -target -value) @addr (:addr contract) @chainId)}
           ^{:key "default"}[:option {:value ""} "-Select-"]
           ^{:key "native"}[:option {:value "0x0"} (str (:name native-token) " (" (:shortname native-token) ")")]
-          #_(doall
+          (doall
            (for [t @token-addrs]
              (let [token (chain-tokens t)]
                (when-not (= :lp (:type token))
@@ -80,7 +80,6 @@
           (doall
            (for [[vault-addr vault] @vault-addrs]
              (do
-               (js/console.log vault-addr vault)
                (let [name (:name vault)]
                 ^{:key vault-addr}[:option {:value vault-addr} name]))))]]]]
       [:section.component.zap-row
@@ -100,7 +99,7 @@
                  :on-click #(do
                               (if (= from "0x0")
                                 (re-frame/dispatch [::events/call-contract-write-paid (.parseEther e/utils amt)  contract "zapInToVault" [:vaulter from to] [(:token vault) (:router vault) to]])
-                                (re-frame/dispatch [::events/call-contract-write contract "zapInTokenToVault" [:vaulter from to] [from  (:token vault) (:router vault) to]])))}]]]]]
+                                (re-frame/dispatch [::events/call-contract-write contract "zapInTokenToVault" [:vaulter from to] [from (.parseEther e/utils amt) (:token vault) (:router vault) to]])))}]]]]]
     ))
 
 (defn migrator-panel
@@ -330,7 +329,7 @@
   (let [connected (re-frame/subscribe [::subs/connected])
         addr (re-frame/subscribe [::subs/addr])
         balance (re-frame/subscribe [::subs/balance])
-        formatted-balance (.formatUnits e/utils @balance)
+        formatted-balance (if @balance (.formatUnits e/utils @balance) "0.0")
         chainId (re-frame/subscribe [::subs/chainId])
         network-name (:name (chainId->chain @chainId))]
     (if @connected
@@ -394,10 +393,11 @@
            (for [token (map chain-tokens @token-addrs)]
              (let [isLP (= :lp (:type token) )
                    isSpirit (= :spirit (:exchange token))
+                   isSpiritToken (= "SPIRIT" (:shortname token))
                    zapping-in (= :in zap-direction)
                    addr (:address token)]
                (when (xnor isLP zapping-in)
-                 (when (and (or isSpirit (not isLP) (not restricted)) (not (= "0x0" (:address token)))) ^{:key addr}[:option {:value addr} (str (:shortname token))])))))]]]]
+                 (when (and (or isSpirit (not isLP) (not restricted) (not (and (not zapping-in) (= "SPIRIT" (:shortname token))))) (not (= "0x0" (:address token)))) ^{:key addr}[:option {:value addr} (str (:shortname token))])))))]]]]
         [:section.component.zap-row
           [:div.field-row
            [:label {:for "zapin-amt"} "Amount"]
