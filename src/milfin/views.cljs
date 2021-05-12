@@ -163,7 +163,7 @@
   [btn {:text "Migrate"
                  :on-click #(do
                               (js/console.log [from amt from-router to])
-                              (re-frame/dispatch [::events/call-contract-write contract "zapAcross" [:migrator from to] [from (.parseEther e/utils zapin-amt) from-router to]]))}]
+                              (re-frame/dispatch [::events/call-contract-write contract "zapAcross" [:migrator from to] [from (.parseEther e/utils amt) from-router to]]))}]
              [btn {:text "Approve"
                    :on-click #(re-frame/dispatch [::events/approve-erc20 from (:addr contract)])}]
              )
