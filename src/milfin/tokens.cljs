@@ -56,6 +56,10 @@
             :shortname "FTM"
             :type :native
           :address "0x0"}
+   "0xb3654dc3d10ea7645f8319668e8f54d2574fbdc8" {:name "Chainlink Token"
+                                                 :address "0xb3654dc3d10ea7645f8319668e8f54d2574fbdc8"
+                                                 :shortname "LINK"
+                                                 :type :erc20}
    "0xf16e81dce15b08f326220742020379b855b87df9" {:name "Ice Token"
                                                  :address "0xf16e81dce15b08f326220742020379b855b87df9"
                                                  :shortname "ICE"
