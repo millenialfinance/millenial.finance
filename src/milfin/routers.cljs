@@ -19,10 +19,19 @@
    }
   )
 
+(def matic-routers
+  {
+   "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff" {:address "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff"
+                                                 :name "QuickSwap"}
+
+   })
+
 (def routers
   {
    :bsc nil
    :ftm ftm-routers
+   :matic matic-routers
    250 ftm-routers
    97 nil
+   137 matic-routers
    })

@@ -79,4 +79,14 @@
                                                  :token "0xdC9232E2Df177d7a12FdFf6EcBAb114E2231198D"
                                                  :router "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff"
                                                  :address "0xf26607237355D7c6183ea66EC908729E9c6eEB6b"}
+   "0x82303a4b2c821204A84AB2a068eC8EDf3Bc23061" {:name "mOCEAN-MATIC Beefy Finance Vault"
+                                                 :token "0x5a94F81D25c73eDdBDD84b84E8F6D36C58270510"
+                                                 :router "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff"
+                                                 :address "0x82303a4b2c821204A84AB2a068eC8EDf3Bc23061"}
+   ;; this vault requires an intermediate step
+   ;; need to go through quick to get ANY otherwise u get fucked
+   #_"0x2849095eE44eCd5f60Ed04f94e5BB45623A8e75a" #_{:name "ANY-QUICK LP Beefy Finance Vault"
+                                                 :token "0xeb275d1d930F157504cca7D7AFCe38360C7302b5"
+                                                 :router "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff"
+                                                 :address "0x2849095eE44eCd5f60Ed04f94e5BB45623A8e75a"}
    })
