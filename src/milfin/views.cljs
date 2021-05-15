@@ -81,7 +81,10 @@
            (for [[vault-addr vault] @vault-addrs]
              (do
                (let [name (:name vault)]
-                ^{:key vault-addr}[:option {:value vault-addr} name]))))]]]]
+                 ^{:key vault-addr}[:option {:value vault-addr} name]))))]
+         [:div
+          [:p (str "Balance: " (.formatUnits e/utils (or (get @balances to) "0")))]
+          [:p (str "Vault Address: " to)]]]]]
       [:section.component.zap-row
           [:div.field-row
            [:label {:for "vault-amt"} "Amount"]
@@ -275,6 +278,7 @@
   [vault-addr wallet-addr chainId]
   (let [{:keys [token router]} ((if (= 250 chainId) ftm-vaults matic-vaults) vault-addr)
         ]
+    (re-frame/dispatch [::events/get-erc20-bal vault-addr wallet-addr])
     (re-frame/dispatch [::events/store-in [:vaulter :to] vault-addr])
     (re-frame/dispatch [::events/store-in [:vaulter :token] token])
     (re-frame/dispatch [::events/store-in [:vaulter :router] router])))
@@ -304,8 +308,8 @@
                               (re-frame/dispatch [::events/call-contract-write contract "zapInToken" [kw :zapInToken zapin-token zapout-token] [zapin-token (.parseEther e/utils zapin-amt) zapout-token router-addr]]))
       (= :out zap-direction) (if (= zapout-type :native)
              (do
-
-               (re-frame/dispatch [::events/call-contract-write contract "zapOut" [kw :zapIn zapin-token zapout-token] [zapin-token (.parseEther e/utils zapin-amt) router-addr]]))
+               (js/console.log [zapin-token  (.parseEther e/utils zapin-amt)  router-addr])
+               (re-frame/dispatch [::events/call-contract-write contract "zapOut" [kw :zapOut zapin-token] [zapin-token (.parseEther e/utils zapin-amt) router-addr]]))
              (do
                (js/console.log [zapin-token  (.parseEther e/utils zapin-amt) zapout-token router-addr])
                (re-frame/dispatch [::events/call-contract-write contract "zapOutToken" [kw :zapOutToken zapin-token zapout-token] [zapin-token  (.parseEther e/utils zapin-amt) zapout-token router-addr]]))))

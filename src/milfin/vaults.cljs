@@ -1,8 +1,7 @@
 (ns milfin.vaults)
 
 (def ftm-vaults
-  {
-   "0x49b5988d48039794f6232b44D7ed8F9bF8b6F784" {:name "SPIRIT/FTM Supra Finance Vault"
+  {"0x49b5988d48039794f6232b44D7ed8F9bF8b6F784" {:name "SPIRIT/FTM Supra Finance Vault"
                                                  :token "0x30748322b6e34545dbe0788c421886aeb5297789"
                                                  :router "0x16327e3fbdaca3bcf7e38f5af2599d2ddc33ae52"
                                                  :address "0x49b5988d48039794f6232b44D7ed8F9bF8b6F784"}
@@ -48,7 +47,7 @@
                                                  :address "0xA3e3Af161943CfB3941B631676134bb048739727"}
    "0x5d89017d2465115007AbA00da1E6446dF2C19f34"  {:name "USDT/FTM Beefy Finance Vault"
                                                   :token "0x5965e53aa80a0bcf1cd6dbdd72e6a9b2aa047410"
-                                                 :router "0xf491e7b69e4244ad4002bc14e878a34207e38c29"
+                                                  :router "0xf491e7b69e4244ad4002bc14e878a34207e38c29"
                                                   :address "0x5d89017d2465115007AbA00da1E6446dF2C19f34"}
    "0x2dC73D17Ae01De6D49aab45668601591FF283dee" {:name "YFI/FTM Beefy Finance Vault"
                                                  :token "0xbf4d61d4cec3a9dff7452d8987e1cc2943e2eb4c"
@@ -59,8 +58,8 @@
                                                  :router "0xf491e7b69e4244ad4002bc14e878a34207e38c29"
                                                  :address "0x74907ad4E79b1Ce415caB26FEf526ae017598cEe"}
    "0x2BDA70d1DcE6b0855e812daaBB096F3DaaEBd4Bc"  {:name "CREAM/FTM Beefy Finance Vault"
-                                                 :token "0xb77b223490e1f5951ec79a8d09db9eab2adcb934"
-                                                 :router "0xf491e7b69e4244ad4002bc14e878a34207e38c29"
+                                                  :token "0xb77b223490e1f5951ec79a8d09db9eab2adcb934"
+                                                  :router "0xf491e7b69e4244ad4002bc14e878a34207e38c29"
                                                   :address "0x2BDA70d1DcE6b0855e812daaBB096F3DaaEBd4Bc"}
    "0xF5Bf6b3624eb10Ee855FEC1C5a4af81D90996b6c" {:name "COVER/FTM Beefy Finance Vault"
                                                  :token "0x5dc7848bf215f1d99f2af3d2bf78fcdf238ee34b"
@@ -69,13 +68,10 @@
    "0x711969A90C9EDD815A5C2b441FC80d067EC5E969" {:name "LINK/FTM Beefy Finance Vault"
                                                  :token "0x89d9bc2f2d091cfbfc31e333d6dc555ddbc2fd29"
                                                  :router "0xf491e7b69e4244ad4002bc14e878a34207e38c29"
-                                                 :address "0x711969A90C9EDD815A5C2b441FC80d067EC5E969"}
-
-   })
+                                                 :address "0x711969A90C9EDD815A5C2b441FC80d067EC5E969"}})
 
 (def matic-vaults
-  {
-   "0xf26607237355D7c6183ea66EC908729E9c6eEB6b" {:name "wBTC-ETH Beefy Finance Vault"
+  {"0xf26607237355D7c6183ea66EC908729E9c6eEB6b" {:name "wBTC-ETH Beefy Finance Vault"
                                                  :token "0xdC9232E2Df177d7a12FdFf6EcBAb114E2231198D"
                                                  :router "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff"
                                                  :address "0xf26607237355D7c6183ea66EC908729E9c6eEB6b"}
@@ -83,10 +79,13 @@
                                                  :token "0x5a94F81D25c73eDdBDD84b84E8F6D36C58270510"
                                                  :router "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff"
                                                  :address "0x82303a4b2c821204A84AB2a068eC8EDf3Bc23061"}
+   "0xf2E8fC408d77e8fC012797654D76ed399BFcE174" {:name "ETH-MATIC LP Polycat Vault"
+                                                 :token "0xadbF1854e5883eB8aa7BAf50705338739e558E5b"
+                                                 :router "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff"
+                                                 :address "0xf2E8fC408d77e8fC012797654D76ed399BFcE174"}
    ;; this vault requires an intermediate step
    ;; need to go through quick to get ANY otherwise u get fucked
    #_"0x2849095eE44eCd5f60Ed04f94e5BB45623A8e75a" #_{:name "ANY-QUICK LP Beefy Finance Vault"
-                                                 :token "0xeb275d1d930F157504cca7D7AFCe38360C7302b5"
-                                                 :router "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff"
-                                                 :address "0x2849095eE44eCd5f60Ed04f94e5BB45623A8e75a"}
-   })
+                                                     :token "0xeb275d1d930F157504cca7D7AFCe38360C7302b5"
+                                                     :router "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff"
+                                                     :address "0x2849095eE44eCd5f60Ed04f94e5BB45623A8e75a"}})

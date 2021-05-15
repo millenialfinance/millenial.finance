@@ -46,6 +46,8 @@
                                                  :type :erc20}
    "0xdC9232E2Df177d7a12FdFf6EcBAb114E2231198D" {:name "wBTC/ETH Quickswap LP Token"
                                                  :address "0xdC9232E2Df177d7a12FdFf6EcBAb114E2231198D"
+                                                 :exchange :quick
+                                                 :router-addr "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff"
                                                  :shortname "wBTC/ETH Q-LP"
                                                  :type :lp}
    })
