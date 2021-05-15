@@ -65,6 +65,10 @@
                                                  :token "0x5dc7848bf215f1d99f2af3d2bf78fcdf238ee34b"
                                                  :router "0xf491e7b69e4244ad4002bc14e878a34207e38c29"
                                                  :address "0xF5Bf6b3624eb10Ee855FEC1C5a4af81D90996b6c"}
+   "0xC5b2a6aB801E74F098aCC8Bb62B786b47319c4D9" {:name "BNB/FTM Beefy Finance Vault"
+                                                 :address "0xC5b2a6aB801E74F098aCC8Bb62B786b47319c4D9"
+                                                 :token "0x956DE13EA0FA5b577E4097Be837BF4aC80005820"
+                                                 :router "0xf491e7b69e4244ad4002bc14e878a34207e38c29"}
    "0x711969A90C9EDD815A5C2b441FC80d067EC5E969" {:name "LINK/FTM Beefy Finance Vault"
                                                  :token "0x89d9bc2f2d091cfbfc31e333d6dc555ddbc2fd29"
                                                  :router "0xf491e7b69e4244ad4002bc14e878a34207e38c29"
@@ -72,17 +76,21 @@
 
 (def matic-vaults
   {"0xf26607237355D7c6183ea66EC908729E9c6eEB6b" {:name "wBTC-ETH Beefy Finance Vault"
+                                                 :platform :beefy
                                                  :token "0xdC9232E2Df177d7a12FdFf6EcBAb114E2231198D"
                                                  :router "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff"
                                                  :address "0xf26607237355D7c6183ea66EC908729E9c6eEB6b"}
    "0x82303a4b2c821204A84AB2a068eC8EDf3Bc23061" {:name "mOCEAN-MATIC Beefy Finance Vault"
+                                                 :platform :beefy
                                                  :token "0x5a94F81D25c73eDdBDD84b84E8F6D36C58270510"
                                                  :router "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff"
                                                  :address "0x82303a4b2c821204A84AB2a068eC8EDf3Bc23061"}
    "0xf2E8fC408d77e8fC012797654D76ed399BFcE174" {:name "ETH-MATIC LP Polycat Vault"
+                                                 :platform :polycat
                                                  :token "0xadbF1854e5883eB8aa7BAf50705338739e558E5b"
                                                  :router "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff"
                                                  :address "0xf2E8fC408d77e8fC012797654D76ed399BFcE174"}
+
    ;; this vault requires an intermediate step
    ;; need to go through quick to get ANY otherwise u get fucked
    #_"0x2849095eE44eCd5f60Ed04f94e5BB45623A8e75a" #_{:name "ANY-QUICK LP Beefy Finance Vault"

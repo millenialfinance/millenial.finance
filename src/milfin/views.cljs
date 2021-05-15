@@ -152,7 +152,7 @@
        [:section.component.zap-row
           [:div.field-row
            [:label {:for "migrate-amt"} "Amount"]
-           [:input {:id "migrate-amt" :type "text" :value amt :on-change #(let [val (.. % -target -value)]
+           [:input {:id "migrate-amt" :type "number" :value amt :on-change #(let [val (.. % -target -value)]
                                                                                 (cond
                                                                                   (= "." val) (re-frame/dispatch [::events/store-in [:migrator :amt] (str "0" (.. % -target -value))])
                                                                                   (= "" val) (re-frame/dispatch [::events/store-in [:migrator :amt] "0"])
@@ -405,7 +405,7 @@
         [:section.component.zap-row
           [:div.field-row
            [:label {:for "zapin-amt"} "Amount"]
-           [:input {:id "zapin-amt" :type "text" :value zapin-amt :on-change #(let [val (.. % -target -value)]
+           [:input {:id "zapin-amt" :type "number" :value zapin-amt :on-change #(let [val (.. % -target -value)]
                                                                                 (cond
                                                                                   (= "." val) (re-frame/dispatch [::events/store-in [:zapper :zapin-amt] (str "0" (.. % -target -value))])
                                                                                   (= "" val) (re-frame/dispatch [::events/store-in [:zapper :zapin-amt] "0"])

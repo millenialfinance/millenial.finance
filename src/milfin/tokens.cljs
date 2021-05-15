@@ -62,6 +62,11 @@
                                                  :address "0xb3654dc3d10ea7645f8319668e8f54d2574fbdc8"
                                                  :shortname "LINK"
                                                  :type :erc20}
+   "0x956DE13EA0FA5b577E4097Be837BF4aC80005820" {:name "FTM-BNB SpookySwap LP Token"
+                                                 :address "0x956DE13EA0FA5b577E4097Be837BF4aC80005820"
+                                                 :router-addr "0xf491e7b69e4244ad4002bc14e878a34207e38c29"
+                                                 :shortname "FTM/BNB LP"
+                                                 :type :lp}
    "0xf16e81dce15b08f326220742020379b855b87df9" {:name "Ice Token"
                                                  :address "0xf16e81dce15b08f326220742020379b855b87df9"
                                                  :shortname "ICE"
