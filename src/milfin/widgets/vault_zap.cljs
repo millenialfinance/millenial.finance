@@ -12,6 +12,51 @@
    [milfin.contracts  :refer [parse-abistr chain->contracts]]
    ))
 
+(defn handle-vaultin-token-change
+  [token-addr wallet-addr contract-addr chainId]
+  (let [tokens (tokenlist/tokens chainId)
+        token (tokens token-addr)
+        type (:type token)]
+    (case type
+      :erc20 (do
+               (re-frame/dispatch [::events/get-erc20-allowance token-addr wallet-addr contract-addr])
+               (re-frame/dispatch [::events/get-erc20-bal token-addr wallet-addr]))
+      :native (do
+                (re-frame/dispatch [::events/fetch-balance]))))
+  (re-frame/dispatch [::events/store-in [:vaulter :from] token-addr]))
+
+(defn handle-zapin-token-change
+  [token-addr wallet-addr contract-addr chainId]
+  (let [tokens (tokenlist/tokens chainId)
+        token (tokens token-addr)
+        type (:type token)]
+    (case type
+      :lp (do
+            (re-frame/dispatch [::events/get-erc20-allowance token-addr wallet-addr contract-addr])
+            (re-frame/dispatch [::events/get-erc20-bal token-addr wallet-addr])
+            (re-frame/dispatch [::events/store-in [:zapper :zap-direction] :out]))
+      :erc20 (do
+               (re-frame/dispatch [::events/store-in [:zapper :zap-direction] :in])
+               (re-frame/dispatch [::events/get-erc20-allowance token-addr wallet-addr contract-addr])
+               (re-frame/dispatch [::events/get-erc20-bal token-addr wallet-addr]))
+      :native (do
+                (re-frame/dispatch [::events/store-in [:zapper :zap-direction] :in])
+                (re-frame/dispatch [::events/fetch-balance]))))
+  (re-frame/dispatch [::events/store-in [:zapper :zapin-token] token-addr]))
+
+(defn handle-vaultout-change
+  [vault-addr wallet-addr chainId]
+  (let [{:keys [token router]} ((if (= 250 chainId) ftm-vaults matic-vaults) vault-addr)
+        ]
+    (re-frame/dispatch [::events/get-erc20-bal vault-addr wallet-addr])
+    (re-frame/dispatch [::events/store-in [:vaulter :to] vault-addr])
+    (re-frame/dispatch [::events/store-in [:vaulter :token] token])
+    (re-frame/dispatch [::events/store-in [:vaulter :router] router])))
+
+(defn handle-vault-provider-change
+  [id-str]
+  (re-frame/dispatch [::events/store-in [:vaulter :provider] (keyword id-str)] ))
+
 (defn contract-status-bar
   [contract chainId on-click]
   [status-bar
@@ -26,12 +71,14 @@
         vaulter-state (re-frame/subscribe [::subs/vaulter-state])
         {:keys [from to amt router token]} @vaulter-state
         chainId (re-frame/subscribe [::subs/chainId])
+        providers (re-frame/subscribe [::subs/vault-providers @chainId])
         chain-tokens (tokenlist/tokens @chainId)
         chain-routers (routers @chainId)
         native-balance (re-frame/subscribe [::subs/balance])
         token-addrs (re-frame/subscribe [::subs/enabled-tokens @chainId])
         vault-addrs (re-frame/subscribe [::subs/enabled-vaults @chainId])
         vault (if (= @chainId 250) (ftm-vaults to) (matic-vaults to))
+        selected-provider (re-frame/subscribe [::subs/vault-provider])
         balances (re-frame/subscribe [::subs/token-balances])
         allowances (re-frame/subscribe [::subs/token-allowances])
         contract (:milzap (chain->contracts (if (= 250 @chainId) :ftm :matic)) )
@@ -39,11 +86,12 @@
         ]
     [window "Vault Zap"
      [:div
-      [contract-status-bar contract @chainId #(refresh-zapper @token-addrs @addr (:addr contract))]
+      [contract-status-bar contract @chainId ]
       [:section
        [:fieldset
         [:legend "Zapping From"]
         [:div
+
          [:select {:value (or from "")
                    :on-change #(handle-vaultin-token-change (.. % -target -value) @addr (:addr contract) @chainId)}
           ^{:key "default"}[:option {:value ""} "-Select-"]
@@ -68,14 +116,22 @@
        [:fieldset
         [:legend "Zapping Into Vault"]
         [:div
+        [:div.field-row.vault-provider-row
+         (doall
+          (for [provider @providers]
+            [:div.vault-provider
+             [:input {:id (name provider) :type "radio" :name "vault-provider" :on-change #(handle-vault-provider-change (.. % -target -id))}]
+             [:label {:for (name provider)} (clojure.string/capitalize (name provider))]]))
+         ]
          [:select {:value (or to "")
                    :on-change #(handle-vaultout-change (.. % -target -value) @addr @chainId)}
           ^{:key "default"}[:option {:value ""} "-Select-"]
           (doall
            (for [[vault-addr vault] @vault-addrs]
              (do
-               (let [name (:name vault)]
-                 ^{:key vault-addr}[:option {:value vault-addr} name]))))]
+               (let [n (:name vault)
+                     selected (or (and (not (nil? @selected-provider )) (clojure.string/includes? (clojure.string/lower-case n) (name @selected-provider))) (nil? @selected-provider))]
+                 (when selected ^{:key vault-addr}[:option {:value vault-addr} n])))))]
          [:div
           [:p (str "Balance: " (.formatUnits e/utils (or (get @balances to) "0")))]
           [:p (str "Vault Address: " to)]]]]]

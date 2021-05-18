@@ -1,5 +1,9 @@
 (ns milfin.vaults)
 
+(def providers
+  {250 [:supra :beefy]
+   137 [:beefy]})
+
 (def ftm-vaults
   {"0x49b5988d48039794f6232b44D7ed8F9bF8b6F784" {:name "SPIRIT/FTM Supra Finance Vault"
                                                  :token "0x30748322b6e34545dbe0788c421886aeb5297789"

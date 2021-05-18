@@ -28,6 +28,51 @@
    (when chainId (str "Network: " (:name (chainId->chain chainId))))
    (when on-click [btn {:text "Refresh" :on-click on-click}])])
 
+(defn refresh-zapper
+  [tokens wallet-addr contract-addr]
+  (doall
+   (for [token tokens]
+     (when-not (= "0x0" (:address token))
+       (do
+        (re-frame/dispatch-sync [::events/get-erc20-allowance token wallet-addr contract-addr])
+        (re-frame/dispatch-sync [::events/get-erc20-bal token wallet-addr]))))))
+
+
+(defn handle-migrate-out-change
+  [router-addr ]
+  (re-frame/dispatch [::events/store-in [:migrator :to] router-addr])
+  )
+
+(defn handle-migrate-in-change
+  [token-addr wallet-addr contract-addr chainId]
+  (let [tokens (tokenlist/tokens chainId)
+        token (tokens token-addr)
+        type (:type token)]
+    (when (= type :lp)
+      (do
+        (re-frame/dispatch [::events/get-erc20-allowance token-addr wallet-addr contract-addr])
+        (re-frame/dispatch [::events/get-erc20-bal token-addr wallet-addr])
+        (re-frame/dispatch [::events/store-in [:migrator :from] token-addr])
+        ))))
+
+(defn handle-zapin-token-change
+  [token-addr wallet-addr contract-addr chainId]
+  (let [tokens (tokenlist/tokens chainId)
+        token (tokens token-addr)
+        type (:type token)]
+    (case type
+      :lp (do
+            (re-frame/dispatch [::events/get-erc20-allowance token-addr wallet-addr contract-addr])
+            (re-frame/dispatch [::events/get-erc20-bal token-addr wallet-addr])
+            (re-frame/dispatch [::events/store-in [:zapper :zap-direction] :out]))
+      :erc20 (do
+               (re-frame/dispatch [::events/store-in [:zapper :zap-direction] :in])
+               (re-frame/dispatch [::events/get-erc20-allowance token-addr wallet-addr contract-addr])
+               (re-frame/dispatch [::events/get-erc20-bal token-addr wallet-addr]))
+      :native (do
+                (re-frame/dispatch [::events/store-in [:zapper :zap-direction] :in])
+                (re-frame/dispatch [::events/fetch-balance]))))
+  (re-frame/dispatch [::events/store-in [:zapper :zapin-token] token-addr]))
 
 
 (defn migrator-panel
@@ -46,6 +91,7 @@
         ]
     [window "Liquidity Migrator"
      [:div
+
       [contract-status-bar contract @chainId #(refresh-zapper @token-addrs @addr (:addr contract))]
       [:section.component
        [:div.rowfields
@@ -141,72 +187,11 @@
 
 
 
-(defn handle-migrate-out-change
-  [router-addr ]
-  (re-frame/dispatch [::events/store-in [:migrator :to] router-addr])
-  )
 
-(defn handle-migrate-in-change
-  [token-addr wallet-addr contract-addr chainId]
-  (let [tokens (tokenlist/tokens chainId)
-        token (tokens token-addr)
-        type (:type token)]
-    (when (= type :lp)
-      (do
-        (re-frame/dispatch [::events/get-erc20-allowance token-addr wallet-addr contract-addr])
-        (re-frame/dispatch [::events/get-erc20-bal token-addr wallet-addr])
-        (re-frame/dispatch [::events/store-in [:migrator :from] token-addr])
-        ))))
 
-(defn handle-vaultin-token-change
-  [token-addr wallet-addr contract-addr chainId]
-  (let [tokens (tokenlist/tokens chainId)
-        token (tokens token-addr)
-        type (:type token)]
-    (case type
-      :erc20 (do
-               (re-frame/dispatch [::events/get-erc20-allowance token-addr wallet-addr contract-addr])
-               (re-frame/dispatch [::events/get-erc20-bal token-addr wallet-addr]))
-      :native (do
-                (re-frame/dispatch [::events/fetch-balance]))))
-  (re-frame/dispatch [::events/store-in [:vaulter :from] token-addr]))
 
-(defn handle-zapin-token-change
-  [token-addr wallet-addr contract-addr chainId]
-  (let [tokens (tokenlist/tokens chainId)
-        token (tokens token-addr)
-        type (:type token)]
-    (case type
-      :lp (do
-            (re-frame/dispatch [::events/get-erc20-allowance token-addr wallet-addr contract-addr])
-            (re-frame/dispatch [::events/get-erc20-bal token-addr wallet-addr])
-            (re-frame/dispatch [::events/store-in [:zapper :zap-direction] :out]))
-      :erc20 (do
-               (re-frame/dispatch [::events/store-in [:zapper :zap-direction] :in])
-               (re-frame/dispatch [::events/get-erc20-allowance token-addr wallet-addr contract-addr])
-               (re-frame/dispatch [::events/get-erc20-bal token-addr wallet-addr]))
-      :native (do
-                (re-frame/dispatch [::events/store-in [:zapper :zap-direction] :in])
-                (re-frame/dispatch [::events/fetch-balance]))))
-  (re-frame/dispatch [::events/store-in [:zapper :zapin-token] token-addr]))
 
-(defn refresh-zapper
-  [tokens wallet-addr contract-addr]
-  (doall
-   (for [token tokens]
-     (when-not (= "0x0" (:address token))
-       (do
-        (re-frame/dispatch-sync [::events/get-erc20-allowance token wallet-addr contract-addr])
-        (re-frame/dispatch-sync [::events/get-erc20-bal token wallet-addr]))))))
 
-(defn handle-vaultout-change
-  [vault-addr wallet-addr chainId]
-  (let [{:keys [token router]} ((if (= 250 chainId) ftm-vaults matic-vaults) vault-addr)
-        ]
-    (re-frame/dispatch [::events/get-erc20-bal vault-addr wallet-addr])
-    (re-frame/dispatch [::events/store-in [:vaulter :to] vault-addr])
-    (re-frame/dispatch [::events/store-in [:vaulter :token] token])
-    (re-frame/dispatch [::events/store-in [:vaulter :router] router])))
 
 (defn handle-zapout-token-change
   [token-addr wallet-addr]

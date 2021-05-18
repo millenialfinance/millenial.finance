@@ -92,3 +92,13 @@
  ::enabled-vaults
  (fn [db [_ chainId]]
    (get (:vaults db) chainId)))
+
+(re-frame/reg-sub
+ ::vault-provider
+ (fn [db]
+   (:provider (:vaulter db))))
+
+(re-frame/reg-sub
+ ::vault-providers
+ (fn [db [_ chainId]]
+   (get (:vault-providers db) chainId)))

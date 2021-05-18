@@ -110,3 +110,12 @@ p {
   font-size: 1.2em;
   line-height: 1.5;
 }
+
+.vault-provider-row {
+  margin-top: .1rem;
+  margin-bottom: .3rem;
+}
+
+.vault-provider {
+  padding-right: .1rem;
+}
