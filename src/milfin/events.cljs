@@ -1,23 +1,47 @@
 (ns milfin.events
   (:require
    [milfin.ethers :as e]
-   [cljs.core.async :refer [go]]
+   [cljs.core.async :refer [go <!]]
    [cljs.core.async.interop :refer-macros [<p!]]
    [re-frame.core :as re-frame]
+   [milfin.covalent :as covalent]
    [milfin.db :as db]
    [day8.re-frame.tracing :refer-macros [fn-traced]]
    [milfin.chains :refer [chainId->chain]]
-   [milfin.contracts :refer [chain->contracts]]))
+   [milfin.contracts :refer [chain->contracts]]
+   [milfin.tokens :as tokenlist]))
 
 (re-frame/reg-event-db
  ::initialize-db
  (fn-traced [_ _]
             db/default-db))
 
+
 (re-frame/reg-event-db
  ::store
  (fn-traced [db [_ k v]]
             (assoc db k v)))
+
+(re-frame/reg-event-db
+ ::set-from-router
+ (fn-traced [db [_ router]]
+            (-> db
+                (assoc-in [:migrator :from-router] router)
+                (assoc-in [:migrator :from-token] {}))))
+
+(re-frame/reg-event-db
+ ::set-to-router
+ (fn-traced [db [_ router]]
+            (-> db
+                (assoc-in [:migrator :to-router] router)
+                )))
+
+(re-frame/reg-event-db
+ ::set-migrator-from-token
+ (fn-traced [db [_ token]]
+            (let [token (get (tokenlist/tokens (:chainId db)) token {})]
+              (assoc-in db [:migrator :from-token] token))))
+
 
 (re-frame/reg-event-db
  ::store-in
@@ -45,6 +69,12 @@
             (let [db (:db cofx)
                   window-eth (:window-eth cofx)]
               {:eth-fetch [window-eth :balance :network-name]})))
+
+(re-frame/reg-event-fx
+ ::fetch-covalent-balances
+ (fn-traced [cofx event]
+            (let [{:keys [chainId addr]} (:db cofx)]
+              {:covalent-balances [chainId addr]})))
 
 (re-frame/reg-event-fx
  ::load-contracts
@@ -146,7 +176,7 @@
    (go
      (let [eth (<p! (.enable window-eth))
            contract (instantiate-contract-write _contract)
-           args (into [] (conj a (clj->js {:gasPrice "4000000000" :gasLimit "1000000"})))
+           args (into [] (conj a (clj->js {:gasLimit "1000000"})))
            result (<p! (apply js-invoke contract f args))]
        (re-frame/dispatch [::store-contract-state keys result])))))
 
@@ -156,10 +186,19 @@
    (go
      (let [eth (<p! (.enable window-eth))
            contract (instantiate-contract-write _contract)
-           args (into [] (conj a (clj->js {:value val :gasPrice "4000000000" :gasLimit "1000000"})))
+           args (into [] (conj a (clj->js {:value val :gasLimit "1000000"})))
            _ (js/console.log (first args))
            result (<p! (apply js-invoke contract f args))]
        (re-frame/dispatch [::store-contract-state keys result])))))
+
+(re-frame/reg-fx
+ :covalent-balances
+ (fn [[chainId addr]]
+   (go
+     (let [response (<! (covalent/get-balances chainId addr))]
+       (let [d (:data (:body response))
+             dms (map #(into {}) d)]
+         (re-frame/dispatch [::store-in [:covalent :balances] d]))))))
 
 (re-frame/reg-fx
  :eth-fetch
@@ -177,9 +216,11 @@
                                n (<p! (.getNetwork provider))
                                chainId (.-chainId n)
                                chain (chainId->chain chainId)
+                               addr (<p! (e/get-addr))
                                kwd (keyword (clojure.string/lower-case (:chain chain)))]
                            (re-frame/dispatch [::load-contracts kwd])
                            (re-frame/dispatch [::store :chainId chainId])
+                           (re-frame/dispatch [::fetch-covalent-balances chainId addr])
                            )))))))
 
 (defn fetch-pool-info

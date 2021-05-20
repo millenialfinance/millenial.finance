@@ -2,11 +2,14 @@
   (:require
    [reagent.dom :as rdom]
    [re-frame.core :as re-frame]
+   [milfin.covalent :as covalent]
    [milfin.events :as events]
    [milfin.views :as views]
    [milfin.config :as config]
    ))
 
+
+(js/console.log covalent/api-key)
 
 (defn dev-setup []
   (when config/debug?

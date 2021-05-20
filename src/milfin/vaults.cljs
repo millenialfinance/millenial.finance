@@ -4,6 +4,8 @@
   {250 [:supra :beefy]
    137 [:beefy]})
 
+
+
 (def ftm-vaults
   {"0x49b5988d48039794f6232b44D7ed8F9bF8b6F784" {:name "SPIRIT/FTM Supra Finance Vault"
                                                  :token "0x30748322b6e34545dbe0788c421886aeb5297789"
@@ -89,11 +91,7 @@
                                                  :token "0x5a94F81D25c73eDdBDD84b84E8F6D36C58270510"
                                                  :router "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff"
                                                  :address "0x82303a4b2c821204A84AB2a068eC8EDf3Bc23061"}
-   "0xf2E8fC408d77e8fC012797654D76ed399BFcE174" {:name "ETH-MATIC LP Polycat Vault"
-                                                 :platform :polycat
-                                                 :token "0xadbF1854e5883eB8aa7BAf50705338739e558E5b"
-                                                 :router "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff"
-                                                 :address "0xf2E8fC408d77e8fC012797654D76ed399BFcE174"}
+
 
    ;; this vault requires an intermediate step
    ;; need to go through quick to get ANY otherwise u get fucked
@@ -101,3 +99,7 @@
                                                      :token "0xeb275d1d930F157504cca7D7AFCe38360C7302b5"
                                                      :router "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff"
                                                      :address "0x2849095eE44eCd5f60Ed04f94e5BB45623A8e75a"}})
+(def vaults
+  {250 ftm-vaults
+   137 matic-vaults
+   0 {}})

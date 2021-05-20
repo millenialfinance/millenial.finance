@@ -24,6 +24,10 @@ body {
   margin-left: .25rem;
 }
 
+label {
+  font-weight: 600;
+}
+
 .rowfields {
   margin-right: .3rem;
 }

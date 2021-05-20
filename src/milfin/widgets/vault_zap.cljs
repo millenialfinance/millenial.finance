@@ -71,18 +71,16 @@
         vaulter-state (re-frame/subscribe [::subs/vaulter-state])
         {:keys [from to amt router token]} @vaulter-state
         chainId (re-frame/subscribe [::subs/chainId])
-        providers (re-frame/subscribe [::subs/vault-providers @chainId])
-        chain-tokens (tokenlist/tokens @chainId)
-        chain-routers (routers @chainId)
+        providers (re-frame/subscribe [::subs/vault-providers ])
+        chain-tokens (re-frame/subscribe [::subs/tokens])
         native-balance (re-frame/subscribe [::subs/balance])
-        token-addrs (re-frame/subscribe [::subs/enabled-tokens @chainId])
-        vault-addrs (re-frame/subscribe [::subs/enabled-vaults @chainId])
-        vault (if (= @chainId 250) (ftm-vaults to) (matic-vaults to))
+        token-addrs (re-frame/subscribe [::subs/enabled-tokens])
+        vault-addrs (re-frame/subscribe [::subs/enabled-vaults])
+        v (re-frame/subscribe [::subs/selected-vault])
         selected-provider (re-frame/subscribe [::subs/vault-provider])
         balances (re-frame/subscribe [::subs/token-balances])
         allowances (re-frame/subscribe [::subs/token-allowances])
         contract (:milzap (chain->contracts (if (= 250 @chainId) :ftm :matic)) )
-        native-token (get chain-tokens "0x0")
         ]
     [window "Vault Zap"
      [:div
@@ -95,10 +93,9 @@
          [:select {:value (or from "")
                    :on-change #(handle-vaultin-token-change (.. % -target -value) @addr (:addr contract) @chainId)}
           ^{:key "default"}[:option {:value ""} "-Select-"]
-          ^{:key "native"}[:option {:value "0x0"} (str (:name native-token) " (" (:shortname native-token) ")")]
           (doall
            (for [t @token-addrs]
-             (let [token (chain-tokens t)]
+             (let [token (get @chain-tokens t)]
                (when-not (= :lp (:type token))
                  ^{:key t}[:option {:value t} (str (:shortname token))]))))]
          [:p (str "Balance: "
@@ -151,6 +148,6 @@
            [btn {:text "Zap"
                  :on-click #(do
                               (if (= from "0x0")
-                                (re-frame/dispatch [::events/call-contract-write-paid (.parseEther e/utils amt)  contract "zapInToVault" [:vaulter from to] [(:token vault) (:router vault) to]])
-                                (re-frame/dispatch [::events/call-contract-write contract "zapInTokenToVault" [:vaulter from to] [from (.parseEther e/utils amt) (:token vault) (:router vault) to]])))}]]]]]
+                                (re-frame/dispatch [::events/call-contract-write-paid (.parseEther e/utils amt)  contract "zapInToVault" [:vaulter from to] [(:token @v) (:router @v) to]])
+                                (re-frame/dispatch [::events/call-contract-write contract "zapInTokenToVault" [:vaulter from to] [from (.parseEther e/utils amt) (:token @v) (:router @v) to]])))}]]]]]
     ))

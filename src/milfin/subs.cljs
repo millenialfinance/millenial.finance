@@ -1,6 +1,10 @@
 (ns milfin.subs
   (:require
-   [re-frame.core :as re-frame]))
+   [re-frame.core :as re-frame]
+   [milfin.contracts :refer [chain->contracts]]
+   [milfin.routers :refer [routers]]
+   [milfin.vaults :refer [vaults]]
+   [milfin.tokens :as tokenlist]))
 
 (re-frame/reg-sub
  ::name
@@ -32,6 +36,12 @@
  ::contracts
  (fn [db]
    (:contracts db)))
+
+(re-frame/reg-sub
+ ::zapper-contract
+ :<- [::contracts]
+ (fn [contracts ]
+   (:milzap contracts)))
 
 (re-frame/reg-sub
  ::contracts-state
@@ -69,14 +79,16 @@
    (:token-allowances (:contracts-state db))))
 
 (re-frame/reg-sub
- ::enabled-tokens
- (fn [db [_ chainId]]
-   (get (:enabled-tokens db) chainId)))
+ ::all-enabled-tokens
+ (fn [db]
+   (:enabled-tokens db) ))
 
 (re-frame/reg-sub
- ::enabled-routers
- (fn [db [_ chainId]]
-   (get (:enabled-routers db) chainId)))
+ ::enabled-tokens
+ :<- [::chainId]
+ :<- [::all-enabled-tokens]
+ (fn [[chainId allTokens]]
+   (get allTokens chainId)))
 
 (re-frame/reg-sub
  ::migrator-state
@@ -89,9 +101,16 @@
    (:vaulter db)))
 
 (re-frame/reg-sub
+ ::all-enabled-vaults
+ (fn [db ]
+   (:vaults db)))
+
+(re-frame/reg-sub
  ::enabled-vaults
- (fn [db [_ chainId]]
-   (get (:vaults db) chainId)))
+ :<- [::chainId]
+ :<- [::all-enabled-vaults]
+ (fn [[chainId allVaults]]
+   (get allVaults chainId)))
 
 (re-frame/reg-sub
  ::vault-provider
@@ -99,6 +118,97 @@
    (:provider (:vaulter db))))
 
 (re-frame/reg-sub
+ ::all-vault-providers
+ (fn [db]
+   (:vault-providers db) ))
+
+(re-frame/reg-sub
  ::vault-providers
- (fn [db [_ chainId]]
-   (get (:vault-providers db) chainId)))
+ :<- [::chainId]
+ :<- [::all-vault-providers]
+ (fn [[chainId vaults]]
+   (get vaults chainId)))
+
+(re-frame/reg-sub
+ ::tokens
+ :<- [::chainId]
+ (fn [chainId]
+   (tokenlist/tokens chainId)))
+
+(re-frame/reg-sub
+ ::migrator-dest-router
+ :<- [::chainId]
+ :<- [::migrator-state]
+ (fn [[chainId {:keys [to-router]}]]
+   (get-in routers [chainId to-router] {})))
+
+(re-frame/reg-sub
+ ::migrator-amt
+ :<- [::migrator-state]
+ (fn [state]
+   (:amt state)))
+
+
+(re-frame/reg-sub
+ ::migrator-source-router
+ :<- [::chainId]
+ :<- [::migrator-state]
+ (fn [[chainId {:keys [from-router]}]]
+   (get-in routers [chainId from-router] {})))
+
+(re-frame/reg-sub
+ ::migrator-token
+ (fn [db]
+   (:from-token (:migrator db))))
+
+
+
+(re-frame/reg-sub
+ ::migrator-lp-tokens
+ :<- [::migrator-source-router]
+ :<- [::tokens]
+ (fn [[source-router tokens]]
+   (let [router-addr  (:address source-router)
+         isLP #(= :lp (:type %))
+         is-selected #(and (isLP %) (= (:router-addr %) router-addr))]
+     (filter is-selected (vals tokens)))))
+
+(re-frame/reg-sub
+ ::routers
+ :<- [::chainId]
+ (fn [chainId]
+   (vals (routers chainId))))
+
+(re-frame/reg-sub
+ ::selected-vault
+ :<- [::chainId]
+ :<- [::vaulter-state]
+ (fn [[chainId {:keys [to]}]]
+   (get-in vaults [chainId to])))
+
+(re-frame/reg-sub
+ ::cov-bals
+ (fn [db]
+   (get-in db [:covalent :balances :items] [])))
+
+(re-frame/reg-sub
+ ::covalent-balances
+ :<- [::cov-bals]
+ (fn [token-bals [_ include-dust]]
+   (if-not include-dust
+     (filter #(not= "dust" (:type %)) token-bals)
+     token-bals)))
+
+(re-frame/reg-sub
+ ::migrator-from-balance
+ :<- [::migrator-token]
+ :<- [::token-balances]
+ (fn [[token token-bals]]
+   (get token-bals (:address token) 0)))
+
+(re-frame/reg-sub
+ ::migrator-from-allowance
+ :<- [::migrator-token]
+ :<- [::token-allowances]
+ (fn [[token token-allowances]]
+   (get token-allowances (:address token) 0)))

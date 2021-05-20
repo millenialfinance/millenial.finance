@@ -7,6 +7,8 @@
    [milfin.components :refer [window btn status-bar]]
    [milfin.routers :refer [routers]]
    [milfin.widgets.vault-zap :refer [vault-zapper]]
+   [milfin.widgets.balances :refer [balances-display]]
+   [milfin.widgets.liqmigrator :as liqmigrator]
    [milfin.vaults :refer [ftm-vaults matic-vaults]]
    [milfin.contracts  :refer [parse-abistr chain->contracts]]
    [milfin.ethers :as e]
@@ -37,24 +39,6 @@
         (re-frame/dispatch-sync [::events/get-erc20-allowance token wallet-addr contract-addr])
         (re-frame/dispatch-sync [::events/get-erc20-bal token wallet-addr]))))))
 
-
-(defn handle-migrate-out-change
-  [router-addr ]
-  (re-frame/dispatch [::events/store-in [:migrator :to] router-addr])
-  )
-
-(defn handle-migrate-in-change
-  [token-addr wallet-addr contract-addr chainId]
-  (let [tokens (tokenlist/tokens chainId)
-        token (tokens token-addr)
-        type (:type token)]
-    (when (= type :lp)
-      (do
-        (re-frame/dispatch [::events/get-erc20-allowance token-addr wallet-addr contract-addr])
-        (re-frame/dispatch [::events/get-erc20-bal token-addr wallet-addr])
-        (re-frame/dispatch [::events/store-in [:migrator :from] token-addr])
-        ))))
-
 (defn handle-zapin-token-change
   [token-addr wallet-addr contract-addr chainId]
   (let [tokens (tokenlist/tokens chainId)
@@ -74,76 +58,6 @@
                 (re-frame/dispatch [::events/fetch-balance]))))
   (re-frame/dispatch [::events/store-in [:zapper :zapin-token] token-addr]))
 
-
-(defn migrator-panel
-  []
-  (let [addr (re-frame/subscribe [::subs/addr])
-        migrator-state (re-frame/subscribe [::subs/migrator-state])
-        {:keys [from to amt]} @migrator-state
-        chainId (re-frame/subscribe [::subs/chainId])
-        chain-tokens (tokenlist/tokens @chainId)
-        chain-routers (routers @chainId)
-        token-addrs (re-frame/subscribe [::subs/enabled-tokens @chainId])
-        balances (re-frame/subscribe [::subs/token-balances])
-        allowances (re-frame/subscribe [::subs/token-allowances])
-        from-router (:router-addr (get chain-tokens from))
-        contract (:milzap (chain->contracts (if (= 250 @chainId) :ftm :matic)) )
-        ]
-    [window "Liquidity Migrator"
-     [:div
-
-      [contract-status-bar contract @chainId #(refresh-zapper @token-addrs @addr (:addr contract))]
-      [:section.component
-       [:div.rowfields
-        [:fieldset
-         [:legend "Liquidity Token to Migrate"]
-         [:div
-          [:select {:value (or from "")
-                    :on-change #(handle-migrate-in-change (.. % -target -value) @addr (:addr contract) @chainId)}
-           ^{:key "default"}[:option {:value ""} "-Select-"]
-           (doall
-            (for [t @token-addrs]
-              (let [token (chain-tokens t)]
-                (when (and (= (:type token) :lp) (or (not restricted) (not (= :spirit (:exchange token)))))
-                  ^{:key t}[:option {:value t} (:name token)]))))]
-
-          ]]]
-        [:fieldset
-        [:legend "Destination"]
-        [:div
-         [:select {:value to
-                   :on-change #(handle-migrate-out-change (.. % -target -value) )}
-          (doall
-           (for [[router-addr router] (routers (if (= 250 @chainId) :ftm :matic))]
-             (when (or (not restricted) (= "SpiritSwap" (:name router))) ^{:key router-addr}[:option {:value router-addr} (:name router)])))]
-
-         ]]
-       ]
-      [:section.component
-       [:section.component.zap-row
-          [:div.field-row
-           [:label {:for "migrate-amt"} "Amount"]
-           [:input {:id "migrate-amt" :type "number" :value amt :on-change #(let [val (.. % -target -value)]
-                                                                                (cond
-                                                                                  (= "." val) (re-frame/dispatch [::events/store-in [:migrator :amt] (str "0" (.. % -target -value))])
-                                                                                  (= "" val) (re-frame/dispatch [::events/store-in [:migrator :amt] "0"])
-                                                                                  true (re-frame/dispatch [::events/store-in [:migrator :amt] (.. % -target -value)])))
-                    }]]
-          [:div.zap-btn
-           [btn {:text "Max"
-                 :on-click #(re-frame/dispatch [::events/store-in [:migrator :amt] (.formatEther e/utils (@balances from))])}]]
-          [:div.zap-btn
-           (if (not (if (get @allowances from) (.eq (get @allowances from) 0) true))
-  [btn {:text "Migrate"
-                 :on-click #(do
-                              (js/console.log [from amt from-router to])
-                              (re-frame/dispatch [::events/call-contract-write contract "zapAcross" [:migrator from to] [from (.parseEther e/utils amt) from-router to]]))}]
-             [btn {:text "Approve"
-                   :on-click #(re-frame/dispatch [::events/approve-erc20 from (:addr contract)])}]
-             )
-           ]]]
-      ]
-     ]))
 
 (defmulti contract-panel
   (fn [kw contract chainId] (:type contract)))
@@ -184,14 +98,6 @@
 (defmethod contract-panel nil
   [kw contract chainId]
   nil)
-
-
-
-
-
-
-
-
 
 (defn handle-zapout-token-change
   [token-addr wallet-addr]
@@ -237,6 +143,8 @@
      (doall
       (for [[k v] @contracts]
         ^{:key k} [contract-panel k v @chainId]))]))
+
+
 
 (defn wallet-display
   []
@@ -350,6 +258,6 @@
   (let [name (re-frame/subscribe [::subs/addr])]
     [:div
      [window "welcome" [body]]
-     (when (not (= "0x0" @name)) [migrator-panel])
+     (when (not (= "0x0" @name)) [liqmigrator/migrator-display])
      (when (not (= "0x0" @name)) [vault-zapper])
      [contracts-panel]]))

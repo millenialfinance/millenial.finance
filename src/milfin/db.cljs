@@ -13,9 +13,6 @@
    :contracts-state {}
    :token-balances {}
    :token-allowances {}
-   :enabled-routers {
-                     250 ftm-routers
-                     }
    :vaults {
             250 (into {} ftm-vaults)
             137 (into {} matic-vaults)
@@ -43,4 +40,6 @@
             :zapin-amt 0
             :zapin-token ""
             :zapout-token ""
+            :token0 ""
+            :token1 ""
             }})
