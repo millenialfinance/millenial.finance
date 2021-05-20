@@ -23,6 +23,9 @@
   {
    "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff" {:address "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff"
                                                  :name "QuickSwap"}
+   "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506" {:address "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506"
+                                                 :factory "0xc35DADB65012eC5796536bD9864eD8773aBc74C4"
+                                                 :name "SushiSwap"}
 
    })
 
