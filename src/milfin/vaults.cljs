@@ -104,7 +104,7 @@
                                                  :router "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff"
                                                  :address "0x942aa6324E5D0C102d3Ad6607495ac5e798a991a"
                                                  }
-   "0x654E651b658f784406125400cf648588CB9773e8" {:name "DEFI5-ETH QLP"
+   "0x654E651b658f784406125400cf648588CB9773e8" {:name "DEFI5-ETH QLP Beefy Finance Vault"
                                                  :platform :beefy
                                                  :token "0x654E651b658f784406125400cf648588CB9773e8"
                                                  :router "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff"
