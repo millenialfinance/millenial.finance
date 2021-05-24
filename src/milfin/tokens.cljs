@@ -89,7 +89,7 @@
                                                 :address "0x321162Cd933E2Be498Cd2267a90534A804051b11"
                                                  :shortname "wBTC"
                                                  :type :erc20}
-    "0xAd84341756Bf337f5a0164515b1f6F993D194E1f"  {:name "fUSD"
+    #_"0xAd84341756Bf337f5a0164515b1f6F993D194E1f"  #_{:name "fUSD"
                                                 :address "0xAd84341756Bf337f5a0164515b1f6F993D194E1f"
                                                  :shortname "fUSD"
                                                  :type :erc20}
@@ -99,7 +99,7 @@
                                                  :type :lp
                                                  :router-addr "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506"
                                                  :exchange :sushi}
-    "0x5cc61a78f164885776aa610fb0fe1257df78e59b" {:name "Spirit Token"
+    #_"0x5cc61a78f164885776aa610fb0fe1257df78e59b" #_{:name "Spirit Token"
                                                  :address "0x5cc61a78f164885776aa610fb0fe1257df78e59b"
                                                  :shortname "SPIRIT"
                                                  :type :erc20

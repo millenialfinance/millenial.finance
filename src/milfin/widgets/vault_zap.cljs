@@ -25,25 +25,6 @@
                 (re-frame/dispatch [::events/fetch-balance]))))
   (re-frame/dispatch [::events/store-in [:vaulter :from] token-addr]))
 
-(defn handle-zapin-token-change
-  [token-addr wallet-addr contract-addr chainId]
-  (let [tokens (tokenlist/tokens chainId)
-        token (tokens token-addr)
-        type (:type token)]
-    (case type
-      :lp (do
-            (re-frame/dispatch [::events/get-erc20-allowance token-addr wallet-addr contract-addr])
-            (re-frame/dispatch [::events/get-erc20-bal token-addr wallet-addr])
-            (re-frame/dispatch [::events/store-in [:zapper :zap-direction] :out]))
-      :erc20 (do
-               (re-frame/dispatch [::events/store-in [:zapper :zap-direction] :in])
-               (re-frame/dispatch [::events/get-erc20-allowance token-addr wallet-addr contract-addr])
-               (re-frame/dispatch [::events/get-erc20-bal token-addr wallet-addr]))
-      :native (do
-                (re-frame/dispatch [::events/store-in [:zapper :zap-direction] :in])
-                (re-frame/dispatch [::events/fetch-balance]))))
-  (re-frame/dispatch [::events/store-in [:zapper :zapin-token] token-addr]))
-
 (defn handle-vaultout-change
   [vault-addr wallet-addr chainId]
   (let [{:keys [token router]} ((if (= 250 chainId) ftm-vaults matic-vaults) vault-addr)
@@ -75,7 +56,7 @@
         chain-tokens (re-frame/subscribe [::subs/tokens])
         native-balance (re-frame/subscribe [::subs/balance])
         token-addrs (re-frame/subscribe [::subs/enabled-tokens])
-        vault-addrs (re-frame/subscribe [::subs/enabled-vaults])
+        vaults (re-frame/subscribe [::subs/enabled-vaults])
         v (re-frame/subscribe [::subs/selected-vault])
         selected-provider (re-frame/subscribe [::subs/vault-provider])
         balances (re-frame/subscribe [::subs/token-balances])
@@ -124,7 +105,7 @@
                    :on-change #(handle-vaultout-change (.. % -target -value) @addr @chainId)}
           ^{:key "default"}[:option {:value ""} "-Select-"]
           (doall
-           (for [[vault-addr vault] @vault-addrs]
+           (for [[vault-addr vault] @vaults]
              (do
                (let [n (:name vault)
                      selected (or (and (not (nil? @selected-provider )) (clojure.string/includes? (clojure.string/lower-case n) (name @selected-provider))) (nil? @selected-provider))]
