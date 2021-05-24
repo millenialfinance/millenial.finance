@@ -44,6 +44,12 @@
                                                 :address "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6"
                                                  :shortname "wBTC"
                                                  :type :erc20}
+  #_ "0x2cf7252e74036d1da831d11089d326296e64a728" #_{:name "USDC/USDT Quickswap LP Token"
+                                                 :address "0x2cf7252e74036d1da831d11089d326296e64a728"
+                                                 :exchange :quick
+                                                 :router-addr "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff"
+                                                 :shortname "USDC/USDT Q-LP"
+                                                 :type :lp}
    "0xdC9232E2Df177d7a12FdFf6EcBAb114E2231198D" {:name "wBTC/ETH Quickswap LP Token"
                                                  :address "0xdC9232E2Df177d7a12FdFf6EcBAb114E2231198D"
                                                  :exchange :quick

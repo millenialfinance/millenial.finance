@@ -92,6 +92,24 @@
                                                  :router "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff"
                                                  :address "0x82303a4b2c821204A84AB2a068eC8EDf3Bc23061"}
 
+   #_"0x4462817b53E76b722c2D174D0148ddb81452f1dE" #_{:name "USDC-USDT QLP Beefy Finance Vault"
+                                                 :platform :beefy
+                                                 :token "0x2cf7252e74036d1da831d11089d326296e64a728"
+                                                 :router "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff"
+                                                 :address "0x4462817b53E76b722c2D174D0148ddb81452f1dE"
+                                                 }
+   "0x942aa6324E5D0C102d3Ad6607495ac5e798a991a" {:name "UBT-ETH QLP Beefy Finance Vault"
+                                                 :platform :beefy
+                                                 :token "0xcc203f45A31aE086218170F6A9e9623fA1655486"
+                                                 :router "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff"
+                                                 :address "0x942aa6324E5D0C102d3Ad6607495ac5e798a991a"
+                                                 }
+   "0x654E651b658f784406125400cf648588CB9773e8" {:name "DEFI5-ETH QLP"
+                                                 :platform :beefy
+                                                 :token "0x654E651b658f784406125400cf648588CB9773e8"
+                                                 :router "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff"
+                                                 :address "0x654E651b658f784406125400cf648588CB9773e8"
+                                                 }
 
    ;; this vault requires an intermediate step
    ;; need to go through quick to get ANY otherwise u get fucked
