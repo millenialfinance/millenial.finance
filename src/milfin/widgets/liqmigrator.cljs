@@ -48,7 +48,7 @@
            ^{:key (:address token)} [:option {:value (:address token)} (:name token)])]]
        [:div
 
-        (if @from-balance
+        (when @from-balance
           [:p "Balance: " (.formatUnits e/utils @from-balance)])
         (when (= "0" (str @from-allowance)) [btn {:text "Approve" :on-click #(re-frame/dispatch [::events/approve-erc20 (:address from-token) zapper-addr])}])]]]]))
 
@@ -56,7 +56,7 @@
   []
   (let [all-routers (re-frame/subscribe [::subs/routers])
         dest-router @(re-frame/subscribe [::subs/migrator-dest-router])
-        addr @(re-frame/subscribe [::subs/addr])]
+        ]
     [:div
      [:section
       [:fieldset
@@ -86,7 +86,7 @@
                                                                        (cond
                                                                          (= "." val) (re-frame/dispatch [::events/store-in [:migrator :amt] (str "0" (.. % -target -value))])
                                                                          (= "" val) (re-frame/dispatch [::events/store-in [:migrator :amt] "0"])
-                                                                         true (re-frame/dispatch [::events/store-in [:migrator :amt] (.. % -target -value)])))
+                                                                         :else (re-frame/dispatch [::events/store-in [:migrator :amt] (.. % -target -value)])))
                 }]]
       [:div.zap-btn
        [btn {:text "Max"
@@ -101,13 +101,8 @@
 (defn migrator-display
   []
   (let [chainId (re-frame/subscribe [::subs/chainId])
-        all-routers (re-frame/subscribe [::subs/routers])
-        tokens (re-frame/subscribe [::subs/tokens])
-        eligible-lp-tokens (re-frame/subscribe [::subs/migrator-lp-tokens])
-        dest-router (re-frame/subscribe [::subs/migrator-dest-router])
         zapper-contract @(re-frame/subscribe [::subs/zapper-contract])
-        {:keys [from amt]} @(re-frame/subscribe [::subs/migrator-amt])
-        source-router (re-frame/subscribe [::subs/migrator-source-router])]
+        ]
     [window "LiqMigrator.exe"
      [:div
       [contract-status-bar zapper-contract @chainId]

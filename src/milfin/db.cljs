@@ -1,5 +1,5 @@
 (ns milfin.db
-  (:require [milfin.routers :refer [ftm-routers]]
+  (:require
             [milfin.vaults :refer [ftm-vaults matic-vaults providers]]
             [milfin.tokens :refer [tokens]]))
 

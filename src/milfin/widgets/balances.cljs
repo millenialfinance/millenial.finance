@@ -3,7 +3,7 @@
    [re-frame.core :as re-frame]
    [milfin.subs :as subs]
    [milfin.ethers :as e]
-   [milfin.components :refer [window btn status-bar]]
+   [milfin.components :refer [window]]
    ))
 
 (defn balances-display

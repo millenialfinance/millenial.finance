@@ -2,6 +2,7 @@
   (:require
    [milfin.ethers :as e]
    [cljs.core.async :refer [go <!]]
+   [clojure.string]
    [cljs.core.async.interop :refer-macros [<p!]]
    [re-frame.core :as re-frame]
    [milfin.covalent :as covalent]
@@ -57,22 +58,22 @@
 (re-frame/reg-event-fx
  ::initialize-ether
  [(re-frame/inject-cofx :window-eth)]
- (fn-traced [cofx event]
-            (let [db (:db cofx)
+ (fn-traced [cofx]
+            (let [
                   window-eth (:window-eth cofx)]
               {:eth-fetch [window-eth :addr :balance :network-name]})))
 
 (re-frame/reg-event-fx
  ::fetch-balance
  [(re-frame/inject-cofx :window-eth)]
- (fn-traced [cofx event]
-            (let [db (:db cofx)
+ (fn-traced [cofx ]
+            (let [
                   window-eth (:window-eth cofx)]
               {:eth-fetch [window-eth :balance :network-name]})))
 
 (re-frame/reg-event-fx
  ::fetch-covalent-balances
- (fn-traced [cofx event]
+ (fn-traced [cofx ]
             (let [{:keys [chainId addr]} (:db cofx)]
               {:covalent-balances [chainId addr]})))
 
@@ -81,7 +82,7 @@
  [(re-frame/inject-cofx :contracts)]
  (fn-traced [cofx [_ network]]
             (let [db (:db cofx)
-                  contracts (:contracts cofx)]
+                  ]
               {:db (assoc db :contracts (chain->contracts network))})))
 
 (re-frame/reg-event-fx
@@ -165,7 +166,7 @@
  :eth-call
  (fn [[window-eth _contract f keys a]]
    (go
-     (let [eth (<p! (.enable window-eth))
+     (let [_ (<p! (.enable window-eth))
            contract (instantiate-contract _contract)
            result (<p! (apply js-invoke contract f a))]
        (re-frame/dispatch [::store-contract-state keys result])))))
@@ -174,7 +175,7 @@
  :eth-call-write
  (fn [[window-eth _contract f keys a]]
    (go
-     (let [eth (<p! (.enable window-eth))
+     (let [_ (<p! (.enable window-eth))
            contract (instantiate-contract-write _contract)
            args (into [] (conj a (clj->js {:gasLimit "1000000"})))
            result (<p! (apply js-invoke contract f args))]
@@ -184,7 +185,7 @@
  :eth-call-write-paid
  (fn [[window-eth val _contract f keys a]]
    (go
-     (let [eth (<p! (.enable window-eth))
+     (let [_ (<p! (.enable window-eth))
            contract (instantiate-contract-write _contract)
            args (into [] (conj a (clj->js {:value val :gasLimit "1000000"})))
            _ (js/console.log (first args))
@@ -195,16 +196,16 @@
  :covalent-balances
  (fn [[chainId addr]]
    (go
-     (let [response (<! (covalent/get-balances chainId addr))]
-       (let [d (:data (:body response))
-             dms (map #(into {}) d)]
-         (re-frame/dispatch [::store-in [:covalent :balances] d]))))))
+     (let [response (<! (covalent/get-balances chainId addr))
+           d (:data (:body response))
+           ]
+       (re-frame/dispatch [::store-in [:covalent :balances] d])))))
 
 (re-frame/reg-fx
  :eth-fetch
  (fn [[window-eth & fields]]
    (go
-     (let [eth (<p! (.enable window-eth))]
+     (let [_ (<p! (.enable window-eth))]
        (re-frame/dispatch [::store :connected true])
        (doseq [f fields]
          (case f

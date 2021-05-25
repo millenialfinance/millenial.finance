@@ -5,15 +5,11 @@
    [milfin.tokens :as tokenlist]
    [milfin.events :as events :refer [fetch-pool-info]]
    [milfin.components :refer [window btn status-bar]]
-   [milfin.routers :refer [routers]]
    [milfin.widgets.vault-zap :refer [vault-zapper]]
-   [milfin.widgets.balances :refer [balances-display]]
    [milfin.widgets.liqmigrator :as liqmigrator]
-   [milfin.vaults :refer [ftm-vaults matic-vaults]]
-   [milfin.contracts  :refer [parse-abistr chain->contracts]]
    [milfin.ethers :as e]
    [milfin.chains :refer [chainId->chain]]
-   [clojure.string :as str]))
+   ))
 
 (def restricted false)
 
@@ -35,9 +31,8 @@
   (doall
    (for [token tokens]
      (when-not (= "0x0" (:address token))
-       (do
-        (re-frame/dispatch-sync [::events/get-erc20-allowance token wallet-addr contract-addr])
-        (re-frame/dispatch-sync [::events/get-erc20-bal token wallet-addr]))))))
+       (re-frame/dispatch-sync [::events/get-erc20-allowance token wallet-addr contract-addr])
+       (re-frame/dispatch-sync [::events/get-erc20-bal token wallet-addr])))))
 
 (defn handle-zapin-token-change
   [token-addr wallet-addr contract-addr chainId]
@@ -60,7 +55,7 @@
 
 
 (defmulti contract-panel
-  (fn [kw contract chainId] (:type contract)))
+  (fn [_ contract _] (:type contract)))
 
 (defmethod contract-panel :pool
   [kw contract chainId]
@@ -71,7 +66,7 @@
      [:div
       [status-bar
        (str "Contract Address: " (:addr contract))
-       (if chainId (str "Network: " (:name (chainId->chain chainId))))
+       (when chainId (str "Network: " (:name (chainId->chain chainId))))
        [btn {:text "Refresh" :on-click #(fetch-pool-info contract kw @addr)}]]
       (for [poolId [0 1 2]]
         ^{:key poolId}
@@ -82,21 +77,21 @@
            [:fieldset
             [:legend (str "Pool " poolId)]
             (if poolInfo
-              (let [[stakingTokenAddr stakingTokenTotalAmount] poolInfo
+              (let [[stakingTokenAddr] poolInfo
                     stakingToken (tokenlist/bsc-tokens stakingTokenAddr)]
                 [:p (str "Staking: " (:name stakingToken) " (" (:shortname stakingToken) ")")])
               (fetch-pool-info contract kw @addr))
-            (if userInfo [:p (str "Staked Balance: " (.formatUnits e/utils (first userInfo)))])
-            (if pendingReward [:p (str "Pending reward: " (.formatUnits e/utils pendingReward))])
+            (when userInfo [:p (str "Staked Balance: " (.formatUnits e/utils (first userInfo)))])
+            (when pendingReward [:p (str "Pending reward: " (.formatUnits e/utils pendingReward))])
             [btn {:text "Claim"
                   :on-click #(re-frame/dispatch [::events/call-contract-write contract "withdraw" [kw :withdraw poolId] [poolId 0]])}]]]))]]))
 
 (defmethod contract-panel :utility
-  [kw contract chainId]
+  [& _]
   nil)
 
 (defmethod contract-panel nil
-  [kw contract chainId]
+  [& _]
   nil)
 
 (defn handle-zapout-token-change
@@ -110,7 +105,6 @@
         zapin-type (:type (tokens zapin-token))
         zapout-type (:type (tokens zapout-token))
         zap-across (= :lp zapin-type zapout-type)
-        is-native-send (= :native zapin-type)
         router-addr (case zap-direction
                       :in (:router-addr (tokens zapout-token))
                       :out (:router-addr (tokens zapin-token)))
@@ -215,7 +209,6 @@
            (for [token (map chain-tokens @token-addrs)]
              (let [isLP (= :lp (:type token) )
                    isSpirit (= :spirit (:exchange token))
-                   isSpiritToken (= "SPIRIT" (:shortname token))
                    zapping-in (= :in zap-direction)
                    addr (:address token)]
                (when (xnor isLP zapping-in)
@@ -227,7 +220,7 @@
                                                                                 (cond
                                                                                   (= "." val) (re-frame/dispatch [::events/store-in [:zapper :zapin-amt] (str "0" (.. % -target -value))])
                                                                                   (= "" val) (re-frame/dispatch [::events/store-in [:zapper :zapin-amt] "0"])
-                                                                                  true (re-frame/dispatch [::events/store-in [:zapper :zapin-amt] (.. % -target -value)])))}]]
+                                                                                  :else (re-frame/dispatch [::events/store-in [:zapper :zapin-amt] (.. % -target -value)])))}]]
           [:div.zap-btn
            [btn {:text "Max"
                  :on-click #(re-frame/dispatch [::events/store-in [:zapper :zapin-amt] (.formatEther e/utils (if (= "0x0" zapin-token)

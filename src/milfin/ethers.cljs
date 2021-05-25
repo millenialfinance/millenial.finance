@@ -1,6 +1,6 @@
 (ns milfin.ethers
   (:require ["ethers" :as ethers-lib]
-            [milfin.chains :refer [chains]]
+
             ))
 
 (def e ethers-lib/ethers)

@@ -1,7 +1,6 @@
 (ns milfin.subs
   (:require
    [re-frame.core :as re-frame]
-   [milfin.contracts :refer [chain->contracts]]
    [milfin.routers :refer [routers]]
    [milfin.vaults :refer [vaults]]
    [milfin.tokens :as tokenlist]))

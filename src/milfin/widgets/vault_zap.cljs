@@ -2,14 +2,14 @@
   (:require
    [re-frame.core :as re-frame]
    [milfin.subs :as subs]
-   [milfin.events :as events :refer [fetch-pool-info]]
+   [clojure.string]
+   [milfin.events :as events]
    [milfin.ethers :as e]
    [milfin.tokens :as tokenlist]
    [milfin.components :refer [window btn status-bar]]
-   [milfin.routers :refer [routers]]
    [milfin.chains :refer [chainId->chain]]
    [milfin.vaults :refer [ftm-vaults matic-vaults]]
-   [milfin.contracts  :refer [parse-abistr chain->contracts]]
+   [milfin.contracts  :refer [chain->contracts]]
    ))
 
 (defn handle-vaultin-token-change
@@ -21,8 +21,8 @@
       :erc20 (do
                (re-frame/dispatch [::events/get-erc20-allowance token-addr wallet-addr contract-addr])
                (re-frame/dispatch [::events/get-erc20-bal token-addr wallet-addr]))
-      :native (do
-                (re-frame/dispatch [::events/fetch-balance]))))
+      :native
+      (re-frame/dispatch [::events/fetch-balance])))
   (re-frame/dispatch [::events/store-in [:vaulter :from] token-addr]))
 
 (defn handle-vaultout-change
@@ -50,7 +50,7 @@
   []
   (let [addr (re-frame/subscribe [::subs/addr])
         vaulter-state (re-frame/subscribe [::subs/vaulter-state])
-        {:keys [from to amt router token]} @vaulter-state
+        {:keys [from to amt]} @vaulter-state
         chainId (re-frame/subscribe [::subs/chainId])
         providers (re-frame/subscribe [::subs/vault-providers ])
         chain-tokens (re-frame/subscribe [::subs/tokens])
@@ -106,10 +106,9 @@
           ^{:key "default"}[:option {:value ""} "-Select-"]
           (doall
            (for [[vault-addr vault] @vaults]
-             (do
-               (let [n (:name vault)
-                     selected (or (and (not (nil? @selected-provider )) (clojure.string/includes? (clojure.string/lower-case n) (name @selected-provider))) (nil? @selected-provider))]
-                 (when selected ^{:key vault-addr}[:option {:value vault-addr} n])))))]
+             (let [n (:name vault)
+                   selected (or (and (not (nil? @selected-provider )) (clojure.string/includes? (clojure.string/lower-case n) (name @selected-provider))) (nil? @selected-provider))]
+               (when selected ^{:key vault-addr}[:option {:value vault-addr} n]))))]
          [:div
           [:p (str "Balance: " (.formatUnits e/utils (or (get @balances to) "0")))]
           [:p (str "Vault Address: " to)]]]]]
@@ -119,7 +118,7 @@
            [:input {:id "vault-amt" :type "number" :value amt :on-change #(let [val (.. % -target -value)]
                                                                                 (cond
                                                                                   (= "." val) (re-frame/dispatch [::events/store-in [:vaulter :amt] "0."])
-                                                                                  true (re-frame/dispatch [::events/store-in [:vaulter :amt] (.. % -target -value)])))}]]
+                                                                                  :else (re-frame/dispatch [::events/store-in [:vaulter :amt] (.. % -target -value)])))}]]
           [:div.zap-btn
            [btn {:text "Max"
                  :on-click #(re-frame/dispatch [::events/store-in [:vaulter :amt] (.formatEther e/utils (if (= "0x0" from)
