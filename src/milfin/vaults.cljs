@@ -1,13 +1,21 @@
 (ns milfin.vaults)
 
 (def providers
-  {250 [:supra :beefy]
+  {250 [:grim :supra :beefy :hyper]
    137 [:beefy]})
 
 
 
 (def ftm-vaults
-  {"0x49b5988d48039794f6232b44D7ed8F9bF8b6F784" {:name "SPIRIT/FTM Supra Finance Vault"
+  {"0x7dfB3A1494379a4bD3c11Fdf472D5686C215D6cf" {:name "FRAX/FTM Grim Vault"
+                                                 :token "0x0eC0E1629E776272FA3E55548D4A656BE0EEdcF4"
+                                                 :router "0x16327e3fbdaca3bcf7e38f5af2599d2ddc33ae52"
+                                                 :address "0x7dfB3A1494379a4bD3c11Fdf472D5686C215D6cf"}
+   #_"0x6C89FEC29e95d187A35915BC18a942C4000A6FE9" #_{:name "ORI/FTM Hyperswap Star Vault"
+                                                 :token "0x0433305Ae161d28eD1408D11581610339dfC9BE4"
+                                                 :router "0x53c153a0df7E050BbEFbb70eE9632061f12795fB"
+                                                 :address "0x6C89FEC29e95d187A35915BC18a942C4000A6FE9"}
+   "0x49b5988d48039794f6232b44D7ed8F9bF8b6F784" {:name "SPIRIT/FTM Supra Finance Vault"
                                                  :token "0x30748322b6e34545dbe0788c421886aeb5297789"
                                                  :router "0x16327e3fbdaca3bcf7e38f5af2599d2ddc33ae52"
                                                  :address "0x49b5988d48039794f6232b44D7ed8F9bF8b6F784"}
