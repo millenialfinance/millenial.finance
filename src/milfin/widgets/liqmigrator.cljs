@@ -4,6 +4,7 @@
    [milfin.events :as events]
    [milfin.chains :refer [chainId->chain]]
    [milfin.subs :as subs]
+   [milfin.contracts :refer [chain->contracts]]
    [milfin.ethers :as e]
    [milfin.components :refer [window btn status-bar]]))
 
@@ -18,12 +19,13 @@
 (defn zap-from
   []
   (let [all-routers (re-frame/subscribe [::subs/routers])
+        chainId (re-frame/subscribe [::subs/chainId])
         eligible-lp-tokens (re-frame/subscribe [::subs/migrator-lp-tokens])
         addr @(re-frame/subscribe [::subs/addr])
         from-token @(re-frame/subscribe [::subs/migrator-token])
         from-balance (re-frame/subscribe [::subs/migrator-from-balance])
         from-allowance (re-frame/subscribe [::subs/migrator-from-allowance])
-        zapper-contract @(re-frame/subscribe [::subs/zapper-contract])
+        zapper-contract (:milzap (chain->contracts (if (= 250 @chainId) :ftm :matic)) )
         zapper-addr (:addr zapper-contract)
         source-router (re-frame/subscribe [::subs/migrator-source-router])]
     [:fieldset
@@ -96,7 +98,7 @@
 (defn migrator-display
   []
   (let [chainId (re-frame/subscribe [::subs/chainId])
-        zapper-contract @(re-frame/subscribe [::subs/zapper-contract])
+        zapper-contract (:milzap (chain->contracts (if (= 250 @chainId) :ftm :matic)) )
         ]
     [window "LiqMigrator.exe"
      [:div
