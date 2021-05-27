@@ -176,7 +176,7 @@
  ::routers
  :<- [::chainId]
  (fn [chainId]
-   (vals (routers chainId))))
+   (vals (into {} (filter #(string? (first %)) (routers chainId))))))
 
 (re-frame/reg-sub
  ::selected-vault
@@ -202,6 +202,14 @@
  :<- [::vaulter-state]
  (fn [{:keys [amt]}]
    amt))
+
+(re-frame/reg-sub
+ ::vault-router
+ :<- [::chainId]
+ :<- [::selected-vault]
+ (fn [[chainId {:keys [router]}]]
+   (js/console.log "Router: " (clj->js router))
+   (get-in routers [chainId router] {})))
 
 (re-frame/reg-sub
  ::cov-bals

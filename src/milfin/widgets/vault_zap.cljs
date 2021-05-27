@@ -64,9 +64,11 @@
         selected-provider (re-frame/subscribe [::subs/vault-provider])
         balances (re-frame/subscribe [::subs/token-balances])
         allowances (re-frame/subscribe [::subs/token-allowances])
+        router (re-frame/subscribe [::subs/vault-router])
         contract (:milzap (chain->contracts (if (= 250 @chainId) :ftm :matic)) )
         ]
     (re-frame/dispatch [::events/store-in [:vaulter :provider] (first @providers)])
+    (js/console.log "Router!: " (clj->js @router))
     (fn []
       [window "Vault Zap"
        [:div
@@ -133,6 +135,6 @@
           [btn {:text "Zap"
                 :on-click #(do
                              (if (= @from "0x0")
-                               (re-frame/dispatch [::events/call-contract-write-paid (.parseEther e/utils @amt)  contract "zapInToLPVault" [:vaulter @from @to] [(:token @v) (:router @v) @to @addr]])
-                               (re-frame/dispatch [::events/call-contract-write contract "zapInTokenToLPVault" [:vaulter @from @to] [@from (.parseEther e/utils @amt) (:token @v) (:router @v) @to @addr]])))}]]]]])
+                               (re-frame/dispatch [::events/call-contract-write-paid (.parseEther e/utils @amt)  contract "zapInToLPVault" [:vaulter @from @to] [(:token @v) (:address @router) @to @addr]])
+                               (re-frame/dispatch [::events/call-contract-write contract "zapInTokenToLPVault" [:vaulter @from @to] [@from (.parseEther e/utils @amt) (:token @v ) (:address @router) @to @addr]])))}]]]]])
     ))
