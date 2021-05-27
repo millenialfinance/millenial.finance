@@ -77,7 +77,9 @@
           [:legend "Zapping From"]
           [:div
 
-           [:select {:value (or @from "")
+           [:label.mrp {:for "vzap-from"} "Token: "]
+           [:select {:id "vzap-from"
+                     :value (or @from "")
                      :on-change #(handle-vaultin-token-change (.. % -target -value) @addr (:addr contract) @chainId)}
             ^{:key "default"}[:option {:value ""} "-Select-"]
             (doall
@@ -107,7 +109,9 @@
                 [:input {:id (name provider) :checked (= provider @selected-provider) :type "radio" :name "vault-provider" :on-change #(handle-vault-provider-change (.. % -target -id))}]
                 [:label {:for (name provider)} (clojure.string/capitalize (name provider))]]))
             ]
-           [:select {:value (or @to "")
+           [:label.mrp {:for "vzap-to"} "Vault: "]
+           [:select {:id "vzap-top"
+                     :value (or @to "")
                      :on-change #(handle-vaultout-change (.. % -target -value) @addr @chainId)}
             ^{:key "default"}[:option {:value ""} "-Select-"]
             (doall
