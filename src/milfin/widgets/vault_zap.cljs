@@ -70,6 +70,7 @@
         ]
     (fn []
     (js/console.log "CHAINID" @chainId)
+      (js/console.log "VAULTS" sorted-vaults)
       [window "Vault Zap"
        [:div
         [contract-status-bar contract @chainId ]
