@@ -65,7 +65,7 @@
         balances (re-frame/subscribe [::subs/token-balances])
         allowances (re-frame/subscribe [::subs/token-allowances])
         router (re-frame/subscribe [::subs/vault-router])
-        contract (:milzap (chain->contracts (if (= 250 @chainId) :ftm :matic)) )
+        contract (:milzap (chain->contracts (if (= 137 @chainId) :matic :ftm)) )
         ]
     (js/console.log "CHAINID" @chainId)
     (fn []

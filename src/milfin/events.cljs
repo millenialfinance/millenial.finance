@@ -85,6 +85,7 @@
                   ]
               {:db (assoc db :contracts (chain->contracts network))})))
 
+
 (re-frame/reg-event-fx
  ::call-contract
  [(re-frame/inject-cofx :window-eth)]
@@ -227,7 +228,7 @@
                                chain (chainId->chain chainId)
                                addr (<p! (e/get-addr))
                                kwd (keyword (clojure.string/lower-case (:chain chain)))]
-                           (re-frame/dispatch [::load-contracts chainId])
+                           (re-frame/dispatch [::load-contracts kwd])
                            (re-frame/dispatch [::store :chainId chainId])
                            (re-frame/dispatch [::fetch-covalent-balances chainId addr])
                            )))))))
