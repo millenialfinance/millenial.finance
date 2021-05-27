@@ -68,6 +68,34 @@
                                                  :address "0xb3654dc3d10ea7645f8319668e8f54d2574fbdc8"
                                                  :shortname "LINK"
                                                  :type :erc20}
+   "0x04068da6c83afcfa0e13ba15a6696662335d5b75" {:name "USDC"
+                                                 :address "0x04068da6c83afcfa0e13ba15a6696662335d5b75"
+                                                 :shortname "USDC"
+                                                 :type :erc20}
+   "0xae75a438b2e0cb8bb01ec1e1e376de11d44477cc" {:name "Sushi"
+                                                 :address "0xae75a438b2e0cb8bb01ec1e1e376de11d44477cc"
+                                                 :shortname "SUSHI"
+                                                 :type :erc20}
+   "0xd67de0e0a0fd7b15dc8348bb9be742f3c5850454" {:name "Binance Token"
+                                                 :address "0xd67de0e0a0fd7b15dc8348bb9be742f3c5850454"
+                                                 :shortname "BNB"
+                                                 :type :erc20}
+   "0x6a07a792ab2965c72a5b8088d3a069a7ac3a993b" {:name "AAVE"
+                                                 :address "0x6a07a792ab2965c72a5b8088d3a069a7ac3a993b"
+                                                 :shortname "AAVE"
+                                                 :type :erc20}
+   "0x1e4f97b9f9f913c46f1632781732927b9019c68b" {:name "Curve DAO"
+                                                 :address "0x1e4f97b9f9f913c46f1632781732927b9019c68b"
+                                                 :shortname "CRV"
+                                                 :type :erc20}
+   "0x657a1861c15a3ded9af0b6799a195a249ebdcbc6" {:name "Cream"
+                                                 :address "0x657a1861c15a3ded9af0b6799a195a249ebdcbc6"
+                                                 :shortname "CREAM"
+                                                 :type :erc20}
+   "0xaf319e5789945197e365e7f7fbfc56b130523b33" {:name "Frax"
+                                                 :address "0x657a1861c15a3ded9af0b6799a195a249ebdcbc6"
+                                                 :shortname "FRAX"
+                                                 :type :erc20}
    "0x956DE13EA0FA5b577E4097Be837BF4aC80005820" {:name "FTM-BNB SpookySwap LP Token"
                                                  :address "0x956DE13EA0FA5b577E4097Be837BF4aC80005820"
                                                  :router-addr "0xf491e7b69e4244ad4002bc14e878a34207e38c29"
