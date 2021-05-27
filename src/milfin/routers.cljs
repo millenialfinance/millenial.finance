@@ -15,6 +15,12 @@
                                               :init-hash "0xcdf2deca40a0bd56de8e3ce5c7df6727e5b1bf2ac96f283fa9c4b3e6b42ea9d2"
                :name "SpookySwap"})
 
+(def waka {:address "0x7B17021FcB7Bc888641dC3bEdfEd3734fCaf2c87"
+           :name "Waka"})
+
+(def hyperjump {:address "0x53c153a0df7E050BbEFbb70eE9632061f12795fB"
+                :name "Hyperjump"})
+
 (def ftm-routers
   {
    "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506" sushi-ftm
@@ -25,6 +31,11 @@
 
    "0xf491e7b69e4244ad4002bc14e878a34207e38c29" spooky
    :spooky spooky
+
+   :wakafinance waka
+
+   :hyperjump hyperjump
+
    }
   )
 

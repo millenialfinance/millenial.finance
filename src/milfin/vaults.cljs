@@ -1,10 +1,12 @@
-(ns milfin.vaults)
+(ns milfin.vaults
+  (:require [milfin.grim :as grim]
+            [clojure.string]))
 
 (def providers
   {250 [:grim :supra :beefy :hyper]
    137 [:beefy]})
 
-(def ftm-vaults
+(def ftm-vaults-hc
   {;; SINGLE SIDED STAKING VAULTS (GRIM)
 
    "0x0d5Ecb27D1574E3B574d6D8c93C628d17348c99B" {:name "Grim Finance SPIRIT Vault"
@@ -32,72 +34,6 @@
                                                      :router "0x53c153a0df7E050BbEFbb70eE9632061f12795fB"
                                                      :address "0x6C89FEC29e95d187A35915BC18a942C4000A6FE9"}
 
-   "0xB45c9a2627219Db00D82b4F2816D544f41bCBC4B" {:name "Grim Finance BUSD-FUSDT Vault"
-                                                 :token "0x1Ac51904cFAaD15679B3500F0fC41D2971657f80"
-                                                 :router :spirit
-                                                 :address "0xB45c9a2627219Db00D82b4F2816D544f41bCBC4B"}
-   "0x8C2DCB72c80a4e4014D0EAda094a4DD690c6fe37" {:name "Grim Finance FRAX-FTM Vault"
-                                                 :token "0x0eC0E1629E776272FA3E55548D4A656BE0EEdcF4"
-                                                 :router :spirit
-                                                 :address "0x8C2DCB72c80a4e4014D0EAda094a4DD690c6fe37"}
-   "0x72dC5eF4EC32582b18465eD7900Fe0280Fde9736"  {:name "Grim Finance FXS-FRAX Vault"
-                                                  :token "0x100FcF27C87D1cc7b8D6c28b69b84A359e4fd377"
-                                                  :router :spirit
-                                                  :address "0x72dC5eF4EC32582b18465eD7900Fe0280Fde9736"}
-   "0x3A5A2a671d30b09ecFB95bC398be62313569b6de" {:name "Grim Finance ICE-FTM Vault"
-                                                 :token "0x936D23C83c2469f6a14B9f5bEaec13879598A5aC"
-                                                 :router :spirit
-                                                 :address "0x3A5A2a671d30b09ecFB95bC398be62313569b6de"}
-   "0x8f9d07bae2A31b5B82F7E5fb8916296EEB3e3e9a" {:name "Grim Finance YFI-WOOFY Vault"
-                                                 :token "0x287ebF376c59a037B8D8E0e987461b2fd8550D8c"
-                                                 :router :spirit
-                                                 :address "0x8f9d07bae2A31b5B82F7E5fb8916296EEB3e3e9a"}
-
-   "0x14409cab075DDe7A50fF14e9f76c9E1B26d030AE"  {:name "Grim Finance SUPRA-FTM Vault"
-                                                  :token "0xa636bf8D0741b71aC8E71Ee8d83e5312fEbe7083"
-                                                  :router :spirit
-                                                  :address "0x14409cab075DDe7A50fF14e9f76c9E1B26d030AE"}
-
-   "0x05C8e2230bdbEdd27016F0F50eadA181D36e16B7"  {:name "Grim Finance MM-FTM Vault"
-                                                  :token "0x971D049B7BDE4ca9192A461708eBB54C8EBC0843"
-                                                  :router :spirit
-                                                  :address "0x05C8e2230bdbEdd27016F0F50eadA181D36e16B7"}
-
-   "0x6fF9e23BdC45a165f88F723A265d412F403270A0"  {:name "Grim Finance SPIRIT-FTM Vault"
-                                                  :token "0x30748322B6E34545DBe0788C421886AEB5297789"
-                                                  :router :spirit
-                                                  :address "0x6fF9e23BdC45a165f88F723A265d412F403270A0"}
-
-   "0x0092739FEDaC3c77EdC88A1e9B83686f21b9BE96"  {:name "Grim Finance FTM-USDC Vault"
-                                                  :token "0xe7E90f5a767406efF87Fdad7EB07ef407922EC1D"
-                                                  :router :spirit
-                                                  :address "0x0092739FEDaC3c77EdC88A1e9B83686f21b9BE96"}
-
-
-  "0xd0CA2E5A8c12F56a130A7d609DcAC0f820743056" {:name "Grim Finance DAI-SPIRIT Vault"
-    :token "0xfFbfc0446cA725b21256461e214E9D472f9be390"
-                                                  :router :spirit
-    :address "0xd0CA2E5A8c12F56a130A7d609DcAC0f820743056"}
-
-   "0xD671f21fAaAd44CC5c5937Ca1e90380d3276FDf5" {:name "Grim Finance WBTC-FTM Vault"
-    :token "0x279b2c897737a50405ED2091694F225D83F2D3bA"
-                                                  :router :spirit
-    :address "0xD671f21fAaAd44CC5c5937Ca1e90380d3276FDf5"}
-
-   "0x106A8d32D4CcC8fA3BCf6BA39dC999853B5F4C2E" {:name "Grim Finance wETH/FTM Vault"
-    :token "0x613BF4E46b4817015c01c6Bb31C7ae9edAadc26e"
-                                                  :router :spirit
-    :address "0x106A8d32D4CcC8fA3BCf6BA39dC999853B5F4C2E"}
-
-   "0xBBDfebA68D7615159F1663FcF324a96F524E197F" {:name "Grim Finance SUSHI-FTM Vault"
-    :token "0x9Fe4c0CE5F533e96C2b72d852f190961AD5a7bB3"
-                                                  :router :spirit
-    :address "0xBBDfebA68D7615159F1663FcF324a96F524E197F"}
-
- "0x724f06Dd82646b2cE819058F2F77138d42dB47Ec"  {:name "Grim Finance CREAM-FTM Vault"
-    :token "0x040dd0d0f5e2a01fEb0C5457AbB588B23Cf4c43a"
-                                                  :router :spirit
-    :address "0x724f06Dd82646b2cE819058F2F77138d42dB47Ec"}
 
 
    "0x49b5988d48039794f6232b44D7ed8F9bF8b6F784" {:name "SPIRIT/FTM Supra Finance Vault"
@@ -221,6 +157,33 @@
                                                      :token "0xeb275d1d930F157504cca7D7AFCe38360C7302b5"
                                                      :router :quick
                                                      :address "0x2849095eE44eCd5f60Ed04f94e5BB45623A8e75a"}})
+
+(defn convert-vault
+  [router vault]
+  {:router router
+   :token (:lpaddress vault)
+   :name (str (:lpname vault) " Vault")
+   :address (:vault vault)})
+
+(defn enabled
+  [vault]
+  (let [name (:name vault)]
+    (not
+     (or
+      (clojure.string/includes? name "ORI")
+      (clojure.string/includes? name "DAI-USDC")))))
+
+(def grim-vaults
+  (apply merge (for [platform grim/vaults]
+   (let [name (:NAME platform)
+         kw (keyword (clojure.string/lower-case name))
+         vaults (map #(convert-vault kw %) (:vaults platform))
+         filteredVaults (filter enabled vaults)
+         pairs (map #(conj [(:address %)] %) filteredVaults)]
+     (into {} pairs)))))
+
+(def ftm-vaults (merge grim-vaults ftm-vaults-hc))
+
 (def vaults
   {250 ftm-vaults
    137 matic-vaults
