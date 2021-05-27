@@ -77,7 +77,7 @@
                                                  :address "0xf16e81dce15b08f326220742020379b855b87df9"
                                                  :shortname "ICE"
                                                  :type :erc20}
-   "0x841FAD6EAe12c286d1Fd18d1d525DFfA75C7EFFE"  {:name "Boo Token"
+   #_"0x841FAD6EAe12c286d1Fd18d1d525DFfA75C7EFFE"  #_{:name "Boo Token"
                                                   :address "0x841FAD6EAe12c286d1Fd18d1d525DFfA75C7EFFE"
                                                  :shortname "BOO"
                                                  :type :erc20}
