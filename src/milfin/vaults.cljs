@@ -1,13 +1,30 @@
 (ns milfin.vaults)
 
 (def providers
-  {250 [#_:grim :supra :beefy :hyper]
+  {250 [:grim :supra :beefy :hyper]
    137 [:beefy]})
 
 
 
 (def ftm-vaults
-  {#_"0x7dfB3A1494379a4bD3c11Fdf472D5686C215D6cf" #_{:name "FRAX/FTM Grim Vault"
+  {
+  ;; SINGLE SIDED STAKING VAULTS (GRIM)
+
+   "0x0d5Ecb27D1574E3B574d6D8c93C628d17348c99B" {:name "Grim Finance SPIRIT Vault"
+                                                 :token "0x5cc61a78f164885776aa610fb0fe1257df78e59b"
+                                                 :router :spirit
+                                                 :type :single
+                                                 :provider :grim
+                                                 :address "0x0d5Ecb27D1574E3B574d6D8c93C628d17348c99B"}
+   "0x177Bd708eB4880d2f0e0E319F48BF1308CFe6494" {:name "Grim Finance BOO Vault"
+                                                 :token "0x841FAD6EAe12c286d1Fd18d1d525DFfA75C7EFFE"
+                                                 :router :spooky
+                                                 :type :single
+                                                 :provider :grim
+                                                 :address "0x177Bd708eB4880d2f0e0E319F48BF1308CFe6494"
+                                                 }
+
+   #_"0x7dfB3A1494379a4bD3c11Fdf472D5686C215D6cf" #_{:name "FRAX/FTM Grim Vault"
                                                  :token "0x0eC0E1629E776272FA3E55548D4A656BE0EEdcF4"
                                                  :router "0x16327e3fbdaca3bcf7e38f5af2599d2ddc33ae52"
                                                  :address "0x7dfB3A1494379a4bD3c11Fdf472D5686C215D6cf"}
