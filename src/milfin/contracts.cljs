@@ -12,7 +12,7 @@
                                 "function zapOutToken(address _from, uint amount, address _to, address routerAddr, address _recipient) external"]
 
                     :addr "0x17A32a805779feC6A0b3eBab6Cb60fc190Ae899B"
-                    :name "Zapper"
+                    :name "LP Zapper"
                     :chain :matic
                     :type :milzap}}
    :ftm {:milzap {:abistr  #js["function zapInToken(address _from, uint amount, address _to, address routerAddr, address _recipient) external"
@@ -26,7 +26,7 @@
                                "function zapOutToken(address _from, uint amount, address _to, address routerAddr, address _recipient) external"]
 
                   :addr "0x743107Cd17EDb00f94b75A770787E15FEBe5ED39"
-                  :name "Zapper"
+                  :name "LP Zapper"
                   :chain :ftm
                   :type :milzap}}
    :utils {:erc20
