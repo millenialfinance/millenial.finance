@@ -27,9 +27,15 @@
    (:connected db)))
 
 (re-frame/reg-sub
- ::chainId
+ ::chainId-inner
  (fn [db]
    (:chainId db)))
+
+(re-frame/reg-sub
+ ::chainId
+ :<- [::chainId-inner]
+ (fn [chainId ]
+   chainId))
 
 (re-frame/reg-sub
  ::contracts
