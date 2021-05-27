@@ -21,5 +21,6 @@
 
 (defn init []
   (re-frame/dispatch-sync [::events/initialize-db])
+  (re-frame/dispatch [::events/initialize-ether])
   (dev-setup)
   (mount-root))

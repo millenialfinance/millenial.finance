@@ -60,6 +60,7 @@
         native-balance (re-frame/subscribe [::subs/balance])
         token-addrs (re-frame/subscribe [::subs/enabled-tokens])
         vaults (re-frame/subscribe [::subs/enabled-vaults])
+        sorted-vaults (sort-by #(:name (second %)) @vaults)
         v (re-frame/subscribe [::subs/selected-vault])
         selected-provider (re-frame/subscribe [::subs/vault-provider])
         balances (re-frame/subscribe [::subs/token-balances])
@@ -115,7 +116,7 @@
                      :on-change #(handle-vaultout-change (.. % -target -value) @addr @chainId)}
             ^{:key "default"}[:option {:value ""} "-Select-"]
             (doall
-             (for [[vault-addr vault] @vaults]
+             (for [[vault-addr vault] sorted-vaults]
                (let [n (:name vault)
                      selected (or (and (not (nil? @selected-provider )) (clojure.string/includes? (clojure.string/lower-case n) (name @selected-provider))) (nil? @selected-provider))]
                  (when selected ^{:key vault-addr}[:option {:value vault-addr} n]))))]
