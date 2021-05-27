@@ -135,6 +135,6 @@
           [btn {:text "Zap"
                 :on-click #(do
                              (if (= @from "0x0")
-                               (re-frame/dispatch [::events/call-contract-write-paid (.parseEther e/utils @amt)  contract "zapInToLPVault" [:vaulter @from @to] [(:token @v) (:address @router) @to @addr]])
-                               (re-frame/dispatch [::events/call-contract-write contract "zapInTokenToLPVault" [:vaulter @from @to] [@from (.parseEther e/utils @amt) (:token @v ) (:address @router) @to @addr]])))}]]]]])
+                               (re-frame/dispatch [::events/call-contract-write-paid (.parseEther e/utils @amt)  contract (if (= :single (:type @v)) "zapInToSingleSidedVault" "zapInToLPVault") [:vaulter @from @to] [(:token @v) (:address @router) @to @addr]])
+                               (re-frame/dispatch [::events/call-contract-write contract (if (= :single (:type @v)) "zapInTokenToSingleSidedVault" "zapInTokenToLPVault")  [:vaulter @from @to] [@from (.parseEther e/utils @amt) (:token @v ) (:address @router) @to @addr]])))}]]]]])
     ))
