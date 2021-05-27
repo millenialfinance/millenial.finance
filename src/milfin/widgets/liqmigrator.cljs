@@ -19,12 +19,12 @@
 (defn zap-from
   []
   (let [all-routers (re-frame/subscribe [::subs/routers])
-        chainId (re-frame/subscribe [::subs/chainId])
         eligible-lp-tokens (re-frame/subscribe [::subs/migrator-lp-tokens])
         addr @(re-frame/subscribe [::subs/addr])
         from-token @(re-frame/subscribe [::subs/migrator-token])
         from-balance (re-frame/subscribe [::subs/migrator-from-balance])
         from-allowance (re-frame/subscribe [::subs/migrator-from-allowance])
+        chainId (re-frame/subscribe [::subs/chainId])
         zapper-contract (:milzap (chain->contracts (if (= 250 @chainId) :ftm :matic)) )
         zapper-addr (:addr zapper-contract)
         source-router (re-frame/subscribe [::subs/migrator-source-router])]
@@ -73,7 +73,8 @@
   []
   (let [{:keys [from-token amt]} @(re-frame/subscribe [::subs/migrator-state])
         source-router (re-frame/subscribe [::subs/migrator-source-router])
-        zapper-contract @(re-frame/subscribe [::subs/zapper-contract])
+        chainId (re-frame/subscribe [::subs/chainId])
+        zapper-contract (:milzap (chain->contracts (if (= 250 @chainId) :ftm :matic)) )
         dest-router (re-frame/subscribe [::subs/migrator-dest-router])
         from-balance (re-frame/subscribe [::subs/migrator-from-balance])]
     [:section.component.zap-row

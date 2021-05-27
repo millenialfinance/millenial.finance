@@ -9,8 +9,6 @@
    ))
 
 
-(js/console.log covalent/api-key)
-
 (defn dev-setup []
   (when config/debug?
     (println "dev mode")))
