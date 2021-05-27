@@ -162,7 +162,7 @@
   [router vault]
   {:router router
    :token (:lpaddress vault)
-   :name (str (:lpname vault) " Vault")
+   :name (str "Grim " (:lpname vault) " Vault")
    :address (:vault vault)})
 
 (defn enabled
@@ -183,6 +183,8 @@
      (into {} pairs)))))
 
 (def ftm-vaults (merge grim-vaults ftm-vaults-hc))
+
+(js/console.log (clj->js ftm-vaults))
 
 (def vaults
   {250 ftm-vaults
