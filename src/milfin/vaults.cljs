@@ -7,7 +7,7 @@
 
 
 (def ftm-vaults
-  {"0x7dfB3A1494379a4bD3c11Fdf472D5686C215D6cf" {:name "FRAX/FTM Grim Vault"
+  {#_"0x7dfB3A1494379a4bD3c11Fdf472D5686C215D6cf" #_{:name "FRAX/FTM Grim Vault"
                                                  :token "0x0eC0E1629E776272FA3E55548D4A656BE0EEdcF4"
                                                  :router "0x16327e3fbdaca3bcf7e38f5af2599d2ddc33ae52"
                                                  :address "0x7dfB3A1494379a4bD3c11Fdf472D5686C215D6cf"}
