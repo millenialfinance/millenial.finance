@@ -67,7 +67,6 @@
         router (re-frame/subscribe [::subs/vault-router])
         contract (:milzap (chain->contracts (if (= 250 @chainId) :ftm :matic)) )
         ]
-    (re-frame/dispatch [::events/store-in [:vaulter :provider] (first @providers)])
     (js/console.log "Router!: " (clj->js @router))
     (fn []
       [window "Vault Zap"

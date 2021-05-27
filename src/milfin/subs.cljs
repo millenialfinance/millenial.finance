@@ -112,11 +112,6 @@
    (get allVaults chainId)))
 
 (re-frame/reg-sub
- ::vault-provider
- (fn [db]
-   (:provider (:vaulter db))))
-
-(re-frame/reg-sub
  ::all-vault-providers
  (fn [db]
    (:vault-providers db) ))
@@ -184,6 +179,13 @@
  :<- [::vaulter-state]
  (fn [[chainId {:keys [to]}]]
    (get-in vaults [chainId to])))
+
+(re-frame/reg-sub
+ ::vault-provider
+ :<- [::vaulter-state]
+ (fn [{:keys [provider]}]
+   provider))
+
 
 (re-frame/reg-sub
  ::vault-from

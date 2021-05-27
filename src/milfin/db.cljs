@@ -33,7 +33,7 @@
    :vaulter {:from ""
              :to ""
              :amt "0"
-             :provider :beefy
+             :provider :grim
              :router ""
              :token ""}
    :zapper {
