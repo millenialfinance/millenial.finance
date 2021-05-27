@@ -251,6 +251,6 @@
   (let [name (re-frame/subscribe [::subs/addr])]
     [:div
      [window "welcome" [body]]
-     (when (not (= "0x0" @name)) [liqmigrator/migrator-display])
      (when (not (= "0x0" @name)) [vault-zapper])
+     (when (not (= "0x0" @name)) [liqmigrator/migrator-display])
      [contracts-panel]]))

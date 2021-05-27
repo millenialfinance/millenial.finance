@@ -31,8 +31,9 @@
               :amt 0
               }
    :vaulter {:from ""
-             :to "0x49b5988d48039794f6232b44D7ed8F9bF8b6F784"
+             :to ""
              :amt 0
+             :provider :grim
              :router ""
              :token ""}
    :zapper {

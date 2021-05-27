@@ -123,3 +123,12 @@ p {
 .vault-provider {
   padding-right: .1rem;
 }
+
+.fieldsets {
+  flex-wrap: wrap;;
+  justify-content: space-evenly;
+}
+
+fieldset {
+  flex-grow: 1;
+}
