@@ -26,50 +26,46 @@
         zapper-contract @(re-frame/subscribe [::subs/zapper-contract])
         zapper-addr (:addr zapper-contract)
         source-router (re-frame/subscribe [::subs/migrator-source-router])]
-    [:div
-     [:section
-      [:fieldset
-       [:legend "Zapping From"]
-       [:div.field-row
-        [:label {:for "from-router"} "Source Dex"]
-        [:select {:id "from-router" :value (or (:address @source-router) "")  :on-change #(do
+    [:fieldset
+     [:legend "Zapping From"]
+     [:div.field-row
+      [:label {:for "from-router"} "Source Dex"]
+      [:select {:id "from-router" :value (or (:address @source-router) "")  :on-change #(do
 
-                                                                                            (re-frame/dispatch [::events/set-from-router (.. % -target -value)]))}
-         ^{:key "default"} [:option {:value ""} "-Select-"]
-         (for [router @all-routers]
-           ^{:key (:address router)} [:option {:value (:address router)} (:name router)])]
-        [:label {:for "from-token"} "LP Token"]
-        [:select {:id "from-token" :on-change #(do
-                                                 (re-frame/dispatch [::events/get-erc20-bal (.. % -target -value) addr])
-                                                 (re-frame/dispatch [::events/get-erc20-allowance (.. % -target -value) addr zapper-addr])
-                                                 (re-frame/dispatch [::events/set-migrator-from-token (.. % -target -value)]))}
-         ^{:key "default"} [:option {:value ""} "-Select-"]
-         (for [token @eligible-lp-tokens]
-           ^{:key (:address token)} [:option {:value (:address token)} (:name token)])]]
-       [:div
+                                                                                          (re-frame/dispatch [::events/set-from-router (.. % -target -value)]))}
+       ^{:key "default"} [:option {:value ""} "-Select-"]
+       (for [router @all-routers]
+         ^{:key (:address router)} [:option {:value (:address router)} (:name router)])]
+      [:label {:for "from-token"} "LP Token"]
+      [:select {:id "from-token" :on-change #(do
+                                               (re-frame/dispatch [::events/get-erc20-bal (.. % -target -value) addr])
+                                               (re-frame/dispatch [::events/get-erc20-allowance (.. % -target -value) addr zapper-addr])
+                                               (re-frame/dispatch [::events/set-migrator-from-token (.. % -target -value)]))}
+       ^{:key "default"} [:option {:value ""} "-Select-"]
+       (for [token @eligible-lp-tokens]
+         ^{:key (:address token)} [:option {:value (:address token)} (:name token)])]]
+     [:div
 
-        (when @from-balance
-          [:p "Balance: " (.formatUnits e/utils @from-balance)])
-        (when (= "0" (str @from-allowance)) [btn {:text "Approve" :on-click #(re-frame/dispatch [::events/approve-erc20 (:address from-token) zapper-addr])}])]]]]))
+      (when @from-balance
+        [:p "Balance: " (.formatUnits e/utils @from-balance)])
+      (when (= "0" (str @from-allowance)) [btn {:text "Approve" :on-click #(re-frame/dispatch [::events/approve-erc20 (:address from-token) zapper-addr])}])]]))
 
 (defn zap-to
   []
   (let [all-routers (re-frame/subscribe [::subs/routers])
         dest-router @(re-frame/subscribe [::subs/migrator-dest-router])
         ]
-    [:div
-     [:section
-      [:fieldset
-       [:legend "Zapping To"]
-       [:div.field-row
-        [:label {:for "to-router"} "Destination Dex"]
-        [:select {:id "to-router" :value (or (:address dest-router) "") :on-change #(do
-                                                                                            (re-frame/dispatch [::events/set-to-router (.. % -target -value)]))}
-         ^{:key "default"} [:option {:value ""} "-Select-"]
-         (for [router @all-routers]
-           ^{:key (:address router)} [:option {:value (:address router)} (:name router)])]
-        ]
-       ]]]))
+    [:fieldset
+     [:legend "Zapping To"]
+     [:div.field-row
+      [:label {:for "to-router"} "Destination Dex"]
+      [:select {:id "to-router" :value (or (:address dest-router) "") :on-change #(do
+                                                                                    (re-frame/dispatch [::events/set-to-router (.. % -target -value)]))}
+       ^{:key "default"} [:option {:value ""} "-Select-"]
+       (for [router @all-routers]
+         ^{:key (:address router)} [:option {:value (:address router)} (:name router)])]
+      ]
+     ]))
 
 (defn zap-bar
   []
@@ -78,25 +74,24 @@
         zapper-contract @(re-frame/subscribe [::subs/zapper-contract])
         dest-router (re-frame/subscribe [::subs/migrator-dest-router])
         from-balance (re-frame/subscribe [::subs/migrator-from-balance])]
-    [:section.component
-     [:section.component.zap-row
-      [:div.field-row
-       [:label {:for "migr-amt"} "Amount"]
-       [:input {:id "migr-amt" :type "number" :value amt :on-change #(let [val (.. % -target -value)]
-                                                                       (cond
-                                                                         (= "." val) (re-frame/dispatch [::events/store-in [:migrator :amt] (str "0" (.. % -target -value))])
-                                                                         (= "" val) (re-frame/dispatch [::events/store-in [:migrator :amt] "0"])
-                                                                         :else (re-frame/dispatch [::events/store-in [:migrator :amt] (.. % -target -value)])))
-                }]]
-      [:div.zap-btn
-       [btn {:text "Max"
-             :on-click #(re-frame/dispatch [::events/store-in [:migrator :amt] (.formatEther e/utils @from-balance)])}]]
-      [:div.zap-btn
-       [btn {:text "Migrate"
-             :on-click #(do
-                          (re-frame/dispatch [::events/call-contract-write zapper-contract "zapAcross" [:migrator (:address from-token) @dest-router] [(:address from-token) (.parseEther e/utils amt) (:address @source-router) (:address @dest-router)]]))}]
+    [:section.component.zap-row
+     [:div.field-row
+      [:label {:for "migr-amt"} "Amount"]
+      [:input {:id "migr-amt" :type "number" :value amt :on-change #(let [val (.. % -target -value)]
+                                                                      (cond
+                                                                        (= "." val) (re-frame/dispatch [::events/store-in [:migrator :amt] (str "0" (.. % -target -value))])
+                                                                        (= "" val) (re-frame/dispatch [::events/store-in [:migrator :amt] "0"])
+                                                                        :else (re-frame/dispatch [::events/store-in [:migrator :amt] (.. % -target -value)])))
+               }]]
+     [:div.zap-btn
+      [btn {:text "Max"
+            :on-click #(re-frame/dispatch [::events/store-in [:migrator :amt] (.formatEther e/utils @from-balance)])}]]
+     [:div.zap-btn
+      [btn {:text "Migrate"
+            :on-click #(do
+                         (re-frame/dispatch [::events/call-contract-write zapper-contract "zapAcross" [:migrator (:address from-token) @dest-router] [(:address from-token) (.parseEther e/utils amt) (:address @source-router) (:address @dest-router)]]))}]
 
-       ]]]))
+      ]]))
 
 (defn migrator-display
   []
@@ -106,6 +101,7 @@
     [window "LiqMigrator.exe"
      [:div
       [contract-status-bar zapper-contract @chainId]
-      [zap-from]
-      [zap-to]
+      [:section.component.fieldsets
+       [zap-from]
+       [zap-to]]
       [zap-bar]]]))

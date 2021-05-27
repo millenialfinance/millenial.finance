@@ -1,7 +1,7 @@
 body {
   margin: 0;
   padding: 0;
-  background: #c0c0c0;
+  background: #ece9d8;;
 }
 
 .status-bar {
@@ -30,14 +30,6 @@ label {
 
 .rowfields {
   margin-right: .3rem;
-}
-
-.status-bar-field {
-  box-shadow: inset -1px -1px  #dfdfdf,
-    inset 1px 1px #808080;
-  flex-grow: 1;
-  padding: 2px 5px;
-  margin: 0;
 }
 
 p.pool-title {
@@ -131,4 +123,14 @@ p {
 
 fieldset {
   flex-grow: 1;
+  margin: 0.75rem 0.25rem;
+}
+
+@media screen and (min-width: 600px) {
+  .window {
+    margin: 12px 10rem;
+  }
+  #header {
+    margin: 12px 10rem;
+  }
 }
