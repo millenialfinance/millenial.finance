@@ -67,8 +67,8 @@
         router (re-frame/subscribe [::subs/vault-router])
         contract (:milzap (chain->contracts (if (= 137 @chainId) :matic :ftm)) )
         ]
-    (js/console.log "CHAINID" @chainId)
     (fn []
+    (js/console.log "CHAINID" @chainId)
       [window "Vault Zap"
        [:div
         [contract-status-bar contract @chainId ]
