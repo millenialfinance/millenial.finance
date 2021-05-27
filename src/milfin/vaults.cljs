@@ -1,7 +1,7 @@
 (ns milfin.vaults)
 
 (def providers
-  {250 [:grim :supra :beefy :hyper]
+  {250 [#_:grim :supra :beefy :hyper]
    137 [:beefy]})
 
 

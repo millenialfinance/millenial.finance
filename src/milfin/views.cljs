@@ -16,7 +16,7 @@
 (defn wallet-btn
   []
   [btn {:text "Connect Wallet"
-        :on-click #(re-frame/dispatch-sync [::events/initialize-ether])}])
+        :on-click #(re-frame/dispatch [::events/initialize-ether])}])
 
 (defn contract-status-bar
   [contract chainId on-click]
@@ -31,8 +31,8 @@
   (doall
    (for [token tokens]
      (when-not (= "0x0" (:address token))
-       (re-frame/dispatch-sync [::events/get-erc20-allowance token wallet-addr contract-addr])
-       (re-frame/dispatch-sync [::events/get-erc20-bal token wallet-addr])))))
+       (re-frame/dispatch [::events/get-erc20-allowance token wallet-addr contract-addr])
+       (re-frame/dispatch [::events/get-erc20-bal token wallet-addr])))))
 
 (defn handle-zapin-token-change
   [token-addr wallet-addr contract-addr chainId]
@@ -100,7 +100,7 @@
   (re-frame/dispatch [::events/get-erc20-bal token-addr wallet-addr]))
 
 (defn handle-zap
-  [contract kw zap-direction zapin-token zapin-amt zapout-token chainId]
+  [contract kw zap-direction zapin-token zapin-amt zapout-token chainId addr]
   (let [tokens (tokenlist/tokens chainId)
         zapin-type (:type (tokens zapin-token))
         zapout-type (:type (tokens zapout-token))
@@ -114,15 +114,15 @@
                        _toRouter (:router-addr (tokens zapout-token))]
                    (re-frame/dispatch [::events/call-contract-write-paid (.parseEther e/utils zapin-amt) contract "zapAcross" [kw :zapIn zapin-token zapout-token] [zapin-token (.parseEther e/utils zapin-amt) _fromRouter _toRouter]]))
       (= :in zap-direction) (if (= zapin-type :native)
-                              (re-frame/dispatch [::events/call-contract-write-paid (.parseEther e/utils zapin-amt) contract "zapIn" [kw :zapIn zapin-token zapout-token] [zapout-token router-addr]])
-                              (re-frame/dispatch [::events/call-contract-write contract "zapInToken" [kw :zapInToken zapin-token zapout-token] [zapin-token (.parseEther e/utils zapin-amt) zapout-token router-addr]]))
+                              (re-frame/dispatch [::events/call-contract-write-paid (.parseEther e/utils zapin-amt) contract "zapIn" [kw :zapIn zapin-token zapout-token] [zapout-token router-addr addr]])
+                              (re-frame/dispatch [::events/call-contract-write contract "zapInToken" [kw :zapInToken zapin-token zapout-token] [zapin-token (.parseEther e/utils zapin-amt) zapout-token router-addr addr]]))
       (= :out zap-direction) (if (= zapout-type :native)
              (do
                (js/console.log [zapin-token  (.parseEther e/utils zapin-amt)  router-addr])
-               (re-frame/dispatch [::events/call-contract-write contract "zapOut" [kw :zapOut zapin-token] [zapin-token (.parseEther e/utils zapin-amt) router-addr]]))
+               (re-frame/dispatch [::events/call-contract-write contract "zapOut" [kw :zapOut zapin-token] [zapin-token (.parseEther e/utils zapin-amt) router-addr addr]]))
              (do
                (js/console.log [zapin-token  (.parseEther e/utils zapin-amt) zapout-token router-addr])
-               (re-frame/dispatch [::events/call-contract-write contract "zapOutToken" [kw :zapOutToken zapin-token zapout-token] [zapin-token  (.parseEther e/utils zapin-amt) zapout-token router-addr]]))))
+               (re-frame/dispatch [::events/call-contract-write contract "zapOutToken" [kw :zapOutToken zapin-token zapout-token] [zapin-token  (.parseEther e/utils zapin-amt) zapout-token router-addr addr]]))))
     ))
 
 (defn xnor
@@ -228,7 +228,7 @@
                                                                                                                (@balances zapin-token)))])}]]
           [:div.zap-btn
            [btn {:text "Zap"
-                 :on-click #(handle-zap contract kw zap-direction zapin-token zapin-amt zapout-token @chainId)}]]]
+                 :on-click #(handle-zap contract kw zap-direction zapin-token zapin-amt zapout-token @chainId @addr)}]]]
       ]]))
 
 (defn intro

@@ -88,15 +88,17 @@
 (re-frame/reg-event-fx
  ::call-contract
  [(re-frame/inject-cofx :window-eth)]
- (fn-traced [cofx [_ contract fn keys & a]]
+ (fn-traced [cofx [_ contract fn keys a]]
             (let [window-eth (:window-eth cofx)]
-              {:eth-call (apply conj [window-eth contract fn keys] a)})))
+              (js/console.log "In call-contract" (clj->js contract))
+              {:eth-call (conj [window-eth contract fn keys] a)})))
 
 (re-frame/reg-event-fx
  ::call-contract-write
  [(re-frame/inject-cofx :window-eth)]
  (fn-traced [cofx [_ contract fn keys args]]
             (let [window-eth (:window-eth cofx)]
+              (js/console.log "In call-contract-write" (clj->js contract))
               {:eth-call-write (conj [window-eth contract fn keys] args)})))
 
 (re-frame/reg-event-fx
@@ -104,6 +106,7 @@
  [(re-frame/inject-cofx :window-eth)]
  (fn-traced [cofx [_ val contract fn keys args]]
             (let [window-eth (:window-eth cofx)]
+              (js/console.log "In call-contract-write-paid" (clj->js contract))
               {:eth-call-write-paid (conj [window-eth val contract fn keys] args)})))
 
 (re-frame/reg-event-fx
@@ -112,7 +115,7 @@
  (fn-traced [cofx [_ token-addr wallet-addr]]
             (let [window-eth (:window-eth cofx)
                   contracts (:contracts cofx)
-                  erc20 (:erc20 (:bsc contracts))
+                  erc20 (:erc20 (:utils contracts))
                   contract (assoc erc20 :addr token-addr)]
               {:eth-call [window-eth contract "balanceOf" [:token-balances token-addr] [wallet-addr]]})))
 
@@ -122,7 +125,7 @@
  (fn-traced [cofx [_ token-addr wallet-addr contract-addr]]
             (let [window-eth (:window-eth cofx)
                   contracts (:contracts cofx)
-                  erc20 (:erc20 (:bsc contracts))
+                  erc20 (:erc20 (:utils contracts))
                   contract (assoc erc20 :addr token-addr)]
               {:eth-call [window-eth contract "allowance" [:token-allowances token-addr] [wallet-addr contract-addr]]})))
 
@@ -132,8 +135,9 @@
  (fn-traced [cofx [_ token-addr contract-addr]]
             (let [window-eth (:window-eth cofx)
                   contracts (:contracts cofx)
-                  erc20 (:erc20 (:bsc contracts))
+                  erc20 (:erc20 (:utils contracts))
                   contract (assoc erc20 :addr token-addr)]
+              (js/console.log (clj->js contract))
               {:eth-call-write [window-eth contract "approve" [:pending-token-approvals token-addr] [contract-addr (.toHexString (.parseEther e/utils "1000000000000"))]]})))
 
 
@@ -157,10 +161,15 @@
 (defn instantiate-contract-write
   [{:keys [abistr addr]}]
    (let [provider (e/get-web3-provider)
-         signer (.getSigner provider)]
-     (-> addr
+         signer (.getSigner provider)
+         contract (-> addr
          (e/instantiate-contract abistr provider)
-         (.connect signer))))
+         (.connect signer)
+         )]
+     (do
+       (js/console.log contract)
+       contract)
+     ))
 
 (re-frame/reg-fx
  :eth-call
@@ -188,7 +197,6 @@
      (let [_ (<p! (.enable window-eth))
            contract (instantiate-contract-write _contract)
            args (into [] (conj a (clj->js {:value val :gasLimit "1000000"})))
-           _ (js/console.log (first args))
            result (<p! (apply js-invoke contract f args))]
        (re-frame/dispatch [::store-contract-state keys result])))))
 

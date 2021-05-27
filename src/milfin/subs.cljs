@@ -186,6 +186,24 @@
    (get-in vaults [chainId to])))
 
 (re-frame/reg-sub
+ ::vault-from
+ :<- [::vaulter-state]
+ (fn [{:keys [from]}]
+   from))
+
+(re-frame/reg-sub
+ ::vault-to
+ :<- [::vaulter-state]
+ (fn [{:keys [to]}]
+   to))
+
+(re-frame/reg-sub
+ ::vault-amt
+ :<- [::vaulter-state]
+ (fn [{:keys [amt]}]
+   amt))
+
+(re-frame/reg-sub
  ::cov-bals
  (fn [db]
    (get-in db [:covalent :balances :items] [])))

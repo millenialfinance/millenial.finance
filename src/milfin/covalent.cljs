@@ -14,6 +14,51 @@
    (str base-url chainId "/address/" address "/balances_v2/")
    {:basic-auth {:username api-key :password ""}}))
 
-#_(go (let [response (<!)]
+(defn get-top-pairs-2
+  []
+  (http/post
+   "https://api.thegraph.com/subgraphs/name/sushiswap/fantom-exchange"
+   {:json-params {:query "
+{
+	pairs(first: 10, orderBy: volumeUSD, orderDirection: desc) {
+    id
+    token0 {
+      id
+      name
+    }
+    token1 {
+      id
+      name
+    }
+  }
+}
+"}
+    }))
+
+(defn get-top-pairs
+  []
+  (http/post
+   "https://api.thegraph.com/subgraphs/name/sushiswap/fantom-exchange"
+   {:body  "
+{\"query\":
+{
+	pairs(first: 10, orderBy: volumeUSD, orderDirection: desc) {
+    id
+    token0 {
+      id
+      name
+    }
+    token1 {
+      id
+      name
+    }
+  }
+}
+}
+"
+    }))
+
+#_(go
+  (let [response (<! (get-top-pairs))]
       (prn (:status response))
       (prn  (:body response))))
