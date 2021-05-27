@@ -123,6 +123,16 @@
                                                  :router :quick
                                                  :address "0x4462817b53E76b722c2D174D0148ddb81452f1dE"
                                                  }
+   ;; Single Sided
+   "0x9B36ECeaC46B70ACfB7C2D6F3FD51aEa87C31018" {:name "DAI Beefy Finance Vault"
+                                                 :platform :beefy
+                                                 :token "0x8f3cf7ad23cd3cadbd9735aff958023239c6a063"
+                                                 :type :single
+                                                 :router :quick
+                                                 :address "0x9B36ECeaC46B70ACfB7C2D6F3FD51aEa87C31018"}
+
+
+   ;; LP
    "0x942aa6324E5D0C102d3Ad6607495ac5e798a991a" {:name "UBT-ETH QLP Beefy Finance Vault"
                                                  :platform :beefy
                                                  :token "0xcc203f45A31aE086218170F6A9e9623fA1655486"

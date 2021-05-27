@@ -32,7 +32,7 @@
               }
    :vaulter {:from ""
              :to ""
-             :amt 0
+             :amt "0"
              :provider :beefy
              :router ""
              :token ""}

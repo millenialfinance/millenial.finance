@@ -186,7 +186,7 @@
    (go
      (let [_ (<p! (.enable window-eth))
            contract (instantiate-contract-write _contract)
-           args (into [] (conj a (clj->js {:gasLimit "1000000"})))
+           args (into [] (conj a (clj->js {:gasLimit "1400000"})))
            result (<p! (apply js-invoke contract f args))]
        (re-frame/dispatch [::store-contract-state keys result])))))
 
@@ -196,7 +196,7 @@
    (go
      (let [_ (<p! (.enable window-eth))
            contract (instantiate-contract-write _contract)
-           args (into [] (conj a (clj->js {:value val :gasLimit "1000000"})))
+           args (into [] (conj a (clj->js {:value val :gasLimit "1400000"})))
            result (<p! (apply js-invoke contract f args))]
        (re-frame/dispatch [::store-contract-state keys result])))))
 
@@ -227,7 +227,7 @@
                                chain (chainId->chain chainId)
                                addr (<p! (e/get-addr))
                                kwd (keyword (clojure.string/lower-case (:chain chain)))]
-                           (re-frame/dispatch [::load-contracts kwd])
+                           (re-frame/dispatch [::load-contracts chainId])
                            (re-frame/dispatch [::store :chainId chainId])
                            (re-frame/dispatch [::fetch-covalent-balances chainId addr])
                            )))))))
