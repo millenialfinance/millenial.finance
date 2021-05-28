@@ -3,19 +3,19 @@
             [clojure.string]))
 
 (def providers
-  {250 [:grim :supra :beefy :hyper]
+  {250 [#_:grim :supra :beefy :hyper]
    137 [:beefy]})
 
 (def ftm-vaults-hc
   {;; SINGLE SIDED STAKING VAULTS (GRIM)
 
-   "0x0d5Ecb27D1574E3B574d6D8c93C628d17348c99B" {:name "Grim Finance SPIRIT Vault"
+   #_"0x0d5Ecb27D1574E3B574d6D8c93C628d17348c99B" #_{:name "Grim Finance SPIRIT Vault"
                                                  :token "0x5cc61a78f164885776aa610fb0fe1257df78e59b"
                                                  :router :spirit
                                                  :type :single
                                                  :provider :grim
                                                  :address "0x0d5Ecb27D1574E3B574d6D8c93C628d17348c99B"}
-   "0x177Bd708eB4880d2f0e0E319F48BF1308CFe6494" {:name "Grim Finance BOO Vault"
+   #_"0x177Bd708eB4880d2f0e0E319F48BF1308CFe6494" #_{:name "Grim Finance BOO Vault"
                                                  :token "0x841FAD6EAe12c286d1Fd18d1d525DFfA75C7EFFE"
                                                  :router :spooky
                                                  :type :single
@@ -182,11 +182,11 @@
          pairs (map #(conj [(:address %)] %) filteredVaults)]
      (into {} pairs)))))
 
-(def ftm-vaults (merge grim-vaults ftm-vaults-hc))
+#_(def ftm-vaults (merge grim-vaults ftm-vaults-hc))
+(def ftm-vaults ftm-vaults-hc)
 
-(js/console.log (clj->js ftm-vaults))
 
 (def vaults
-  {250 ftm-vaults
+  {250 ftm-vaults-hc
    137 matic-vaults
    0 {}})
