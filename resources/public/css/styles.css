@@ -148,6 +148,10 @@ fieldset {
   margin-top: .5rem;
 }
 
+p {
+  line-height: 1.5;
+}
+
 
 blockquote {
   margin-top: 1rem;
@@ -159,4 +163,8 @@ blockquote {
 
 blockquote footer {
   margin: 12px 0 0 12px;
+}
+
+div.window {
+  font-family: Arial;
 }
