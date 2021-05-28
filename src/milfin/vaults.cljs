@@ -162,7 +162,7 @@
   [router vault]
   {:router router
    :token (:lpaddress vault)
-   :name (str "Grim " (:lpname vault) " Vault")
+   :name (str "Grim " (:lpname vault) " Vault (" (clojure.string/capitalize (name router)) ")")
    :address (:vault vault)})
 
 (defn enabled
