@@ -110,7 +110,7 @@
                 [:label {:for (name provider)} (clojure.string/capitalize (name provider))]]))
             ]
            [:label.mrp {:for "vzap-to"} "Vault: "]
-           [:select {:id "vzap-top"
+           [:select.zapselect {:id "vzap-top"
                      :value (or @to "")
                      :on-change #(handle-vaultout-change (.. % -target -value) @addr @chainId)}
             ^{:key "default"}[:option {:value ""} "-Select-"]

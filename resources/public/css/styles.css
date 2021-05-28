@@ -141,5 +141,9 @@ fieldset {
 }
 
 .platformlabel {
-  margin-top: .3rem;
+  margin-top: 0.8rem;
+}
+
+.zapselect {
+  margin-top: .5rem;
 }
