@@ -181,10 +181,9 @@
           ^{:key "default"}[:option {:value ""} "-Select-"]
           ^{:key "native"}[:option {:value "0x0"} (str (:name native-token) " (" (:shortname native-token) ")")]
           (doall
-           (for [t @token-addrs]
-             (let [token (chain-tokens t)]
-               (when (or (not (= :lp (:type token))) (= :spirit (:exchange token)) (not restricted))
-                 ^{:key t}[:option {:value t} (str (:shortname token))]))))]
+           (for [token @token-addrs]
+             (when (or (not (= :lp (:type token))) (= :spirit (:exchange token)) (not restricted))
+               ^{:key (:address token)}[:option {:value (:address token)} (str (:shortname token))])))]
          [:p (str "Balance: "
                     (if (= "0x0" zapin-token)
                       (.formatUnits e/utils (or @native-balance 0))

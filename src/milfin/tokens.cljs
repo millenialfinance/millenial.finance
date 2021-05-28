@@ -93,7 +93,7 @@
                                                  :shortname "CREAM"
                                                  :type :erc20}
    "0xaf319e5789945197e365e7f7fbfc56b130523b33" {:name "Frax"
-                                                 :address "0x657a1861c15a3ded9af0b6799a195a249ebdcbc6"
+                                                 :address "0xaf319e5789945197e365e7f7fbfc56b130523b33"
                                                  :shortname "FRAX"
                                                  :type :erc20}
    "0x956DE13EA0FA5b577E4097Be837BF4aC80005820" {:name "FTM-BNB SpookySwap LP Token"
