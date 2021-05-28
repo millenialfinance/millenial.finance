@@ -115,7 +115,7 @@
  :<- [::chainId]
  :<- [::all-enabled-vaults]
  (fn [[chainId allVaults]]
-   (get allVaults chainId)))
+   (sort-by #(:name (second %)) (get allVaults chainId))))
 
 (re-frame/reg-sub
  ::all-vault-providers

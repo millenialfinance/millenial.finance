@@ -26,6 +26,7 @@ body {
 
 label {
   font-weight: 600;
+  font-size: larger;
 }
 
 .rowfields {
@@ -103,7 +104,7 @@ h4 {
 
 p {
   max-width: 50rem;
-  font-size: 1.2em;
+  font-size: larger;
   line-height: 1.5;
 }
 
@@ -137,4 +138,8 @@ fieldset {
 
 .mrp {
   margin-right: .4rem;
+}
+
+.platformlabel {
+  margin-top: .3rem;
 }

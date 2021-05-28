@@ -120,6 +120,7 @@
                      selected (or (and (not (nil? @selected-provider )) (clojure.string/includes? (clojure.string/lower-case n) (name @selected-provider))) (nil? @selected-provider))]
                  (when selected ^{:key vault-addr}[:option {:value vault-addr} n]))))]
            [:div
+            (when (:name @router) [:label.platformlabel (str "Platform: " (:name @router))])
             [:p (str "Balance: " (.formatUnits e/utils (or (get @balances @to) "0")))]
             [:p (str "Vault Address: " @to)]]]]]
         [:section.component.zap-row
