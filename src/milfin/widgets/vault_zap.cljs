@@ -72,6 +72,8 @@
       [window "Vault Zap"
        [:div
         [contract-status-bar contract @chainId ]
+        [:blockquote "Deposit into your favorite vaults with whatever token you're already holding!"
+         [:footer "— Millennial Finance User Manual"]]
         [:section.component.fieldsets
          [:fieldset
           [:legend "Zapping From"]

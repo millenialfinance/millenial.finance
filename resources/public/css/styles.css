@@ -147,3 +147,16 @@ fieldset {
 .zapselect {
   margin-top: .5rem;
 }
+
+
+blockquote {
+  margin-top: 1rem;
+  margin-left: 1.5rem;;
+  margin-right: 1.5rem;;
+  padding: 20px;
+  background: #dfdfdf;
+}
+
+blockquote footer {
+  margin: 12px 0 0 12px;
+}
