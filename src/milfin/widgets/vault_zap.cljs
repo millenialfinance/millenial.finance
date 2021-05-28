@@ -85,10 +85,9 @@
                      :on-change #(handle-vaultin-token-change (.. % -target -value) @addr (:addr contract) @chainId)}
             ^{:key "default"}[:option {:value ""} "-Select-"]
             (doall
-             (for [t @token-addrs]
-               (let [token (get @chain-tokens t)]
-                 (when-not (= :lp (:type token))
-                   ^{:key t}[:option {:value t} (str (:shortname token))]))))]
+             (for [token @token-addrs]
+               (when-not (= :lp (:type token))
+                 ^{:key (:address token)}[:option {:value (:address token)} (:shortname token)])))]
            [:p (str "Balance: "
                     (if (= "0x0" @from)
                       (.formatUnits e/utils (or @native-balance 0))

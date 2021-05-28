@@ -93,7 +93,7 @@
  :<- [::chainId]
  :<- [::all-enabled-tokens]
  (fn [[chainId allTokens]]
-   (get allTokens chainId)))
+   (sort-by :shortname (get allTokens chainId))))
 
 (re-frame/reg-sub
  ::migrator-state
