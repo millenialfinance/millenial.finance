@@ -132,12 +132,7 @@
     :isAdded true,
     :vault "0x19429C692737EE8a85432c8CF6209ca6d51E39c4",
     :strategy "0x02c97d687852b658BBE63fd2Cb8aebCd965BaACd"}
-   {:lpname "ZOO-FTM",
-    :lpaddress "0xDF18DD2631f02D930071DF7d6FF89bbc3718C62F",
-    :POOL_ID 6,
-    :isAdded true,
-    :vault "0x9e8e674D41EF4aA269BAb21C7938000CEcF367D6",
-    :strategy "0x4E1C77992eFC6E1F436e799A96c26c271774FeEc"}
+
    {:lpname "CZTEARS-SPIRIT",
     :lpaddress "0xC66c0F0318e2777A53F884C8874B6CA3c2ED8f84",
     :POOL_ID 20,
@@ -269,18 +264,8 @@
     :isAdded true,
     :vault "0x64c2D4de917a0e3f07600281a7a8b1e4e422B588",
     :strategy "0xdF413219D20CAE3f9cCC11F5662339db7e7e9B82"}
-   {:lpname "FTM-YFI",
-    :lpaddress "0xbf4d61d4cec3a9dff7452d8987e1cc2943e2eb4c",
-    :POOL_ID 9,
-    :isAdded true,
-    :vault "0xb10376002B78F2EBDaDE4AF31799796CA60ed162",
-    :strategy "0x7E199e3c60b9a37dD879D85758064000B6641382"}
-   {:lpname "FTM-ZOO",
-    :lpaddress "0x3Cceb477Fcb6cDE90180983642486E68148D7b27",
-    :POOL_ID 18,
-    :isAdded true,
-    :vault "0xf6966C2d35DBB505773a1533d589E7B870F05a8F",
-    :strategy "0x3C1fc39b8ca3023a70486878f8577d4c6e5C604C"}
+
+
    {:lpname "FTM-SNX",
     :lpaddress "0x06d173628be105fe81f1c82c9979ba79ebcafcb7",
     :POOL_ID 8,
@@ -411,12 +396,7 @@
     :isAdded true,
     :vault "0xAf677319f6cb43827bB1a9fE4ba74406E88984bD",
     :strategy "0x82a35DA99a72634aFee195E5A6e52Ffc479Ebf07"}
-   {:lpname "FTM-ZOO",
-    :lpaddress "0x14643e02c9827fd68465fa2cdeb444ddcb6ba7e2",
-    :POOL_ID 9,
-    :isAdded true,
-    :vault "0xe34381ba346da364034B36b950C03592AE466978",
-    :strategy "0x729cFd92e69a24A5D821Ad8b5F1feB856BC967f8"}
+
    {:lpname "FTM-BADGER",
     :lpaddress "0x8a400d6bf3cdf070af6e3312ef4f9681f16a92bd",
     :POOL_ID 10,
