@@ -3,7 +3,7 @@
             [clojure.string]))
 
 (def providers
-  {250 [#_:grim :supra :beefy :hyper]
+  {250 [:grim :supra :beefy :hyper]
    137 [:beefy]})
 
 (def ftm-vaults-hc
@@ -169,7 +169,9 @@
   [vault]
   (let [name (:name vault)]
     (not
-     (or
+     false
+     #_(= :hyperjump (:router vault))
+     #_(or
       (clojure.string/includes? name "ORI")
       (clojure.string/includes? name "DAI-USDC")))))
 
@@ -182,11 +184,11 @@
          pairs (map #(conj [(:address %)] %) filteredVaults)]
      (into {} pairs)))))
 
-#_(def ftm-vaults (merge grim-vaults ftm-vaults-hc))
-(def ftm-vaults ftm-vaults-hc)
+(def ftm-vaults (merge grim-vaults ftm-vaults-hc))
+#_(def ftm-vaults ftm-vaults-hc)
 
 
 (def vaults
-  {250 ftm-vaults-hc
+  {250 ftm-vaults
    137 matic-vaults
    0 {}})
