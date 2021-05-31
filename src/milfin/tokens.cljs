@@ -280,7 +280,7 @@
                                                  :exchange :spooky
                                                  :router-addr "0xf491e7b69e4244ad4002bc14e878a34207e38c29"
                                                  }
-   "0xbf4d61d4cec3a9dff7452d8987e1cc2943e2eb4c" {:name "FTM/YFI SpookySwap LP Token"
+   #_"0xbf4d61d4cec3a9dff7452d8987e1cc2943e2eb4c" #_{:name "FTM/YFI SpookySwap LP Token"
                                                  :address "0xbf4d61d4cec3a9dff7452d8987e1cc2943e2eb4c"
                                                  :shortname "FTM/YFI Spooky LP"
                                                  :type :lp
