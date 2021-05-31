@@ -65,13 +65,11 @@
         balances (re-frame/subscribe [::subs/token-balances])
         allowances (re-frame/subscribe [::subs/token-allowances])
         router (re-frame/subscribe [::subs/vault-router])
-        contract (:milzap (chain->contracts (if (= 137 @chainId) :matic :ftm)) )
         ]
     (fn []
-    (js/console.log "CHAINID" @chainId)
       [window "Vault Zap"
        [:div
-        [contract-status-bar contract @chainId ]
+        [contract-status-bar (:milzap (chain->contracts (if (= 250 @chainId) :ftm :matic)) ) @chainId ]
         [:blockquote "Deposit into your favorite vaults with whatever token you're already holding!"
          [:footer "— Millennial Finance User Manual"]]
         [:section.component.fieldsets
@@ -82,7 +80,7 @@
            [:label.mrp {:for "vzap-from"} "Token: "]
            [:select {:id "vzap-from"
                      :value (or @from "")
-                     :on-change #(handle-vaultin-token-change (.. % -target -value) @addr (:addr contract) @chainId)}
+                     :on-change #(handle-vaultin-token-change (.. % -target -value) @addr (:addr (:milzap (chain->contracts (if (= 250 @chainId) :ftm :matic)) )   ) @chainId)}
             ^{:key "default"}[:option {:value ""} "-Select-"]
             (doall
              (for [token @token-addrs]
@@ -97,7 +95,7 @@
              (if (not (if (get @allowances @from) (.eq (get @allowances @from) 0) true))
                [:p "Contract Approved"]
                [btn {:text "Approve"
-                     :on-click #(re-frame/dispatch [::events/approve-erc20 @from (:addr contract)])}]
+                     :on-click #(re-frame/dispatch [::events/approve-erc20 @from (:addr   (:milzap (chain->contracts (if (= 250 @chainId) :ftm :matic)) ) )])}]
                ))
            ]]
          [:fieldset
@@ -141,6 +139,6 @@
                 :on-click #(do
                              (js/console.log @amt)
                              (if (= @from "0x0")
-                               (re-frame/dispatch [::events/call-contract-write-paid (.parseEther e/utils @amt)  contract (if (= :single (:type @v)) "zapInToSingleSidedVault" "zapInToLPVault") [:vaulter @from @to] [(:token @v) (:address @router) @to @addr]])
-                               (re-frame/dispatch [::events/call-contract-write contract (if (= :single (:type @v)) "zapInTokenToSingleSideVault" "zapInTokenToLPVault")  [:vaulter @from @to] [@from (.parseEther e/utils @amt) (:token @v ) (:address @router) @to @addr]])))}]]]]])
+                               (re-frame/dispatch [::events/call-contract-write-paid (.parseEther e/utils @amt) (:milzap (chain->contracts (if (= 250 @chainId) :ftm :matic)) )   (if (= :single (:type @v)) "zapInToSingleSidedVault" "zapInToLPVault") [:vaulter @from @to] [(:token @v) (:address @router) @to @addr]])
+                               (re-frame/dispatch [::events/call-contract-write (:milzap (chain->contracts (if (= 250 @chainId) :ftm :matic)) )  (if (= :single (:type @v)) "zapInTokenToSingleSideVault" "zapInTokenToLPVault")  [:vaulter @from @to] [@from (.parseEther e/utils @amt) (:token @v ) (:address @router) @to @addr]])))}]]]]])
     ))
