@@ -169,8 +169,7 @@
   [vault]
   (let [name (:name vault)]
     (not
-     false
-     #_(= :hyperjump (:router vault))
+     (= :hyperjump (:router vault))
      #_(or
       (clojure.string/includes? name "ORI")
       (clojure.string/includes? name "DAI-USDC")))))
