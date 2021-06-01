@@ -170,6 +170,8 @@
   (let [name (:name vault)]
     (not
      (= :hyperjump (:router vault))
+     (and (= :spirit (:router vault))
+          (clojure.string/includes? (:name vault) "DAI"))
      #_(or
       (clojure.string/includes? name "ORI")
       (clojure.string/includes? name "DAI-USDC")))))
