@@ -238,7 +238,7 @@
     [:li "Collaborative art (NFT DAOs)"]
     [:li "LP AMM Efficiency"]
     [:li "Priviledged LP Tokens (NFT-like benefits for holders)"]]
-   [:div "Follow us on " [:a {:href "https://twitter.com/milfinance"} "twitter"] " to keep in touch"]])
+   [:div "Follow us on " [:a {:href "https://twitter.com/mlnl_finance"} "twitter"] " to keep in touch"]])
 
 (defn body
   []
