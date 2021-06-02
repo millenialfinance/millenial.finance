@@ -75,6 +75,7 @@
         source-router (re-frame/subscribe [::subs/migrator-source-router])
         chainId (re-frame/subscribe [::subs/chainId])
         zapper-contract (:milzap (chain->contracts (if (= 250 @chainId) :ftm :matic)) )
+        addr (re-frame/subscribe [::subs/addr])
         dest-router (re-frame/subscribe [::subs/migrator-dest-router])
         from-balance (re-frame/subscribe [::subs/migrator-from-balance])]
     [:section.component.zap-row
@@ -92,7 +93,7 @@
      [:div.zap-btn
       [btn {:text "Migrate"
             :on-click #(do
-                         (re-frame/dispatch [::events/call-contract-write zapper-contract "zapAcross" [:migrator (:address from-token) @dest-router] [(:address from-token) (.parseEther e/utils amt) (:address @source-router) (:address @dest-router)]]))}]
+                         (re-frame/dispatch [::events/call-contract-write zapper-contract "zapAcross" [:migrator (:address from-token) @dest-router] [(:address from-token) (.parseEther e/utils amt) (:address @dest-router) @addr]]))}]
 
       ]]))
 
