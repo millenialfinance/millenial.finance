@@ -235,9 +235,8 @@
   [:div
    [:p "We're preparing experiments in various cross-chain areas"]
    [:ul
-    [:li "Collaborative art (NFT DAOs)"]
+    [:li "Automated asset conversions"]
     [:li "LP AMM Efficiency"]
-    [:li "Priviledged LP Tokens (NFT-like benefits for holders)"]]
    [:div "Follow us on " [:a {:href "https://twitter.com/mlnl_finance"} "twitter"] " to keep in touch"]])
 
 (defn body

@@ -70,6 +70,7 @@
       [window "Vault Zap"
        [:div
         [contract-status-bar (:milzap (chain->contracts (if (= 250 @chainId) :ftm :matic)) ) @chainId ]
+        [:p {:style {:color "red"}} "We have upgraded our contract! Please re-approve tokens before using."]
         [:blockquote "Deposit into your favorite vaults with whatever token you're already holding!"
          [:footer "— Millennial Finance User Manual"]]
         [:section.component.fieldsets
