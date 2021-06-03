@@ -11,7 +11,7 @@
                                 "function zapOut(address _from, uint amount, address routerAddr, address _recipient) external"
                                 "function zapOutToken(address _from, uint amount, address _to, address routerAddr, address _recipient) external"]
 
-                    :addr "0x17A32a805779feC6A0b3eBab6Cb60fc190Ae899B"
+                    :addr "0xC8718013dd56fc95Cf896835B0f532451F42F3ee"
                     :name "LP Zapper"
                     :chain :matic
                     :type :milzap}}
