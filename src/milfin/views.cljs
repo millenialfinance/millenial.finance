@@ -237,7 +237,7 @@
    [:ul
     [:li "Automated asset conversions"]
     [:li "LP AMM Efficiency"]
-   [:div "Follow us on " [:a {:href "https://twitter.com/mlnl_finance"} "twitter"] " to keep in touch"]])
+   [:div "Follow us on " [:a {:href "https://twitter.com/mlnl_finance"} "twitter"] " to keep in touch"]]])
 
 (defn body
   []
