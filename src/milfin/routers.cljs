@@ -29,6 +29,8 @@
    "0x16327e3fbdaca3bcf7e38f5af2599d2ddc33ae52" spirit
    :spirit spirit
 
+   :popsicle sushi-ftm
+
    "0xf491e7b69e4244ad4002bc14e878a34207e38c29" spooky
    :spooky spooky
 
