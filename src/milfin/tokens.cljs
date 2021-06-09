@@ -64,6 +64,24 @@
             :shortname "FTM"
             :type :native
           :address "0x0"}
+   "0x6c021Ae822BEa943b2E66552bDe1D2696a53fbB7" {:name "Tomb Token"
+                                                 :address "0x6c021Ae822BEa943b2E66552bDe1D2696a53fbB7"
+                                                 :shortname "TOMB"
+                                                 :type :erc20}
+   "0x4cdF39285D7Ca8eB3f090fDA0C069ba5F4145B37" {:name "TShare Token"
+                                                 :address "0x4cdF39285D7Ca8eB3f090fDA0C069ba5F4145B37"
+                                                 :shortname "TSHARE"
+                                                 :type :erc20}
+   "0x2A651563C9d3Af67aE0388a5c8F89b867038089e" {:name "FTM/TOMB Spooky LP"
+                                                 :address "0x2A651563C9d3Af67aE0388a5c8F89b867038089e"
+                                                 :router-addr "0xf491e7b69e4244ad4002bc14e878a34207e38c29"
+                                                 :shortname "FTM/TOMB Spooky LP"
+                                                 :type :lp}
+   "0x4733bc45eF91cF7CcEcaeeDb794727075fB209F2" {:name "FTM/TSHARE Spooky LP"
+                                                 :address "0x4733bc45eF91cF7CcEcaeeDb794727075fB209F2"
+                                                 :router-addr "0xf491e7b69e4244ad4002bc14e878a34207e38c29"
+                                                 :shortname "FTM/TSHARE Spooky LP"
+                                                 :type :lp}
    "0xb3654dc3d10ea7645f8319668e8f54d2574fbdc8" {:name "Chainlink Token"
                                                  :address "0xb3654dc3d10ea7645f8319668e8f54d2574fbdc8"
                                                  :shortname "LINK"
