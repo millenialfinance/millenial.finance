@@ -80,6 +80,10 @@
                                                  :address "0xd67de0e0a0fd7b15dc8348bb9be742f3c5850454"
                                                  :shortname "BNB"
                                                  :type :erc20}
+   "0x8d11ec38a3eb5e956b052f67da8bdc9bef8abf3e" {:name "DAI Stablecoin"
+                                                 :address "0x8d11ec38a3eb5e956b052f67da8bdc9bef8abf3e"
+                                                 :shortname "DAI"
+                                                 :type :erc20}
    #_"0x6a07a792ab2965c72a5b8088d3a069a7ac3a993b" #_{:name "AAVE"
                                                  :address "0x6a07a792ab2965c72a5b8088d3a069a7ac3a993b"
                                                  :shortname "AAVE"

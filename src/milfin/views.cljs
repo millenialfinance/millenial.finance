@@ -205,11 +205,12 @@
           (when (= zap-direction :out)
            ^{:key "native"} [:option {:value "0x0"} (str (:name native-token) " (" (:shortname native-token) ")")])
           (doall
-           (for [token (map chain-tokens @token-addrs)]
+           (for [token (map #(chain-tokens (:address %)) @token-addrs)]
              (let [isLP (= :lp (:type token) )
                    isSpirit (= :spirit (:exchange token))
                    zapping-in (= :in zap-direction)
                    addr (:address token)]
+               (js/console.log @token-addrs)
                (when (xnor isLP zapping-in)
                  (when (and (or isSpirit (not isLP) (not restricted) (not (and (not zapping-in) (= "SPIRIT" (:shortname token))))) (not (= "0x0" (:address token)))) ^{:key addr}[:option {:value addr} (str (:shortname token))])))))]]]]
         [:section.component.zap-row
