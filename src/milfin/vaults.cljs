@@ -1,11 +1,15 @@
 (ns milfin.vaults
   (:require [milfin.grim :as grim]
             ["./reaper" :as reaper]
+            ["./ftmBeefy" :as ftm-beefy]
             [clojure.string]))
 
-(def reaper-spooky-vaults
+#_(filter #(some #{(:platform %)} ["SpookySwap" "SpiritSwap"]) (:fantomPools (js->clj ftm-beefy :keywordize-keys true)))
+
+(defn get-reaper-vaults
+  [platform]
   (into {}
-        (for [vault (:farms (:spooky (:default (js->clj reaper :keywordize-keys true))))]
+        (for [vault (filter #(not (:deprecated %)) (:farms (get (:default (js->clj reaper :keywordize-keys true)) platform)))]
      [(:address (:vault vault)) {:name (str "Reaper " (:name vault))
                                  :token (:address (:lpToken vault))
                                  :router :spooky
@@ -13,15 +17,11 @@
                                  :provider :reaper
                                  :address (:address (:vault vault))}])))
 
+(def reaper-spooky-vaults
+  (get-reaper-vaults :spooky))
+
 (def reaper-spirit-vaults
-  (into {}
-        (for [vault (:farms (:spirit (:default (js->clj reaper :keywordize-keys true))))]
-     [(:address (:vault vault)) {:name (str "Reaper " (:name vault))
-                                 :token (:address (:lpToken vault))
-                                 :router :spirit
-                                 :type (if (:addLiquidity vault) :lp :single)
-                                 :provider :reaper
-                                 :address (:address (:vault vault))}])))
+  (get-reaper-vaults :spirit))
 
 (def reaper-vaults
   (merge reaper-spooky-vaults reaper-spirit-vaults))
