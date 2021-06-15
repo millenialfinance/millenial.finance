@@ -4,7 +4,24 @@
             ["./ftmBeefy" :as ftm-beefy]
             [clojure.string]))
 
-#_(filter #(some #{(:platform %)} ["SpookySwap" "SpiritSwap"]) (:fantomPools (js->clj ftm-beefy :keywordize-keys true)))
+(def ftm-beefy-vaults
+  (into {}
+        (for [vault (filter #(some #{(:platform %)} ["TombFinance" "SpookySwap" "SpiritSwap"]) (:fantomPools (js->clj ftm-beefy :keywordize-keys true)))]
+          [(:earnContractAddress vault) {:name (str "Beefy " (:name vault) "Vault")
+                                         :token (:tokenAddress vault)
+                                         :router (condp = (:platform vault)
+                                                   "SpookySwap" :spooky
+                                                   "SpiritSwap" :spirit
+                                                   "TombFinance" :spooky
+                                                   :spirit)
+                                         :type (if (contains? (:name vault) "LP") :lp :single)
+                                         :provider :beefy
+                                         :address (:earnContractAddress vault)
+                                         }])
+        )
+  )
+
+(count ftm-beefy-vaults)
 
 (defn get-reaper-vaults
   [platform]
@@ -209,7 +226,7 @@
          pairs (map #(conj [(:address %)] %) filteredVaults)]
      (into {} pairs)))))
 
-(def ftm-vaults (merge reaper-vaults grim-vaults ftm-vaults-hc))
+(def ftm-vaults (merge reaper-vaults grim-vaults ftm-beefy-vaults ftm-vaults-hc))
 #_(def ftm-vaults ftm-vaults-hc)
 
 
