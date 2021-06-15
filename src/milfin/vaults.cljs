@@ -1,9 +1,33 @@
 (ns milfin.vaults
   (:require [milfin.grim :as grim]
+            ["./reaper" :as reaper]
             [clojure.string]))
 
+(def reaper-spooky-vaults
+  (into {}
+        (for [vault (:farms (:spooky (:default (js->clj reaper :keywordize-keys true))))]
+     [(:address (:vault vault)) {:name (str "Reaper " (:name vault))
+                                 :token (:address (:lpToken vault))
+                                 :router :spooky
+                                 :type (if (:addLiquidity vault) :lp :single)
+                                 :provider :reaper
+                                 :address (:address (:vault vault))}])))
+
+(def reaper-spirit-vaults
+  (into {}
+        (for [vault (:farms (:spirit (:default (js->clj reaper :keywordize-keys true))))]
+     [(:address (:vault vault)) {:name (str "Reaper " (:name vault))
+                                 :token (:address (:lpToken vault))
+                                 :router :spirit
+                                 :type (if (:addLiquidity vault) :lp :single)
+                                 :provider :reaper
+                                 :address (:address (:vault vault))}])))
+
+(def reaper-vaults
+  (merge reaper-spooky-vaults reaper-spirit-vaults))
+
 (def providers
-  {250 [:grim :supra :beefy :hyper]
+  {250 [:reaper :grim :supra :beefy :hyper]
    137 [:beefy]})
 
 (def ftm-vaults-hc
@@ -185,7 +209,7 @@
          pairs (map #(conj [(:address %)] %) filteredVaults)]
      (into {} pairs)))))
 
-(def ftm-vaults (merge grim-vaults ftm-vaults-hc))
+(def ftm-vaults (merge reaper-vaults grim-vaults ftm-vaults-hc))
 #_(def ftm-vaults ftm-vaults-hc)
 
 
