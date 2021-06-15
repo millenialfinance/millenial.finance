@@ -5,6 +5,8 @@
             ["./maticBeefy" :as matic-beefy]
             [clojure.string]))
 
+(js->clj (identity reaper))
+
 (def matic-beefy-vaults
   (into {}
         (for [vault (filter #(some #{(:platform %)} ["QuickSwap" "SushiSwap"]) (:polygonPools (js->clj matic-beefy :keywordize-keys true)))]
@@ -57,8 +59,11 @@
 (def reaper-spirit-vaults
   (get-reaper-vaults :spirit))
 
+(def reaper-tomb-vaults
+  (get-reaper-vaults :tomb))
+
 (def reaper-vaults
-  (merge reaper-spooky-vaults reaper-spirit-vaults))
+  (merge reaper-spooky-vaults reaper-spirit-vaults reaper-tomb-vaults))
 
 (def providers
   {250 [:reaper :grim :supra :beefy :hyper]
