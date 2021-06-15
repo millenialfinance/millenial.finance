@@ -2,7 +2,24 @@
   (:require [milfin.grim :as grim]
             ["./reaper" :as reaper]
             ["./ftmBeefy" :as ftm-beefy]
+            ["./maticBeefy" :as matic-beefy]
             [clojure.string]))
+
+(def matic-beefy-vaults
+  (into {}
+        (for [vault (filter #(some #{(:platform %)} ["QuickSwap" "SushiSwap"]) (:polygonPools (js->clj matic-beefy :keywordize-keys true)))]
+          [(:earnContractAddress vault) {:name (str "Beefy " (:name vault) "Vault")
+                                         :token (:tokenAddress vault)
+                                         :router (condp = (:platform vault)
+                                                   "QuickSwap" :quick
+                                                   "SushiSwap" :sushi
+                                                   :quick)
+                                         :type (if (clojure.string/includes? (:name vault) "LP") :lp :single)
+                                         :provider :beefy
+                                         :address (:earnContractAddress vault)
+                                         }])
+        )
+  )
 
 (def ftm-beefy-vaults
   (into {}
@@ -150,7 +167,7 @@
                                                  :router :spooky
                                                  :address "0x711969A90C9EDD815A5C2b441FC80d067EC5E969"}})
 
-(def matic-vaults
+(def matic-vaults-hc
   {"0xf26607237355D7c6183ea66EC908729E9c6eEB6b" {:name "wBTC-ETH Beefy Finance Vault"
                                                  :platform :beefy
                                                  :token "0xdC9232E2Df177d7a12FdFf6EcBAb114E2231198D"
@@ -227,6 +244,7 @@
      (into {} pairs)))))
 
 (def ftm-vaults (merge reaper-vaults grim-vaults ftm-beefy-vaults ftm-vaults-hc))
+(def matic-vaults (merge matic-beefy-vaults matic-vaults-hc))
 #_(def ftm-vaults ftm-vaults-hc)
 
 
