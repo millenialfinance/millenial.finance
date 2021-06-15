@@ -14,7 +14,7 @@
                                                    "SpiritSwap" :spirit
                                                    "TombFinance" :spooky
                                                    :spirit)
-                                         :type (if (contains? (:name vault) "LP") :lp :single)
+                                         :type (if (clojure.string/includes? (:name vault) "LP") :lp :single)
                                          :provider :beefy
                                          :address (:earnContractAddress vault)
                                          }])
