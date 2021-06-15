@@ -70,7 +70,7 @@
       [window "Vault Zap"
        [:div
         [contract-status-bar (:milzap (chain->contracts (if (= 250 @chainId) :ftm :matic)) ) @chainId ]
-
+        [:p {:style {:color "red"}} "Our contract address has changed! Please re-approve before interacting."]
         [:blockquote "Deposit into your favorite vaults with whatever token you're already holding! Fee: 0.2%"
          [:footer "— Millennial Finance User Manual"]]
         [:section.component.fieldsets
