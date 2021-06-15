@@ -349,24 +349,6 @@ const vaults = {
         "deprecated": false
       },
       {
-        "pid": 20,
-        "name": "SPIRIT-CZTEARS Spirit Crypt",
-        "symbol": "rfSPIRITCZTEARS",
-        "account": "testAccount",
-        "lpToken": {
-          "address": "0xC66c0F0318e2777A53F884C8874B6CA3c2ED8f84"
-        },
-        "vault": {
-          "address": "0x1753277FccCD9E29Caa48738A6715490c0D710e3"
-        },
-        "strategy": {
-          "address": "0x0A52Faf05a5a0a3f1Ef9C2200c31114220e5BcED"
-        },
-        "addLiquidity": "https://swap.spiritswap.finance/#/add/0x907f1A48918Bb5DE07c12443CAB0e6EEfCC611BC/0x5Cc61A78F164885776AA610fb0FE1257df78E59B",
-        "fantomPairing": false,
-        "deprecated": false
-      },
-      {
         "pid": 21,
         "name": "FTM-BNB Spirit Crypt",
         "symbol": "rfFTMBNB",
