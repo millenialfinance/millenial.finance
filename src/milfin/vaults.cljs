@@ -23,6 +23,8 @@
         )
   )
 
+(js/console.log matic-beefy-vaults)
+
 (def ftm-beefy-vaults
   (into {}
         (for [vault (filter #(some #{(:platform %)} ["TombFinance" "SpookySwap" "SpiritSwap"]) (:fantomPools (js->clj ftm-beefy :keywordize-keys true)))]
