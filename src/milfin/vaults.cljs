@@ -5,11 +5,9 @@
             ["./maticBeefy" :as matic-beefy]
             [clojure.string]))
 
-(js->clj (identity reaper))
-
 (def matic-beefy-vaults
   (into {}
-        (for [vault (filter #(some #{(:platform %)} ["QuickSwap" "SushiSwap"]) (:polygonPools (js->clj matic-beefy :keywordize-keys true)))]
+        (for [vault (filter #(some #{(:platform %)} ["QuickSwap" "SushiSwap"]) (:default (js->clj matic-beefy :keywordize-keys true)))]
           [(:earnContractAddress vault) {:name (str "Beefy " (:name vault) "Vault")
                                          :token (:tokenAddress vault)
                                          :router (condp = (:platform vault)
@@ -19,15 +17,11 @@
                                          :type (if (clojure.string/includes? (:name vault) "LP") :lp :single)
                                          :provider :beefy
                                          :address (:earnContractAddress vault)
-                                         }])
-        )
-  )
-
-(js/console.log matic-beefy-vaults)
+                                         }])))
 
 (def ftm-beefy-vaults
   (into {}
-        (for [vault (filter #(some #{(:platform %)} ["TombFinance" "SpookySwap" "SpiritSwap"]) (:fantomPools (js->clj ftm-beefy :keywordize-keys true)))]
+        (for [vault (filter #(some #{(:platform %)} ["TombFinance" "SpookySwap" "SpiritSwap"]) (:default (js->clj ftm-beefy :keywordize-keys true)))]
           [(:earnContractAddress vault) {:name (str "Beefy " (:name vault) "Vault")
                                          :token (:tokenAddress vault)
                                          :router (condp = (:platform vault)
@@ -42,7 +36,7 @@
         )
   )
 
-(count ftm-beefy-vaults)
+(count matic-beefy-vaults)
 
 (defn get-reaper-vaults
   [platform]
@@ -252,7 +246,6 @@
 
 (def ftm-vaults (merge reaper-vaults grim-vaults ftm-beefy-vaults ftm-vaults-hc))
 (def matic-vaults (merge matic-beefy-vaults matic-vaults-hc))
-#_(def ftm-vaults ftm-vaults-hc)
 
 
 (def vaults

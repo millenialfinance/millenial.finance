@@ -1,4 +1,4 @@
-export const fantomPools = [
+const vaults = [
   {
     id: 'fantom-bifi-maxi',
     logo: 'single-assets/BIFI.png',
@@ -705,3 +705,5 @@ export const fantomPools = [
     buyTokenUrl: 'https://spookyswap.finance/swap',
   },
 ];
+
+export default vaults;
