@@ -21,6 +21,9 @@
 (def hyperjump {:address "0x53c153a0df7E050BbEFbb70eE9632061f12795fB"
                 :name "Hyperjump"})
 
+(def paint {:address "0xfD000ddCEa75a2E23059881c3589F6425bFf1AbB"
+            :name "PaintSwap"})
+
 (def ftm-routers
   {
    "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506" sushi-ftm
@@ -37,6 +40,8 @@
    :wakafinance waka
 
    :hyperjump hyperjump
+
+   :chad paint
 
    }
   )
