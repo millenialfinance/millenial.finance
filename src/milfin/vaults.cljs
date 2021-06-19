@@ -221,6 +221,7 @@
   [router vault]
   {:router router
    :token (:lpaddress vault)
+   :type (if (clojure.string/includes? (:lpname vault) "-") :lp :single)
    :name (str "Grim " (:lpname vault) " Vault (" (clojure.string/capitalize (name router)) ")")
    :address (:vault vault)})
 
