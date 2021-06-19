@@ -33,7 +33,6 @@ const vaults = [
             }
         ]
     },
-    /*
     {
         "NAME": "Chad",
         "ROUTER": "0xfD000ddCEa75a2E23059881c3589F6425bFf1AbB",
@@ -52,8 +51,6 @@ const vaults = [
             }
         ]
     },
-    */
-
     {
         "NAME": "Spirit",
         "ROUTER": "0x16327E3FbDaCA3bcF7E38F5Af2599D2DDc33aE52",
