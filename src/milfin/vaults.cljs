@@ -61,8 +61,11 @@
 (def reaper-waka-vaults
   (get-reaper-vaults :waka))
 
+(def reaper-steak-vaults
+  (get-reaper-vaults :steak))
+
 (def reaper-vaults
-  (merge reaper-spooky-vaults reaper-spirit-vaults reaper-tomb-vaults reaper-waka-vaults))
+  (merge reaper-spooky-vaults reaper-steak-vaults reaper-spirit-vaults reaper-tomb-vaults reaper-waka-vaults))
 
 (def providers
   {250 [:reaper :grim :supra :beefy :hyper]
