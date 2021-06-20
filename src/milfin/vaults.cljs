@@ -44,7 +44,7 @@
         (for [vault (filter #(not (:deprecated %)) (:farms (get (:default (js->clj reaper :keywordize-keys true)) platform)))]
      [(:address (:vault vault)) {:name (str "Reaper " (:name vault))
                                  :token (:address (:lpToken vault))
-                                 :router :spooky
+                                 :router (or (keyword (:exchange vault)) (keyword platform))
                                  :type (if (:addLiquidity vault) :lp :single)
                                  :provider :reaper
                                  :address (:address (:vault vault))}])))
