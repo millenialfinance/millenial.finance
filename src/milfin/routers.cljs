@@ -28,7 +28,7 @@
             :name "Opera"})
 
 (def steak {:address "0x16327E3FbDaCA3bcF7E38F5Af2599D2DDc33aE52"
-            :name "SteakSwap"})
+            :name "Stake Steak"})
 
 (def ftm-routers
   {
