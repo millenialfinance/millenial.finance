@@ -24,6 +24,9 @@
 (def paint {:address "0xfD000ddCEa75a2E23059881c3589F6425bFf1AbB"
             :name "PaintSwap"})
 
+(def opera {:address "0xE372753F66644A1197AB85Ff529ed02995ED2d6C"
+            :name "Opera"})
+
 (def ftm-routers
   {
    "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506" sushi-ftm
@@ -33,6 +36,8 @@
    :spirit spirit
 
    :popsicle sushi-ftm
+
+   :opera opera
 
    "0xf491e7b69e4244ad4002bc14e878a34207e38c29" spooky
    :spooky spooky
