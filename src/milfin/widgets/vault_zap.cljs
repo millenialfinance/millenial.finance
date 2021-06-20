@@ -15,9 +15,11 @@
   []
   (js/setInterval
    #(let [from (re-frame/subscribe [::subs/vault-from])
+          to (re-frame/subscribe [::subs/vault-to])
           addr (re-frame/subscribe [::subs/addr])
           zapper (re-frame/subscribe [::subs/zapper-contract])]
       (re-frame/dispatch [::events/get-erc20-allowance @from @addr (:addr @zapper)])
+      (re-frame/dispatch [::events/get-erc20-bal  @to @addr])
       (re-frame/dispatch [::events/get-erc20-bal  @from @addr]))
    3000))
 
