@@ -58,6 +58,14 @@ const vaults = [
         "EARNING_TOKEN": "0x5cc61a78f164885776aa610fb0fe1257df78e59b",
         "vaults": [
             {
+                "lpname": "CHAD-STEAK",
+                "lpaddress": "0x9edf4420016646372ca48bc881f2059056083016",
+                "POOL_ID": 5,
+                "isAdded": true,
+                "vault": "0xc2988EEfe6E278D9262f8572dF2eF03288181665",
+                "strategy": "0xCf4e087001c99cd8b92a9f5f3e802e63b20F2034"
+            },
+            {
                 "lpname": "BUSD-FUSDT",
                 "lpaddress": "0x1Ac51904cFAaD15679B3500F0fC41D2971657f80",
                 "POOL_ID": 27,
@@ -266,6 +274,14 @@ const vaults = [
         "MASTERCHEF": "0x2b2929E785374c651a81A63878Ab22742656DcDd",
         "EARNING_TOKEN": "0x841FAD6EAe12c286d1Fd18d1d525DFfA75C7EFFE",
         "vaults": [
+            {
+                "lpname": "CHAD-FBOMB",
+                "lpaddress": "0x2acf18104ffce06ac4b7dfb9c1ff539119d96b27",
+                "POOL_ID": 4,
+                "isAdded": true,
+                "vault": "0xcbF73e45c9F192539950C3eF525b359a4fe4A3c4",
+                "strategy": "0x972A3410B7b6F9731eC313550559FCf3E7EFAEba"
+            },
             {
                 "lpname": "FTM-ANY",
                 "lpaddress": "0x5c021D9cfaD40aaFC57786b409A9ce571de375b4",
@@ -816,40 +832,6 @@ const vaults = [
                 "isAdded": true,
                 "vault": "0xB70eF424D19f6fD958964626e7b61707E4B7Ce53",
                 "strategy": "0x2bCC1b2F760f52A7Cd91295B4BF975e4d6fAE037"
-            }
-        ]
-    },
-    {
-        "NAME": "Chad",
-        "ROUTER": "0x16327E3FbDaCA3bcF7E38F5Af2599D2DDc33aE52",
-        "MASTERCHEF": "0xDA094Ee6bDaf65c911f72FEBfC58002e5e2656d1",
-        "EARNING_TOKEN": "0xcce93540b80abf71b66e0a44fd71e322ce9c4d9e",
-        "vaults": [
-
-            {
-                "lpname": "CHAD-STEAK",
-                "lpaddress": "0x9edf4420016646372ca48bc881f2059056083016",
-                "POOL_ID": 5,
-                "isAdded": true,
-                "vault": "0xc2988EEfe6E278D9262f8572dF2eF03288181665",
-                "strategy": "0xCf4e087001c99cd8b92a9f5f3e802e63b20F2034"
-            }
-        ]
-    },
-    {
-        "NAME": "Chad",
-        "ROUTER": "0xF491e7B69E4244ad4002BC14e878a34207E38c29",
-        "MASTERCHEF": "0xDA094Ee6bDaf65c911f72FEBfC58002e5e2656d1",
-        "EARNING_TOKEN": "0xcce93540b80abf71b66e0a44fd71e322ce9c4d9e",
-        "vaults": [
-
-            {
-                "lpname": "CHAD-FBOMB",
-                "lpaddress": "0x2acf18104ffce06ac4b7dfb9c1ff539119d96b27",
-                "POOL_ID": 4,
-                "isAdded": true,
-                "vault": "0xcbF73e45c9F192539950C3eF525b359a4fe4A3c4",
-                "strategy": "0x972A3410B7b6F9731eC313550559FCf3E7EFAEba"
             }
         ]
     },
