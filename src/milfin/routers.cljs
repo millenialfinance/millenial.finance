@@ -27,6 +27,9 @@
 (def opera {:address "0xE372753F66644A1197AB85Ff529ed02995ED2d6C"
             :name "Opera"})
 
+(def steak {:address "0x16327E3FbDaCA3bcF7E38F5Af2599D2DDc33aE52"
+            :name "SteakSwap"})
+
 (def ftm-routers
   {
    "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506" sushi-ftm
@@ -34,6 +37,10 @@
 
    "0x16327e3fbdaca3bcf7e38f5af2599d2ddc33ae52" spirit
    :spirit spirit
+
+   :tomb spooky
+
+   :steak steak
 
    :popsicle sushi-ftm
 

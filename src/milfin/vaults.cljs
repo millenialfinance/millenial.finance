@@ -58,8 +58,11 @@
 (def reaper-tomb-vaults
   (get-reaper-vaults :tomb))
 
+(def reaper-waka-vaults
+  (get-reaper-vaults :waka))
+
 (def reaper-vaults
-  (merge reaper-spooky-vaults reaper-spirit-vaults reaper-tomb-vaults))
+  (merge reaper-spooky-vaults reaper-spirit-vaults reaper-tomb-vaults reaper-waka-vaults))
 
 (def providers
   {250 [:reaper :grim :supra :beefy :hyper]
