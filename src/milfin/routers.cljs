@@ -32,7 +32,7 @@
 
 (def ftm-routers
   {
-   "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506" sushi-ftm
+   "0xF491e7B69E4244ad4002BC14e878a34207E38c29" sushi-ftm
    :sushi sushi-ftm
 
    "0x16327e3fbdaca3bcf7e38f5af2599d2ddc33ae52" spirit

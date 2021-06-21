@@ -147,7 +147,7 @@
                                                  :address "0x84311ecc54d7553378c067282940b0fdfb913675"
                                                  :shortname "FTM/ICE Sushi LP"
                                                  :type :lp
-                                                 :router-addr "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506"
+                                                 :router-addr "0xF491e7B69E4244ad4002BC14e878a34207E38c29"
                                                  :exchange :sushi}
     #_"0x5cc61a78f164885776aa610fb0fe1257df78e59b" #_{:name "Spirit Token"
                                                  :address "0x5cc61a78f164885776aa610fb0fe1257df78e59b"
