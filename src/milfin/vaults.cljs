@@ -68,7 +68,7 @@
   (merge reaper-spooky-vaults reaper-steak-vaults reaper-spirit-vaults reaper-tomb-vaults reaper-waka-vaults))
 
 (def providers
-  {250 [:reaper :grim :supra :beefy :hyper]
+  {250 [:mlnl :reaper :grim :supra :beefy :hyper]
    137 [:beefy]})
 
 (def ftm-vaults-hc
@@ -99,7 +99,16 @@
                                                      :router "0x53c153a0df7E050BbEFbb70eE9632061f12795fB"
                                                      :address "0x6C89FEC29e95d187A35915BC18a942C4000A6FE9"}
 
-
+   "0x7535b2d72d2b58AFAb7F643EaAdAf529499e7BaC" {:name "MLNL SPIRIT/FTM Vault"
+                                                 :token "0x30748322b6e34545dbe0788c421886aeb5297789"
+                                                 :router :spirit
+                                                 :provider :mlnl
+                                                 :address "0x7535b2d72d2b58AFAb7F643EaAdAf529499e7BaC"}
+   "0xF2aeE145AD68aBDaDf7Aec67b23a300f4D73d6a4" {:name "MLNL BOO/FTM Vault"
+                                                 :token "0xEc7178F4C41f346b2721907F5cF7628E388A7a58"
+                                                 :router :spooky
+                                                 :provider :mlnl
+                                                 :address "0xF2aeE145AD68aBDaDf7Aec67b23a300f4D73d6a4"}
 
    "0x49b5988d48039794f6232b44D7ed8F9bF8b6F784" {:name "SPIRIT/FTM Supra Finance Vault"
                                                  :token "0x30748322b6e34545dbe0788c421886aeb5297789"
