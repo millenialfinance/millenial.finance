@@ -99,6 +99,12 @@
                                                      :router "0x53c153a0df7E050BbEFbb70eE9632061f12795fB"
                                                      :address "0x6C89FEC29e95d187A35915BC18a942C4000A6FE9"}
 
+   "0x1BE79BA2D2cdA99F0e046a97a4Be5ee82E62C5A9" {:name "MLNL SPIRIT/DAI Vault"
+                                                 :token "0xffbfc0446ca725b21256461e214e9d472f9be390"
+                                                 :router :spirit
+                                                 :provider :mlnl
+                                                 :address "0x1BE79BA2D2cdA99F0e046a97a4Be5ee82E62C5A9"}
+
    "0x7535b2d72d2b58AFAb7F643EaAdAf529499e7BaC" {:name "MLNL SPIRIT/FTM Vault"
                                                  :token "0x30748322b6e34545dbe0788c421886aeb5297789"
                                                  :router :spirit

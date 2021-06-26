@@ -137,7 +137,7 @@
                                                                                                          @native-balance
                                                                                                          (@balances @from)))])}]]
          [:div.zap-btn
-          (if (not (if (get @allowances @from) (.eq (get @allowances @from) 0) true))
+          (if (or (not (if (get @allowances @from) (.eq (get @allowances @from) 0) true)) (= @from "0x0"))
             [btn {:text "Zap"
                   :on-click #(do
                                (js/console.log @amt)
